@@ -120,3 +120,74 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Party / Vietnam National Theme */
+.vn-red {
+  --background: oklch(0.97 0.03 29); /* nền sáng hơi vàng */
+  --foreground: oklch(0.2 0.05 29);
+  --primary: oklch(0.55 0.27 29); /* đỏ Đảng mạnh */
+  --primary-foreground: oklch(0.98 0.02 100);
+  --secondary: oklch(0.92 0.02 100);
+  --secondary-foreground: oklch(0.2 0.03 29);
+  --accent: oklch(0.92 0.05 100); /* vàng */
+  --accent-foreground: oklch(0.28 0.1 29);
+  --destructive: oklch(0.52 0.25 29);
+  --muted: oklch(0.95 0.02 29);
+  --muted-foreground: oklch(0.35 0.03 29);
+  --border: oklch(0.88 0.02 29);
+  --input: oklch(0.88 0.02 29);
+  --ring: oklch(0.55 0.28 29);
+  --chart-1: oklch(0.55 0.28 29); /* Đỏ */
+  --chart-2: oklch(0.85 0.1 100); /* Vàng */
+  --chart-3: oklch(0.72 0.17 30); /* Đỏ hơi nâu */
+  --chart-4: oklch(0.62 0.1 90); /* vàng nhạt */
+  --chart-5: oklch(0.4 0.02 29); /* nâu đất */
+}
+
+/* Dark patriotic theme */
+.vn-red-dark {
+  --background: oklch(0.15 0.02 29); /* nền than */
+  --foreground: oklch(0.98 0.02 100);
+  --primary: oklch(0.58 0.27 29); /* đỏ đậm */
+  --primary-foreground: oklch(0.98 0.02 100);
+  --secondary: oklch(0.35 0.02 29);
+  --secondary-foreground: oklch(0.98 0.02 100);
+  --accent: oklch(0.75 0.1 102); /* vàng đậm */
+  --accent-foreground: oklch(0.15 0.02 29);
+  --muted: oklch(0.28 0.01 29);
+  --muted-foreground: oklch(0.8 0.03 100);
+  --border: oklch(0.3 0.01 29);
+  --input: oklch(0.3 0.01 29);
+  --ring: oklch(0.58 0.27 29);
+}
+
+@layer utilities {
+  .bg-vn-gradient-1 {
+    background-image: linear-gradient(to bottom right, #7f0000, #b30000, #ffd600);
+  }
+
+  .bg-vn-gradient-2 {
+    background-image: linear-gradient(to bottom right, #4b0000, #d40000, #ffd600);
+  }
+
+  .bg-vn-gradient-3 {
+    background-image: linear-gradient(to right, #8a0101, #d40000, #ffca00);
+  }
+
+  .bg-vn-gradient-4 {
+    background-image: linear-gradient(135deg, #3f0000 0%, #d40000 40%, #ffd600 90%);
+  }
+
+  .bg-vn-gradient-5 {
+    background-image: linear-gradient(to bottom right, #8b0000, #e60000);
+  }
+
+  .bg-vn-gradient-dark {
+    background-image: linear-gradient(135deg, #0b0606 0%, #400000 40%, #d40000 90%);
+  }
+
+  .bg-vn-flag {
+    background-image: linear-gradient(to bottom, #da251d, #ffd600);
+  }
+}
+
