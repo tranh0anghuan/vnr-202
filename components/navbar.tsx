@@ -19,8 +19,9 @@ export default function Navbar() {
   const navItems = [
     { name: "Trang chủ", href: "/" },
     { name: "Kinh tế", href: "/economy" },
+    { name: "Văn hóa", href: "/culture" },
     { name: "Xã hội", href: "/society" },
-    { name: "Dự án", href: "/projects" },
+    { name: "Thống kê", href: "/statistics" },
   ];
 
   return (
@@ -112,23 +113,7 @@ export default function Navbar() {
               })}
             </div>
 
-            {/* CTA Button */}
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                y: -2,
-                boxShadow: "0 12px 25px rgba(255,215,0,0.4)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="hidden md:block px-8 py-3 rounded-2xl font-semibold text-lg transition-all duration-300 text-white"
-              style={{
-                background: "linear-gradient(135deg, #da251d, #ffd600)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                boxShadow: "0 6px 20px rgba(255,215,0,0.3)",
-              }}
-            >
-              Khám phá ngay
-            </motion.button>
+            <div className=""></div>
           </div>
         </div>
       </motion.nav>
