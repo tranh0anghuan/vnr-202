@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useInView, Variants, cubicBezier } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
+import Navbar from "@/components/navbar";
 
 // Animation variants với easing hợp lệ
 const containerVariants = {
@@ -1505,31 +1506,6 @@ export default function HomePage() {
               </AnimatedItem>
             ))}
           </div>
-
-          {/* View More Button */}
-          <AnimatedItem variants={fadeInUp}>
-            <motion.div
-              className="text-center mt-12"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <motion.button
-                className="group inline-flex items-center gap-3 px-8 py-4 bg-white text-primary font-semibold rounded-2xl shadow-lg hover:shadow-xl border border-red-200 hover:border-red-300 transition-all duration-300"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>Xem thêm tin tức</span>
-                <motion.span
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="text-lg"
-                >
-                  🔄
-                </motion.span>
-              </motion.button>
-            </motion.div>
-          </AnimatedItem>
         </div>
       </AnimatedSection>
 
