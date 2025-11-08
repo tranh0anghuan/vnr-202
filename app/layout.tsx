@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import Chatbot from "@/components/chatbot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Việt Nam Đổi Mới 2018–NAY",
-  description: "Việt Nam Đổi Mới 2018–NAY",
+  description: "Thành tựu Đổi mới Việt Nam giai đoạn 2018 đến nay",
 };
 
 export default function RootLayout({
@@ -25,12 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-red-50 via-amber-50 to-yellow-50 min-h-screen`}
       >
         <Navbar />
         {children}
+        <Chatbot />
+
         <Footer />
       </body>
     </html>
