@@ -30,12 +30,7 @@ export default function Footer({
     { name: "Văn hóa", href: "/culture" },
     { name: "Xã hội", href: "/society" },
     { name: "Thống kê", href: "/statistics" },
-  ];
-
-  const legalLinks = [
-    { name: "Chính sách bảo mật", href: "/" },
-    { name: "Điều khoản sử dụng", href: "/" },
-    { name: "Liên hệ", href: "/" },
+    { name: "AI", href: "/ai-report" },
   ];
 
   return (
