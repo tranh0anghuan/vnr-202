@@ -85,7 +85,7 @@ export default function Footer({
 
       <div className="container mx-auto max-w-6xl relative z-10">
         {/* Main Footer Content */}
-        <div className={`px-4 ${compact ? "py-8" : "py-16"}`}>
+        <div className={`px-4 ${compact ? "py-8" : "py-16"} flex `}>
           {!compact && (
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-12">
               {/* Brand Section */}
@@ -140,44 +140,18 @@ export default function Footer({
                   ))}
                 </ul>
               </motion.div>
-
-              {/* Contact/Info */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                viewport={{ once: true }}
-              >
-                <h4 className="text-lg font-semibold text-yellow-300 mb-4">
-                  Thông tin
-                </h4>
-                <div className="space-y-3 text-white/70">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                      <span>📧</span>
-                    </div>
-                    <span>contact@vietnamdoimoi.vn</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                      <span>🌐</span>
-                    </div>
-                    <span>www.vietnamdoimoi.vn</span>
-                  </div>
-                </div>
-              </motion.div>
             </div>
           )}
 
           {/* Bottom Footer */}
           <motion.div
-            className={`${compact ? "" : "pt-8 border-t border-white/10"}`}
+            className={`${compact ? "" : "pt-8 "}`}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: compact ? 0.1 : 0.6 }}
             viewport={{ once: true }}
           >
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-4">
               <div className="text-center md:text-left">
                 <p className="text-white/60 text-sm">
                   © 2025 Việt Nam Đổi Mới. Tất cả các quyền được bảo lưu.
@@ -188,19 +162,6 @@ export default function Footer({
                     của Việt Nam
                   </p>
                 )}
-              </div>
-
-              <div className="flex gap-6 text-white/50 text-sm">
-                {legalLinks.map((link) => (
-                  <motion.a
-                    key={link.name}
-                    href={link.href}
-                    className="hover:text-yellow-300 transition-colors"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    {link.name}
-                  </motion.a>
-                ))}
               </div>
             </div>
 

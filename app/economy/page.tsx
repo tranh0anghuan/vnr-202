@@ -683,7 +683,7 @@ export default function VietnamEconomyPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            Kinh tế Việt Nam 2018--nay --- Tiến trình, con số và dự án
+            Kinh tế Việt Nam 2018-nay - Tiến trình, con số và dự án
           </motion.h1>
           <motion.div
             className="w-24 h-1 bg-yellow-400 mx-auto mb-4"
@@ -2686,72 +2686,6 @@ export default function VietnamEconomyPage() {
                     </motion.p>
 
                     {/* Action Buttons */}
-                    <motion.div
-                      className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 1.3 }}
-                    >
-                      <motion.button
-                        className="group/btn-primary inline-flex items-center gap-4 px-8 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-red-900 font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <span className="text-lg">Bắt Đầu Hành Động</span>
-                        <motion.span
-                          animate={{ x: [0, 4, 0] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        >
-                          <svg
-                            className="w-6 h-6"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M13 7l5 5m0 0l-5 5m5-5H6"
-                            />
-                          </svg>
-                        </motion.span>
-
-                        {/* Button Glow Effect */}
-                        <div className="absolute inset-0 bg-yellow-400 rounded-2xl blur opacity-0 group-hover/btn-primary:opacity-40 transition duration-500 -z-10"></div>
-                      </motion.button>
-
-                      <motion.button
-                        className="group/btn-secondary inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <span>Tìm Hiểu Thêm</span>
-                        <motion.span
-                          animate={{ rotate: [0, 360] }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "linear",
-                          }}
-                        >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                            />
-                          </svg>
-                        </motion.span>
-                      </motion.button>
-                    </motion.div>
                   </motion.div>
                 </div>
 
