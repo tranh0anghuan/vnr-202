@@ -303,7 +303,8 @@ export default function StatisticsPage() {
                   <span className="text-yellow-300 font-semibold">
                     đồ họa dễ hiểu
                   </span>{" "}
-                  về GDP theo năm, xuất khẩu theo ngành, FDI theo vùng, tỉ lệ BHYT, du lịch, giáo dục.
+                  về GDP theo năm, xuất khẩu theo ngành, FDI theo vùng, tỉ lệ
+                  BHYT, du lịch, giáo dục.
                 </motion.p>
 
                 <motion.div
@@ -317,7 +318,9 @@ export default function StatisticsPage() {
                     <span className="text-yellow-200 font-medium">
                       học tập và nghiên cứu
                     </span>
-                    . Mục tiêu là giúp dễ dàng tiếp cận thông tin, cung cấp nền tảng số liệu cho việc giảng dạy, học tập và phân tích xu hướng phát triển của đất nước.
+                    . Mục tiêu là giúp dễ dàng tiếp cận thông tin, cung cấp nền
+                    tảng số liệu cho việc giảng dạy, học tập và phân tích xu
+                    hướng phát triển của đất nước.
                   </p>
                 </motion.div>
               </div>
@@ -987,34 +990,36 @@ export default function StatisticsPage() {
 
                   {/* Health Insurance Coverage */}
                   <div className="space-y-4">
-                    {statisticsData.health.healthInsurance.map((item, index) => (
-                      <motion.div
-                        key={item.year}
-                        className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10"
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        viewport={{ once: true }}
-                      >
-                        <span className="font-semibold text-white">
-                          {item.year}
-                        </span>
-                        <div className="flex items-center gap-4">
-                          <div className="w-32 bg-white/20 rounded-full h-3">
-                            <motion.div
-                              className="h-3 bg-green-500 rounded-full shadow"
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${item.coverage}%` }}
-                              transition={{ duration: 1, delay: index * 0.1 }}
-                              viewport={{ once: true }}
-                            />
-                          </div>
-                          <span className="font-bold text-green-300 w-12">
-                            {item.coverage}%
+                    {statisticsData.health.healthInsurance.map(
+                      (item, index) => (
+                        <motion.div
+                          key={item.year}
+                          className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10"
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          viewport={{ once: true }}
+                        >
+                          <span className="font-semibold text-white">
+                            {item.year}
                           </span>
-                        </div>
-                      </motion.div>
-                    ))}
+                          <div className="flex items-center gap-4">
+                            <div className="w-32 bg-white/20 rounded-full h-3">
+                              <motion.div
+                                className="h-3 bg-green-500 rounded-full shadow"
+                                initial={{ width: 0 }}
+                                whileInView={{ width: `${item.coverage}%` }}
+                                transition={{ duration: 1, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                              />
+                            </div>
+                            <span className="font-bold text-green-300 w-12">
+                              {item.coverage}%
+                            </span>
+                          </div>
+                        </motion.div>
+                      )
+                    )}
                   </div>
 
                   <div className="mt-6 text-center p-4 bg-green-500/20 backdrop-blur-sm rounded-2xl border border-green-400/30">
@@ -1175,7 +1180,10 @@ export default function StatisticsPage() {
                 <div className="relative h-96 bg-gradient-to-br from-purple-50 to-red-50 rounded-2xl p-6 border border-purple-200">
                   <div className="absolute inset-0 flex items-end justify-between px-6 pb-8">
                     {statisticsData.tourism.data.map((item, index) => (
-                      <div key={item.year} className="flex flex-col items-center">
+                      <div
+                        key={item.year}
+                        className="flex flex-col items-center"
+                      >
                         <motion.div
                           className={`w-10 rounded-t-lg shadow-lg ${
                             item.year === 2020 || item.year === 2021
@@ -1283,8 +1291,6 @@ export default function StatisticsPage() {
           </AnimatedItem>
         </div>
       </AnimatedSection>
-
-    
     </div>
   );
 }
