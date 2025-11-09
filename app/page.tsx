@@ -651,22 +651,21 @@ export default function HomePage() {
 
                   {/* Action Button */}
                   <motion.div whileHover={{ x: 5 }}>
-  <Link
-    href="https://daibieunhandan.vn/bao-ton-va-phat-huy-gia-tri-nghe-thuat-truyen-thong-trong-boi-canh-phat-trien-kinh-te-thi-truong-va-hoi-nhap-quoc-te-10361093.html"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center gap-2 text-yellow-600 font-semibold hover:text-yellow-700 transition-all duration-300 group/btn"
-  >
-    <span>Khám phá di sản</span>
-    <motion.span
-      animate={{ x: [0, 4, 0] }}
-      transition={{ duration: 1.5, repeat: Infinity }}
-    >
-      →
-    </motion.span>
-  </Link>
-</motion.div>
-
+                    <Link
+                      href="https://daibieunhandan.vn/bao-ton-va-phat-huy-gia-tri-nghe-thuat-truyen-thong-trong-boi-canh-phat-trien-kinh-te-thi-truong-va-hoi-nhap-quoc-te-10361093.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-yellow-600 font-semibold hover:text-yellow-700 transition-all duration-300 group/btn"
+                    >
+                      <span>Khám phá di sản</span>
+                      <motion.span
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        →
+                      </motion.span>
+                    </Link>
+                  </motion.div>
                 </div>
               </motion.div>
             </AnimatedItem>
@@ -777,22 +776,21 @@ export default function HomePage() {
 
                   {/* Action Button */}
                   <motion.div whileHover={{ x: 5 }}>
-  <Link
-    href="https://nhandan.vn/danh-ngan-sach-thuc-day-bao-hiem-y-te-toan-dan-post891435.html"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-all duration-300 group/btn"
-  >
-    <span>Xem tiến bộ</span>
-    <motion.span
-      animate={{ x: [0, 4, 0] }}
-      transition={{ duration: 1.5, repeat: Infinity }}
-    >
-      →
-    </motion.span>
-  </Link>
-</motion.div>
-
+                    <Link
+                      href="https://nhandan.vn/danh-ngan-sach-thuc-day-bao-hiem-y-te-toan-dan-post891435.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-all duration-300 group/btn"
+                    >
+                      <span>Xem tiến bộ</span>
+                      <motion.span
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        →
+                      </motion.span>
+                    </Link>
+                  </motion.div>
                 </div>
               </motion.div>
             </AnimatedItem>

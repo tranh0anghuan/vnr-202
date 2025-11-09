@@ -670,48 +670,102 @@ export default function VietnamEconomyPage() {
 
       {/* Header với gradient Việt Nam */}
       <motion.header
-        className="bg-vn-gradient-3 text-white py-8 relative overflow-hidden"
+        className="bg-vn-gradient-4 text-white py-12 relative overflow-hidden"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="absolute inset-0 bg-black opacity-10"></div>
+        {/* Background decorative elements */}
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute top-10 left-10 w-20 h-20 bg-yellow-400/20 rounded-full blur-xl"></div>
+        <div className="absolute bottom-10 right-20 w-32 h-32 bg-red-500/20 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-yellow-300/30 rounded-full blur-lg"></div>
+
+        {/* Animated floating elements */}
+        <motion.div
+          className="absolute top-1/4 left-1/5 w-4 h-4 bg-yellow-300 rounded-full"
+          animate={{
+            y: [0, -15, 0],
+            opacity: [0.7, 1, 0.7],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/3 right-1/3 w-3 h-3 bg-red-400 rounded-full"
+          animate={{
+            y: [0, 10, 0],
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.5,
+          }}
+        />
+
         <div className="container mx-auto px-4 relative z-10">
-          <motion.h1
-            className="text-4xl font-bold mb-4 text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            Kinh tế Việt Nam 2018-nay - Tiến trình, con số và dự án
-          </motion.h1>
-          <motion.div
-            className="w-24 h-1 bg-yellow-400 mx-auto mb-4"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-          ></motion.div>
           <motion.div
             className="text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
           >
-            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3">
+            {/* Main Title */}
+            <AnimatedItem variants={itemVariants}>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-red-400 bg-clip-text text-transparent">
+                  Kinh tế Việt Nam
+                </span>
+                <br />
+                <span className="text-xl md:text-2xl lg:text-3xl font-medium text-white/90 mt-2 block">
+                  Tiến trình, con số và dự án 2018 - nay
+                </span>
+              </h1>
+            </AnimatedItem>
+
+            {/* Decorative line */}
+            <AnimatedItem variants={scaleUp}>
               <motion.div
-                className="w-2 h-2 bg-green-400 rounded-full"
-                animate={{ scale: [1, 1.5, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                className="w-32 h-1 bg-gradient-to-r from-yellow-400 to-red-500 mx-auto mb-6 rounded-full"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
               ></motion.div>
-              <span className="text-sm">Dữ liệu cập nhật 2025</span>
-            </div>
+            </AnimatedItem>
+
+            {/* Update badge */}
+            <AnimatedItem variants={fadeInUp}>
+              <motion.div
+                className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                <motion.div
+                  className="w-2 h-2 bg-green-400 rounded-full"
+                  animate={{ scale: [1, 1.5, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                ></motion.div>
+                <span className="text-sm font-medium">
+                  Dữ liệu cập nhật 2025
+                </span>
+              </motion.div>
+            </AnimatedItem>
           </motion.div>
         </div>
+
+        {/* Bottom gradient overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/5 to-transparent"></div>
 
         {/* Animated waves */}
         <div className="absolute bottom-0 left-0 right-0">
           <motion.svg
-            className="w-full h-12"
+            className="w-full h-16"
             viewBox="0 0 1200 120"
             preserveAspectRatio="none"
             initial={{ opacity: 0 }}
