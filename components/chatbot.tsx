@@ -2,6 +2,7 @@
 
 import { useState, useRef, useLayoutEffect, FormEvent } from "react";
 import { Send, Bot, User, Loader2, MessageCircle, X } from "lucide-react";
+import axios from "axios";
 
 interface Message {
   id: string;
@@ -17,6 +18,9 @@ export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+  const API_URL =
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+  const API_KEY = "AIzaSyChDAeQ0Kf1eTaF3i-dcTNR2cywLsiglUs";
 
   // Tự động cuộn xuống đáy khi có tin nhắn mới
   useLayoutEffect(() => {
@@ -40,27 +44,21 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: `Giải đáp thắc mắc cho sinh viên về thành tựu đổi mới Việt Nam giai đoạn 2018–nay trong chính sách, kinh tế, xã hội... với câu hỏi của sinh viên là ${input}`,
-                },
-              ],
-            },
-          ],
-        }),
+      const response = await axios.post(`${API_URL}?key=${API_KEY}`, {
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `Bạn là trợ lý học thuật hỗ trợ sinh viên tìm hiểu về thành tựu đổi mới và phát triển Việt Nam giai đoạn 2018–nay trong các lĩnh vực chính sách, kinh tế, xã hội, văn hóa và hạ tầng; trả lời dễ hiểu, chính xác, khách quan, dựa trên số liệu và nguồn chính thống (TTXVN, Báo Chính phủ, TCTK, VNExpress, VietnamPlus, VnEconomy…) và liên hệ phù hợp với CLO3 và CLO4; tránh ngôn ngữ tuyên truyền, không nhân danh tổ chức, không dùng đại từ tập thể, nếu nêu quan điểm thì ghi rõ là phân tích học thuật; ưu tiên thuật ngữ đầy đủ, hạn chế viết tắt (nếu có thì giải thích ngay); nếu câu hỏi hơi lệch nhưng vẫn liên quan bối cảnh Việt Nam hiện đại thì trả lời theo khung chủ đề và bổ sung thông tin từ báo chí chính thống; nếu thiếu dữ liệu thì tìm nguồn chính thống gần nhất; nếu câu hỏi không liên quan thì lịch sự từ chối và hướng lại đúng chủ đề; giúp sinh viên hiểu thành tựu thực tế, ý nghĩa đổi mới, chuyển đổi số, hội nhập quốc tế, phát triển hạ tầng (cao tốc Bắc–Nam, Long Thành…), tiến bộ y tế, giáo dục, an sinh, văn hóa và bài học phát triển tương lai.Câu hỏi là: ${input}`,
+              },
+            ],
+          },
+        ],
       });
 
-      if (!response.ok) throw new Error("Failed to get response");
-      const data = await response.json();
       const assistantText =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text ??
+        response.data?.candidates?.[0]?.content?.parts?.[0]?.text ??
         "Xin lỗi, tôi chưa nhận được phản hồi hợp lệ.";
 
       const assistantMessage: Message = {
@@ -72,7 +70,7 @@ export default function Chatbot() {
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
-      console.error(err);
+      console.error("Chat error:", err);
       setMessages((prev) => [
         ...prev,
         {
@@ -151,7 +149,7 @@ export default function Chatbot() {
             {/* Messages */}
             <div
               ref={messagesContainerRef}
-              className="flex-1 p-4 space-y-4 bg-gradient-to-b from-red-50 to-amber-50  overflow-y-auto h-[600px]  "
+              className="flex-1 p-4 space-y-4 bg-gradient-to-b from-red-50 to-amber-50 overflow-y-auto h-[600px]"
             >
               {messages.length === 0 && (
                 <div className="text-center text-gray-500 mt-8">
