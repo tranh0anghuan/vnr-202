@@ -176,6 +176,7 @@ function SocietyHintPanel() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
+        style={{ marginTop: '8px' }}
       >
         <span>💡</span>
         <span className="hidden sm:inline">Gợi ý</span>
@@ -341,7 +342,7 @@ const keywordStyles = `
   .game-float-btn {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    left: 20px;
     z-index: 1000;
   }
 

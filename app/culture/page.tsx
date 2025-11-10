@@ -1,13 +1,13 @@
 // app/culture/page.tsx
-"use client"
+"use client";
 
-import type React from "react"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { useInView, type Variants } from "framer-motion"
-import { useRef, useState } from "react"
-import Image from "next/image"
-import { useGame } from "@/contexts/GameContext"
+import type React from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { useInView, type Variants } from "framer-motion";
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { useGame } from "@/contexts/GameContext";
 
 // Animation variants với easing hợp lệ
 const containerVariants: Variants = {
@@ -18,7 +18,7 @@ const containerVariants: Variants = {
       staggerChildren: 0.2,
     },
   },
-}
+};
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
@@ -30,7 +30,7 @@ const itemVariants: Variants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const slideInLeft: Variants = {
   hidden: { opacity: 0, x: -100 },
@@ -42,7 +42,7 @@ const slideInLeft: Variants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const slideInRight: Variants = {
   hidden: { opacity: 0, x: 100 },
@@ -54,7 +54,7 @@ const slideInRight: Variants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const scaleUp: Variants = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -66,7 +66,7 @@ const scaleUp: Variants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -78,18 +78,18 @@ const fadeInUp: Variants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 // Animated component wrapper
 function AnimatedSection({
   children,
   className = "",
 }: {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <motion.div
@@ -101,7 +101,7 @@ function AnimatedSection({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 function AnimatedItem({
@@ -109,15 +109,15 @@ function AnimatedItem({
   variants = itemVariants,
   className = "",
 }: {
-  children: React.ReactNode
-  variants?: Variants
-  className?: string
+  children: React.ReactNode;
+  variants?: Variants;
+  className?: string;
 }) {
   return (
     <motion.div variants={variants} className={className}>
       {children}
     </motion.div>
-  )
+  );
 }
 
 // Component cho từ khóa có thể click với hint - ĐÃ SỬA (bỏ icon bóng đèn)
@@ -128,24 +128,24 @@ function Keyword({
   className = "",
   inheritFontWeight = false,
 }: {
-  word: string
-  keyword: string
-  hint: string
-  className?: string
-  inheritFontWeight?: boolean
+  word: string;
+  keyword: string;
+  hint: string;
+  className?: string;
+  inheritFontWeight?: boolean;
 }) {
-  const { foundKeywords, addKeyword } = useGame()
-  const [isRecentlyFound, setIsRecentlyFound] = useState(false)
+  const { foundKeywords, addKeyword } = useGame();
+  const [isRecentlyFound, setIsRecentlyFound] = useState(false);
 
-  const isFound = foundKeywords.includes(keyword)
+  const isFound = foundKeywords.includes(keyword);
 
   const handleClick = () => {
     if (!isFound) {
-      addKeyword(keyword)
-      setIsRecentlyFound(true)
-      setTimeout(() => setIsRecentlyFound(false), 2000)
+      addKeyword(keyword);
+      setIsRecentlyFound(true);
+      setTimeout(() => setIsRecentlyFound(false), 2000);
     }
-  }
+  };
 
   return (
     <span className="keyword-wrapper relative inline-block">
@@ -170,12 +170,12 @@ function Keyword({
         {word}
       </motion.span>
     </span>
-  )
+  );
 }
 
-// Component Hint Panel cho Culture
+// Component Hint Panel cho Culture - ĐÃ CẬP NHẬT với từ khóa mới
 function CultureHintPanel() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -188,6 +188,7 @@ function CultureHintPanel() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
+        style={{ marginTop: '8px'}}
       >
         <span>💡</span>
         <span className="hidden sm:inline">Gợi ý</span>
@@ -209,7 +210,10 @@ function CultureHintPanel() {
                   <span>💡</span>
                   Gợi ý Tìm từ khóa - Văn hóa
                 </h3>
-                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
                   <span className="text-xl">×</span>
                 </button>
               </div>
@@ -219,29 +223,33 @@ function CultureHintPanel() {
                 <div className="space-y-4">
                   <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
                     <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
-                      <span>🔄</span>
-                      Từ khóa "ĐỔI MỚI"
+                      <span>🎭</span>
+                      Từ khóa "DÂN GIAN"
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• 2 từ, 7 chữ cái</li>
-                      <li>• Liên quan đến tinh thần cải cách</li>
-                      <li>• Tìm trong phần Sự kiện văn hóa</li>
-                      <li>• Thể hiện tinh thần phát triển</li>
-                      <li>• Chữ cái cần tìm: <strong>D</strong></li>
+                      <li>• Loại hình nghệ thuật truyền thống (Hát Chèo, Múa rối, Ca trù, v.v.)</li>
+                      <li>• Văn hóa được bảo tồn, đưa vào trường học và truyền dạy cho thế hệ trẻ</li>
+                      <li>• Tìm trong phần Bảo tồn bản sắc & Truyền dạy</li>
+                      <li>
+                        • Chữ cái cần tìm: <strong>D</strong>
+                      </li>
                     </ul>
                   </div>
 
                   <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
                     <h4 className="font-semibold text-purple-800 mb-2 flex items-center gap-2">
-                      <span>🏯</span>
-                      Từ khóa "CỐ ĐÔ HUẾ"
+                      <span>💻</span>
+                      Từ khóa "SỐ HÓA"
                     </h4>
                     <ul className="text-sm text-purple-700 space-y-1">
-                      <li>• 3 từ, 8 chữ cái</li>
-                      <li>• Liên quan đến di sản UNESCO</li>
-                      <li>• Tìm trong phần Di sản & Công nhận</li>
-                      <li>• Di sản văn hóa thế giới</li>
-                      <li>• Chữ cái cần tìm: <strong>O</strong></li>
+                      <li>• 2 từ, 5 chữ cái</li>
+                      <li>• Ứng dụng công nghệ để bảo tồn và phát huy giá trị di sản văn hóa</li>
+                      <li>• Thúc đẩy công nghiệp nội dung và dịch vụ giải trí sáng tạo</li>
+                      <li>• Tìm trong phần Bảo tồn bản sắc & Truyền dạy</li>
+                      <li>
+                        • Chữ cái cần tìm: <strong>O</strong>
+                      </li>
                     </ul>
                   </div>
 
@@ -252,10 +260,12 @@ function CultureHintPanel() {
                     </h4>
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• 2 từ, 8 chữ cái</li>
-                      <li>• Liên quan đến phát triển văn hóa</li>
-                      <li>• Tìm trong phần Văn hóa sáng tạo</li>
-                      <li>• Yếu tố quan trọng cho phát triển</li>
-                      <li>• Chữ cái cần tìm: <strong>O</strong></li>
+                      <li>• Yếu tố cần quản lý đồng bộ (cùng quy hoạch và môi trường) để phát triển bền vững</li>
+                      <li>• Các chương trình phục dựng nghề truyền thống nhằm tạo sinh kế và gia tăng yếu tố này</li>
+                      <li>• Tìm trong phần Di sản & Công nhận quốc tế</li>
+                      <li>
+                        • Chữ cái cần tìm: <strong>O</strong>
+                      </li>
                     </ul>
                   </div>
 
@@ -277,7 +287,9 @@ function CultureHintPanel() {
 
               {/* Footer */}
               <div className="pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500 text-center">Tìm tất cả từ khóa để khám phá slogan bí mật!</p>
+                <p className="text-xs text-gray-500 text-center">
+                  Tìm tất cả từ khóa để khám phá slogan bí mật!
+                </p>
               </div>
             </div>
           </motion.div>
@@ -297,11 +309,11 @@ function CultureHintPanel() {
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
 
 export default function CulturePage() {
-  const { foundKeywords } = useGame()
+  const { foundKeywords } = useGame();
 
   // CSS styles cho keyword system - ĐÃ SỬA (xóa hoàn toàn gạch chân)
   const keywordStyles = `
@@ -356,7 +368,7 @@ export default function CulturePage() {
     .game-float-btn {
       position: fixed;
       bottom: 20px;
-      right: 20px;
+      left: 20px;
       z-index: 1000;
     }
 
@@ -364,7 +376,7 @@ export default function CulturePage() {
       display: inline-block;
       position: relative;
     }
-  `
+  `;
 
   const heritageSites = [
     {
@@ -385,7 +397,7 @@ export default function CulturePage() {
       image: "/images/trang-an.jpg",
       link: "https://vi.wikipedia.org/wiki/Qu%E1%BA%A7n_th%E1%BB%83_danh_th%E1%BA%AFng_Tr%C3%A0ng_An",
     },
-  ]
+  ];
 
   const culturalEvents = [
     {
@@ -404,7 +416,7 @@ export default function CulturePage() {
       link: "https://vietnamnet.vn/en/vietnamese-cinema-and-art-industries-surge-in-2025-2456571.html",
       stats: "67% thị phần phim Việt",
     },
-  ]
+  ];
 
   const creativeIndustries = [
     {
@@ -419,11 +431,12 @@ export default function CulturePage() {
       sector: "Dịch vụ Văn hóa",
       revenue: "55.3%",
       growth: "+11.9%",
-      description: "Tỷ lệ doanh thu ngành dịch vụ văn hóa trong tổng doanh thu, phản ánh ",
+      description:
+        "Tỷ lệ doanh thu ngành dịch vụ văn hóa trong tổng doanh thu, phản ánh ",
       image: "/images/creative-services.jpg",
-      link: "https://www.vietnam.vn/buoc-tien-chien-luoc-tren-ban-do-kinh-te-sang-tao-toan-cau",
+      link: "https://www.vietnam.vn/buoc-tien-chien-luoc-tren-ban-do-kinhe-te-sang-tao-toan-cau",
     },
-  ]
+  ];
 
   const preservationInitiatives = [
     {
@@ -444,24 +457,23 @@ export default function CulturePage() {
         "Ứng dụng công nghệ trong bảo tồn và quảng bá di sản văn hóa, tạo ",
       image: "/images/digital-heritage.jpg",
     },
-  ]
+  ];
 
   const challenges = [
     "Thương mại hóa văn hóa dễ dẫn đến mất bản sắc",
     "Thiếu nguồn lực cho bảo tồn dài hạn",
     "Cần cơ chế hỗ trợ nghệ sĩ độc lập và sáng tạo trẻ",
-  ]
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-red-50 text-foreground overflow-x-hidden">
-      
+    <div className="min-h-screen bg-linear-to-b from-yellow-50 to-red-50 text-foreground overflow-x-hidden">
       <style jsx>{keywordStyles}</style>
 
       {/* Hint Panel Component */}
       <CultureHintPanel />
 
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-yellow-400 via-red-500 to-yellow-600 text-white p-4">
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-linear-to-br from-yellow-400 via-red-500 to-yellow-600 text-white p-4">
         {/* Background decorative elements */}
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute top-10 left-10 w-20 h-20 bg-yellow-300/30 rounded-full blur-xl"></div>
@@ -489,7 +501,7 @@ export default function CulturePage() {
               </motion.div>
 
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-yellow-300 via-white to-red-300 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-yellow-300 via-white to-red-300 bg-clip-text text-transparent">
                   Văn Hóa
                 </span>
                 <br />
@@ -538,7 +550,7 @@ export default function CulturePage() {
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 Di sản &
-                <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                   {" "}
                   Công nhận Quốc tế
                 </span>
@@ -564,7 +576,7 @@ export default function CulturePage() {
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent"></div>
                     <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                       UNESCO
                     </div>
@@ -575,20 +587,7 @@ export default function CulturePage() {
                       {site.name}
                     </h3>
                     <p className="text-gray-600 mb-4">
-                      {site.name === "Quần thể Cố đô Huế" ? (
-                        <>
-                          Di sản văn hóa thế giới với kiến trúc{" "}
-                          <Keyword 
-                            word="Cố đô Huế" 
-                            keyword="CỐ ĐÔ HUẾ" 
-                            hint="Di sản UNESCO với kiến trúc cung đình độc đáo" 
-                            inheritFontWeight={true}
-                          />{" "}
-                          độc đáo
-                        </>
-                      ) : (
-                        site.description
-                      )}
+                      {site.description}
                     </p>
                     <motion.a
                       href={site.link}
@@ -613,13 +612,20 @@ export default function CulturePage() {
 
           <AnimatedItem variants={fadeInUp}>
             <motion.div
-              className="mt-12 p-8 bg-gradient-to-r from-yellow-50 to-red-50 rounded-3xl border border-yellow-200"
+              className="mt-12 p-8 bg-linear-to-r from-yellow-50 to-red-50 rounded-3xl border border-yellow-200"
               whileHover={{ scale: 1.02 }}
             >
               <p className="text-lg text-gray-700 text-center">
                 Sáng kiến bảo tồn như số hóa di sản, nâng cấp kết cấu hạ tầng
                 đón khách du lịch đã góp phần gia tăng lượng khách quốc tế và
-                tạo nguồn lực cho địa phương.
+                tạo{" "}
+                <Keyword
+                  word="nguồn lực"
+                  keyword="NGUỒN LỰC"
+                  hint="Yếu tố cần quản lý đồng bộ (cùng quy hoạch và môi trường) để phát triển bền vững. Các chương trình phục dựng nghề truyền thống nhằm tạo sinh kế và gia tăng yếu tố này."
+                  inheritFontWeight={true}
+                />{" "}
+                cho địa phương.
               </p>
             </motion.div>
           </AnimatedItem>
@@ -627,13 +633,13 @@ export default function CulturePage() {
       </AnimatedSection>
 
       {/* Sự kiện văn hóa tiêu biểu */}
-      <AnimatedSection className="py-20 px-4 bg-gradient-to-b from-white to-red-50/30">
+      <AnimatedSection className="py-20 px-4 bg-linear-to-b from-white to-red-50/30">
         <div className="container mx-auto max-w-6xl">
           <AnimatedItem variants={fadeInUp}>
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 Sự kiện Văn hóa
-                <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                   {" "}
                   Tiêu biểu
                 </span>
@@ -665,7 +671,7 @@ export default function CulturePage() {
                         fill
                         className="object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent"></div>
                       <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2">
                         <span className="font-semibold text-gray-800">
                           {event.stats}
@@ -686,12 +692,7 @@ export default function CulturePage() {
                     <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                       {event.description}
                       {event.title === "SEA Games 31 (2022)" ? (
-                        <Keyword 
-                          word="đổi mới" 
-                          keyword="ĐỔI MỚI" 
-                          hint="Tinh thần cải cách và phát triển trong văn hóa" 
-                          inheritFontWeight={true}
-                        />
+                        "sáng tạo và đổi mới"
                       ) : (
                         "phát triển ổn định"
                       )}{" "}
@@ -701,7 +702,7 @@ export default function CulturePage() {
                       href={event.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="inline-flex items-center gap-3 px-6 py-3 bg-linear-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                       whileHover={{ scale: 1.05 }}
                     >
                       <span>Xem chi tiết</span>
@@ -727,7 +728,7 @@ export default function CulturePage() {
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 Văn hóa Sáng tạo &
-                <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                   {" "}
                   Công nghiệp Nội dung
                 </span>
@@ -742,7 +743,7 @@ export default function CulturePage() {
                 variants={index === 0 ? slideInLeft : slideInRight}
               >
                 <motion.div
-                  className="group relative bg-gradient-to-br from-yellow-50 to-red-50 rounded-3xl p-8 shadow-2xl border border-yellow-200 overflow-hidden"
+                  className="group relative bg-linear-to-br from-yellow-50 to-red-50 rounded-3xl p-8 shadow-2xl border border-yellow-200 overflow-hidden"
                   whileHover={{ y: -8, scale: 1.02 }}
                 >
                   <div className="relative z-10">
@@ -766,14 +767,7 @@ export default function CulturePage() {
                     </div>
 
                     <p className="text-gray-700 mb-6 text-lg">
-                      {industry.description}
-                      <Keyword 
-                        word="nguồn lực" 
-                        keyword="NGUỒN LỰC" 
-                        hint="Yếu tố quan trọng cho phát triển văn hóa sáng tạo" 
-                        inheritFontWeight={true}
-                      />{" "}
-                      phát triển mạnh mẽ.
+                      {industry.description} nguồn lực phát triển mạnh mẽ.
                     </p>
 
                     <motion.a
@@ -803,7 +797,7 @@ export default function CulturePage() {
 
           <AnimatedItem variants={fadeInUp}>
             <motion.div
-              className="bg-gradient-to-r from-red-500 to-yellow-500 rounded-3xl p-8 text-white text-center"
+              className="bg-linear-to-r from-red-500 to-yellow-500 rounded-3xl p-8 text-white text-center"
               whileHover={{ scale: 1.02 }}
             >
               <p className="text-xl font-semibold">
@@ -816,13 +810,13 @@ export default function CulturePage() {
       </AnimatedSection>
 
       {/* Bảo tồn bản sắc & Truyền dạy */}
-      <AnimatedSection className="py-20 px-4 bg-gradient-to-b from-white to-yellow-50">
+      <AnimatedSection className="py-20 px-4 bg-linear-to-b from-white to-yellow-50">
         <div className="container mx-auto max-w-6xl">
           <AnimatedItem variants={fadeInUp}>
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 Bảo tồn Bản sắc &
-                <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                   {" "}
                   Truyền dạy
                 </span>
@@ -844,7 +838,7 @@ export default function CulturePage() {
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"></div>
                   </div>
 
                   <div className="p-6">
@@ -852,10 +846,30 @@ export default function CulturePage() {
                       {initiative.title}
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      {initiative.description}
-                      {initiative.title === "Đưa nghệ thuật truyền thống vào trường học" && " văn hóa truyền thống."}
-                      {initiative.title === "Phục dựng nghề truyền thống" && " bản sắc văn hóa."}
-                      {initiative.title === "Số hóa di sản" && " cơ hội tiếp cận rộng rãi."}
+                      {initiative.title ===
+                        "Đưa nghệ thuật truyền thống vào trường học" && (
+                        <>
+                          Xây dựng CLB văn hóa{" "}
+                          <Keyword
+                            word="dân gian"
+                            keyword="DÂN GIAN"
+                            hint="Loại hình nghệ thuật truyền thống (Hát Chèo, Múa rối, Ca trù, v.v.). Văn hóa được bảo tồn, đưa vào trường học và truyền dạy cho thế hệ trẻ."
+                            inheritFontWeight={true}
+                          />
+                          ,{" "}
+                          <Keyword
+                            word="số hóa"
+                            keyword="SỐ HÓA"
+                            hint="Ứng dụng công nghệ để bảo tồn và phát huy giá trị di sản văn hóa. Thúc đẩy công nghiệp nội dung và dịch vụ giải trí sáng tạo."
+                            inheritFontWeight={true}
+                          />{" "}
+                          di sản để tiếp cận người trẻ và bảo tồn văn hóa truyền thống.
+                        </>
+                      )}
+                      {initiative.title === "Phục dựng nghề truyền thống" &&
+                        "Kết hợp dệt, gốm với du lịch trải nghiệm, tạo sinh kế cho cộng đồng và phát huy bản sắc văn hóa."}
+                      {initiative.title === "Số hóa di sản" &&
+                        "Ứng dụng công nghệ trong bảo tồn và quảng bá di sản văn hóa, tạo cơ hội tiếp cận rộng rãi."}
                     </p>
                   </div>
                 </motion.div>
@@ -878,7 +892,7 @@ export default function CulturePage() {
       </AnimatedSection>
 
       {/* Thách thức & Kết luận */}
-      <AnimatedSection className="py-20 px-4 bg-gradient-to-br from-red-50 to-yellow-50">
+      <AnimatedSection className="py-20 px-4 bg-linear-to-br from-red-50 to-yellow-50">
         <div className="container mx-auto max-w-4xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Thách thức */}
@@ -900,7 +914,7 @@ export default function CulturePage() {
                       transition={{ delay: index * 0.1 }}
                       viewport={{ once: true }}
                     >
-                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2 shrink-0"></div>
                       <span className="text-gray-700 font-medium">
                         {challenge}
                       </span>
@@ -913,7 +927,7 @@ export default function CulturePage() {
             {/* Kết luận */}
             <AnimatedItem variants={slideInRight}>
               <motion.div
-                className="bg-gradient-to-br from-yellow-400 to-red-500 rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden"
+                className="bg-linear-to-br from-yellow-400 to-red-500 rounded-3xl p-8 shadow-2xl text-white relative overflow-hidden"
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="relative z-10">
@@ -945,7 +959,7 @@ export default function CulturePage() {
       >
         <Link href="/game">
           <motion.div
-            className="bg-gradient-to-r from-yellow-500 to-red-500 text-white p-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 group"
+            className="bg-linear-to-r from-yellow-500 to-red-500 text-white p-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 group"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -962,12 +976,15 @@ export default function CulturePage() {
               )}
             </div>
             <span>Mini Game</span>
-            <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}>
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+            >
               →
             </motion.span>
           </motion.div>
         </Link>
       </motion.div>
     </div>
-  )
+  );
 }

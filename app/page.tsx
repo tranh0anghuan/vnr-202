@@ -197,7 +197,7 @@ function Keyword({
   )
 }
 
-// Component Hint Panel cho Home
+// Component Hint Panel cho Home - ĐÃ CẬP NHẬT với từ khóa mới
 function HomeHintPanel() {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -212,6 +212,7 @@ function HomeHintPanel() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
+        style={{ marginTop: '8px' }}
       >
         <span>💡</span>
         <span className="hidden sm:inline">Gợi ý</span>
@@ -243,14 +244,14 @@ function HomeHintPanel() {
                 <div className="space-y-4">
                   <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
                     <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
-                      <span>💰</span>
-                      Từ khóa "VỐN"
+                      <span>📝</span>
+                      Từ khóa "EVFTA"
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
-                      <li>• 1 từ, 4 chữ cái</li>
-                      <li>• Liên quan đến tiền và đầu tư</li>
-                      <li>• Tìm trong phần Lĩnh vực nổi bật</li>
-                      <li>• Xuất hiện trong các bài báo về đầu tư</li>
+                      <li>• 5 chữ cái</li>
+                      <li>• Hiệp định thương mại mở rộng thị trường với Liên minh Châu Âu</li>
+                      <li>• Tương tự CPTPP, là cam kết hội nhập quốc tế</li>
+                      <li>• Tìm trong phần dòng thời gian</li>
                     </ul>
                   </div>
 
@@ -261,9 +262,9 @@ function HomeHintPanel() {
                     </h4>
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• 3 chữ cái</li>
-                      <li>• Liên quan đến đầu tư nước ngoài</li>
+                      <li>• Dòng vốn quốc tế vào Việt Nam, là thước đo niềm tin của nhà đầu tư</li>
+                      <li>• Thúc đẩy công nghiệp chế tạo và chuỗi cung ứng công nghệ cao</li>
                       <li>• Tìm trong phần tin nổi bật</li>
-                      <li>• Thường đi kèm với số tiền (tỷ USD)</li>
                     </ul>
                   </div>
 
@@ -364,7 +365,7 @@ export default function HomePage() {
     .game-float-btn {
       position: fixed;
       bottom: 20px;
-      right: 20px;
+      left: 20px;
       z-index: 1000;
     }
 
@@ -707,8 +708,13 @@ export default function HomePage() {
                     Kinh tế Phát triển
                   </h3>
                   <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-                    Tăng trưởng GDP ấn tượng, thu hút mạnh mẽ dòng{" "}
-                    <Keyword word="vốn" keyword="VỐN" hint="4 chữ cái, liên quan đến tiền và đầu tư" inheritFontWeight={true} /> FDI, chuyển dịch
+                    Tăng trưởng GDP ấn tượng, thu hút mạnh mẽ dòng vốn{" "}
+                    <Keyword 
+                      word="FDI" 
+                      keyword="FDI" 
+                      hint="Dòng vốn quốc tế vào Việt Nam, là thước đo niềm tin của nhà đầu tư. Thúc đẩy công nghiệp chế tạo và chuỗi cung ứng công nghệ cao." 
+                      inheritFontWeight={true} 
+                    />, chuyển dịch
                     cơ cấu kinh tế và triển khai các dự án hạ tầng chiến lược quy mô lớn.
                   </p>
 
@@ -1101,7 +1107,21 @@ export default function HomePage() {
                               </h3>
                             </div>
 
-                            <p className="text-white/90 text-lg leading-relaxed mb-6">{event.description}</p>
+                            <p className="text-white/90 text-lg leading-relaxed mb-6">
+                              {event.year === 2019 ? (
+                                <>
+                                  FDI thực hiện đạt 20.38 tỷ USD, ký{" "}
+                                  <Keyword 
+                                    word="EVFTA" 
+                                    keyword="EVFTA" 
+                                    hint="Hiệp định thương mại mở rộng thị trường với Liên minh Châu Âu. Tương tự CPTPP, là cam kết hội nhập quốc tế." 
+                                    inheritFontWeight={true} 
+                                  />
+                                </>
+                              ) : (
+                                event.description
+                              )}
+                            </p>
 
                             <div className="mb-6">
                               {event.year === 2018 && (
@@ -1416,9 +1436,7 @@ export default function HomePage() {
                     >
                       {index === 0 ? (
                         <>
-                          Việt Nam tiếp tục thu hút mạnh mẽ dòng vốn{" "}
-                          <Keyword word="FDI" keyword="FDI" hint="3 chữ cái, liên quan đến đầu tư nước ngoài" inheritFontWeight={true} /> với nhiều
-                          dự án quy mô lớn
+                          Việt Nam tiếp tục thu hút mạnh mẽ dòng vốn FDI với nhiều dự án quy mô lớn
                         </>
                       ) : (
                         news.summary

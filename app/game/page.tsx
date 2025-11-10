@@ -6,317 +6,416 @@ import { useState, useEffect } from "react"
 import { useGame } from "@/contexts/GameContext"
 import Link from "next/link"
 
-// Danh sách từ khóa cần tìm (slogan: "VIỆT NAM ĐỔI MỚI")
-const keywords = [
-  "VỐN",           // V - Home
-  "FDI",           // I - Home
-  "ĐIỆN TỬ",       // E - Economy
-  "CAO TỐC",       // T - Economy
-  "NGHÈO",         // N - Society
-  "KINH TẾ XANH",  // A - Economy
-  "NGÀNH MŨI NHỌN", // M - Economy
-  "ĐỔI MỚI",       // D - Culture
-  "CỐ ĐÔ HUẾ",     // O - Culture
-  "HÀNH CHÍNH",    // I - Society
-  "MẠNG LƯỚI Y TẾ", // M - Society
-  "NGUỒN LỰC",     // O - Culture
-  "HIỆN ĐẠI",      // I - Statistics
+// Cấu trúc ô chữ với thông tin căn chỉnh cố định
+const crosswordData = [
+  { keyword: "EVFTA", highlightIndex: 1, letters: ["E", "V", "F", "T", "A"], paddingLeft: 7 }, // V
+  { keyword: "FDI", highlightIndex: 2, letters: ["F", "D", "I"], paddingLeft: 6 }, // I
+  { keyword: "ĐIỆN TỬ", highlightIndex: 2, letters: ["D", "I", "E", "N", "T", "U"], paddingLeft: 6 }, // E
+  { keyword: "CAO TỐC", highlightIndex: 3, letters: ["C", "A", "O", "T", "O", "C"], paddingLeft: 5 }, // T
+  { keyword: "NGHÈO", highlightIndex: 0, letters: ["N", "G", "H", "E", "O"], paddingLeft: 8 }, // N
+  { keyword: "KINH TẾ XANH", highlightIndex: 7, letters: ["K", "I", "N", "H", "T", "E", "X", "A", "N", "H"], paddingLeft: 1 }, // A
+  { keyword: "NGÀNH MŨI NHỌN", highlightIndex: 5, letters: ["N", "G", "A", "N", "H", "M", "U", "I", "N", "H", "O", "N"], paddingLeft: 3 }, // M
+  { keyword: "DÂN GIAN", highlightIndex: 0, letters: ["D", "A", "N", "G", "I", "A", "N"], paddingLeft: 8 }, // D
+  { keyword: "SỐ HÓA", highlightIndex: 3, letters: ["S", "O", "H", "O", "A"], paddingLeft: 5 }, // O
+  { keyword: "HÀNH CHÍNH", highlightIndex: 6, letters: ["H", "A", "N", "H", "C", "H", "I", "N", "H"], paddingLeft: 2 }, // I
+  { keyword: "MẠNG LƯỚI Y TẾ", highlightIndex: 0, letters: ["M", "A", "N", "G", "L", "U", "O", "I", "Y", "T", "E"], paddingLeft: 8 }, // M
+  { keyword: "NGUỒN LỰC", highlightIndex: 3, letters: ["N", "G", "U", "O", "N", "L", "U", "C"], paddingLeft: 5 }, // O
+  { keyword: "HIỆN ĐẠI", highlightIndex: 1, letters: ["H", "I", "E", "N", "D", "A", "I"], paddingLeft: 7 }, // I
 ]
 
-// Từ khóa từ trang home
-const homeKeywords = ["VỐN", "FDI"]
+// Từ khóa từ trang home (có dấu để match)
+const homeKeywords = ["EVFTA", "FDI"]
 
 export default function GamePage() {
   const { foundKeywords, resetGame } = useGame()
   const [showCelebration, setShowCelebration] = useState(false)
-  const [showHint, setShowHint] = useState(false)
+  const [showSlogan, setShowSlogan] = useState(false)
+  const [isUnlocked, setIsUnlocked] = useState(false)
+  const [showResetDialog, setShowResetDialog] = useState(false)
 
   // Kiểm tra khi tìm đủ từ khóa
   useEffect(() => {
-    if (foundKeywords.length === keywords.length && foundKeywords.length > 0) {
-      setShowCelebration(true)
-      setTimeout(() => setShowCelebration(false), 5000)
+    if (foundKeywords.length === crosswordData.length && foundKeywords.length > 0) {
+      setIsUnlocked(true)
     }
   }, [foundKeywords])
 
-  const getKeywordHint = (keyword: string) => {
-    const hints: { [key: string]: string } = {
-      VỐN: "Tìm trong trang Home - phần Kinh tế và Tin nổi bật",
-      FDI: "Tìm trong trang Home - phần Kinh tế và Tin nổi bật",
-      "ĐIỆN TỬ": "Tìm trong trang Kinh tế - ngành xuất khẩu công nghệ cao",
-      "CAO TỐC": "Tìm trong trang Kinh tế - tuyến giao thông huyết mạch",
-      NGHÈO: "Tìm trong trang Xã hội - mục tiêu giảm...",
-      "KINH TẾ XANH": "Tìm trong trang Kinh tế - nông nghiệp công nghệ cao",
-      "NGÀNH MŨI NHỌN": "Tìm trong trang Kinh tế - ngành tạo nhiều việc làm",
-      "ĐỔI MỚI": "Tìm trong trang Văn hóa - tinh thần cải cách",
-      "CỐ ĐÔ HUẾ": "Tìm trong trang Văn hóa - di sản UNESCO",
-      "HÀNH CHÍNH": "Tìm trong trang Xã hội - lĩnh vực được nâng cao hiệu quả",
-      "MẠNG LƯỚI Y TẾ": "Tìm trong trang Xã hội - hệ thống tiên phong chống dịch",
-      "NGUỒN LỰC": "Tìm trong trang Văn hóa - yếu tố phát triển văn hóa sáng tạo",
-      "HIỆN ĐẠI": "Tìm trong trang Thống kê - mục tiêu xã hội hướng tới",
-    }
-    return hints[keyword] || "Tìm trong các trang nội dung"
+  const handleResetGame = () => {
+    setShowResetDialog(true)
   }
 
-  const handleResetGame = () => {
-    if (confirm("Bạn có chắc muốn reset tiến trình game? Tất cả từ khóa đã tìm thấy sẽ bị xóa.")) {
-      resetGame()
+  const confirmReset = () => {
+    resetGame()
+    setIsUnlocked(false)
+    setShowSlogan(false)
+    setShowResetDialog(false)
+  }
+
+  const cancelReset = () => {
+    setShowResetDialog(false)
+  }
+
+  const handleUnlockSlogan = () => {
+    if (isUnlocked) {
+      setShowSlogan(true)
+      setShowCelebration(true)
+      setTimeout(() => setShowCelebration(false), 5000)
     }
+  }
+
+  // Render ô chữ với padding cố định
+  const renderCrossword = () => {
+    return (
+      <div className="space-y-3">
+        {crosswordData.map((row, rowIndex) => {
+          const isFound = foundKeywords.includes(row.keyword)
+          const totalWidth = 16 // Tổng chiều rộng 16 ô
+          const paddingRight = totalWidth - (row.paddingLeft + row.letters.length)
+          
+          return (
+            <motion.div
+              key={row.keyword}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: rowIndex * 0.1 }}
+              className="flex items-center gap-4"
+            >
+              {/* STT */}
+              <div className="w-8 text-right text-sm text-white font-medium">
+                {rowIndex + 1}.
+              </div>
+
+              {/* Các ô chữ cái với padding cố định */}
+              <div className="flex gap-0 flex-1 min-h-6 items-center">
+                {/* Padding trái cố định */}
+                {Array.from({ length: row.paddingLeft }).map((_, index) => (
+                  <div key={`left-${index}`} className="w-6 h-6" />
+                ))}
+                
+                {/* Các ô chữ cái */}
+                {row.letters.map((letter, letterIndex) => {
+                  const isHighlighted = letterIndex === row.highlightIndex
+                  
+                  return (
+                    <div
+                      key={letterIndex}
+                      className={`w-6 h-6 flex items-center justify-center border-2 text-sm font-bold transition-all duration-300 ${
+                        isHighlighted
+                          ? isFound
+                            ? "bg-yellow-400 border-yellow-500 text-gray-900 shadow-lg transform scale-105"
+                            : "bg-yellow-400/80 border-yellow-500/80 text-gray-900"
+                          : isFound
+                            ? "bg-white/90 border-gray-300 text-gray-700 shadow-md"
+                            : "bg-white/70 border-gray-300 text-gray-600"
+                      } ${letterIndex > 0 ? 'border-l-0' : ''}`}
+                      style={{ borderRadius: 0 }}
+                    >
+                      {isFound ? letter : ""}
+                    </div>
+                  )
+                })}
+
+                {/* Padding phải */}
+                {Array.from({ length: paddingRight }).map((_, index) => (
+                  <div key={`right-${index}`} className="w-6 h-6" />
+                ))}
+              </div>
+
+              {/* Ô hiển thị trạng thái */}
+              <motion.div
+                className={`w-8 h-8 flex items-center justify-center border-2 text-sm font-bold backdrop-blur-sm ${
+                  isFound 
+                    ? "bg-green-500/20 border-green-400 text-green-300 shadow-lg" 
+                    : "bg-white/10 border-white/20 text-white/60"
+                }`}
+                style={{ borderRadius: 0 }}
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                {isFound ? "✓" : "?"}
+              </motion.div>
+            </motion.div>
+          )
+        })}
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-yellow-400 via-red-500 to-yellow-600 text-white p-4">
-      <div className="container mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+    <div className="min-h-screen bg-linear-to-br from-red-900 via-orange-900 to-amber-900 text-white">
+      {/* Particles Background */}
+      <div className="fixed inset-0 overflow-hidden">
+        {[...Array(20)].map((_, i) => (
           <motion.div
-            className="inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-6"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-          >
-            <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-            <span className="text-sm font-semibold text-yellow-300 uppercase tracking-wider">Mini Game</span>
-            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-          </motion.div>
+            key={i}
+            className="absolute w-2 h-2 bg-yellow-300/30 rounded-full"
+            animate={{
+              y: [0, -100, 0],
+              x: [0, Math.sin(i) * 50, 0],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: 3 + i * 0.5,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: i * 0.2,
+            }}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
+      </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
-            <span className="bg-linear-to-r from-yellow-300 via-white to-red-300 bg-clip-text text-transparent">
-              TÌM TỪ KHÓA
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto">
-            Khám phá các từ khóa ẩn trong trang nội dung để hoàn thành slogan bí mật!
-          </p>
-        </motion.div>
+      {/* Header với background gradient đỏ */}
+      <motion.div 
+        initial={{ opacity: 0, y: -50 }} 
+        animate={{ opacity: 1, y: 0 }}
+        className="relative bg-linear-to-r from-red-600/80 to-orange-600/80 text-white py-12 shadow-2xl backdrop-blur-sm"
+      >
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto max-w-7xl px-4 relative">
+          <div className="text-center">
+            <motion.h1 
+              className="text-5xl md:text-7xl font-black mb-6 leading-tight"
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 100 }}
+            >
+              <span className="bg-linear-to-r from-yellow-300 via-white to-orange-300 bg-clip-text text-transparent">
+                Ô CHỮ BÍ MẬT
+              </span>
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Tìm các từ khóa ẩn để mở khóa slogan bí mật!
+            </motion.p>
+          </div>
+        </div>
+      </motion.div>
 
-        {/* Game Board */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-12">
-          {/* Left: Keyword Grid */}
+      {/* Nội dung chính */}
+      <div className="container mx-auto max-w-7xl px-4 py-12 relative">
+        <div className="grid grid-cols-1 xl:grid-cols-10 gap-8 mb-8">
+          {/* Left: Crossword - Chiếm 2/3 màn hình */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl"
+            className="xl:col-span-6 bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold text-yellow-300">TỪ KHÓA CẦN TÌM</h2>
-              <div className="flex gap-2">
+            {/* Header với tiêu đề và nút reset được căn chỉnh đúng */}
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-bold text-white">KHÁM PHÁ Ô CHỮ</h2>
+              {foundKeywords.length > 0 && (
                 <motion.button
-                  onClick={() => setShowHint(!showHint)}
-                  className="px-4 py-2 bg-yellow-500/20 rounded-xl border border-yellow-400/30 text-yellow-300 text-sm font-semibold hover:bg-yellow-500/30 transition-all duration-300"
-                  whileHover={{ scale: 1.05 }}
+                  onClick={handleResetGame}
+                  className="px-4 py-2 bg-red-500/20 rounded-xl border border-red-400/30 text-white-300 text-sm font-semibold hover:bg-red-500/30 transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
+                  whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {showHint ? "Ẩn gợi ý" : "Hiện gợi ý"}
+                  Reset Game
                 </motion.button>
-                {foundKeywords.length > 0 && (
-                  <motion.button
-                    onClick={handleResetGame}
-                    className="px-4 py-2 bg-red-500/20 rounded-xl border border-red-400/30 text-red-300 text-sm font-semibold hover:bg-red-500/30 transition-all duration-300"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Reset
-                  </motion.button>
-                )}
-              </div>
+              )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {keywords.map((keyword, index) => {
-                const isHomeKeyword = homeKeywords.includes(keyword)
-                const isFound = foundKeywords.includes(keyword)
+            {renderCrossword()}
 
-                return (
+            {/* Phần slogan được chuyển xuống đây */}
+            <div className="mt-8 pt-6 border-t border-white/20">
+              <div className="text-center">
+                <motion.button
+                  onClick={handleUnlockSlogan}
+                  disabled={!isUnlocked}
+                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 backdrop-blur-sm ${
+                    isUnlocked
+                      ? "bg-linear-to-r from-yellow-500 to-orange-600 text-white hover:shadow-2xl cursor-pointer shadow-lg transform hover:scale-105"
+                      : "bg-gray-600/30 text-gray-300 cursor-not-allowed border border-gray-500/30"
+                  }`}
+                  whileHover={isUnlocked ? { scale: 1.05, y: -2 } : {}}
+                  whileTap={isUnlocked ? { scale: 0.95 } : {}}
+                >
+                  {isUnlocked ? (
+                    <div className="flex items-center justify-center gap-3">
+                      <motion.span
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        🔓
+                      </motion.span>
+                      <span>MỞ KHÓA SLOGAN</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center gap-3">
+                      <span>🔒</span>
+                      <span>CẦN TÌM ĐỦ {crosswordData.length} TỪ KHÓA ĐỂ HIỂN THỊ SLOGAN</span>
+                    </div>
+                  )}
+                </motion.button>
+              </div>
+
+              {/* Hiển thị slogan khi mở khóa */}
+              {showSlogan && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  className="mt-6 p-6 bg-linear-to-r from-yellow-400/20 to-red-400/20 rounded-2xl border border-yellow-400/30 text-center backdrop-blur-sm"
+                >
+                  <h3 className="text-2xl font-bold text-white mb-3">SLOGAN BÍ MẬT</h3>
                   <motion.div
-                    key={keyword}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`p-4 rounded-2xl text-center font-bold text-lg border-2 transition-all duration-300 group relative ${
-                      isFound
-                        ? "bg-green-500/20 border-green-400 text-green-300 shadow-lg"
-                        : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:border-white/20"
-                    } ${isHomeKeyword ? "home-keyword" : ""}`}
+                    className="text-3xl md:text-4xl font-black tracking-tight wrap-break-word leading-tight"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
                   >
-                    {isFound ? (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="flex items-center justify-center gap-2"
-                      >
-                        <span>✅</span>
-                        <span>{keyword}</span>
-                        {isHomeKeyword && <span className="text-xs bg-blue-500 px-2 py-1 rounded-full">HOME</span>}
-                      </motion.div>
-                    ) : (
-                      <div className="flex items-center justify-center gap-2">
-                        <span>❓</span>
-                        <span>???</span>
-                        {isHomeKeyword && <span className="text-xs bg-blue-500/50 px-2 py-1 rounded-full">HOME</span>}
-                      </div>
-                    )}
-
-                    {/* Hint Tooltip */}
-                    {showHint && !isFound && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-black/90 backdrop-blur-sm rounded-xl p-3 text-sm font-normal text-white/90 z-10 border border-white/20 shadow-2xl"
-                      >
-                        <div className="text-yellow-400 text-xs font-semibold mb-1">Gợi ý:</div>
-                        {getKeywordHint(keyword)}
-                        {isHomeKeyword && (
-                          <div className="text-blue-400 text-xs font-semibold mt-2 flex items-center gap-1">
-                            <span>📍</span>
-                            <span>Có trong trang Home</span>
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
+                    <span className="bg-linear-to-r from-yellow-300 via-orange-300 to-red-300 bg-clip-text text-transparent">
+                      VIETNAMMUONDOI
+                    </span>
                   </motion.div>
-                )
-              })}
+                </motion.div>
+              )}
             </div>
           </motion.div>
 
-          {/* Right: Progress & Instructions */}
+          {/* Right: Progress & Instructions - Chiếm 1/3 màn hình */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl"
+            className="xl:col-span-4 bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl"
           >
-            <h2 className="text-3xl font-bold text-yellow-300 mb-6 text-center">TIẾN ĐỘ & HƯỚNG DẪN</h2>
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">TIẾN ĐỘ HOÀN THÀNH</h2>
 
             {/* Progress */}
             <div className="mb-8">
-              <div className="flex justify-between text-lg mb-3">
+              <div className="flex justify-between text-xl mb-4">
                 <span className="text-white/80">Đã tìm thấy</span>
                 <span className="font-bold text-yellow-300">
-                  {foundKeywords.length}/{keywords.length}
+                  {foundKeywords.length}/{crosswordData.length}
                 </span>
               </div>
-              <div className="w-full bg-white/20 rounded-full h-4 mb-2">
+              <div className="w-full bg-white/20 rounded-full h-4 mb-3 backdrop-blur-sm">
                 <motion.div
-                  className="h-4 bg-linear-to-r from-green-400 via-yellow-400 to-red-400 rounded-full shadow-lg"
+                  className="h-4 bg-linear-to-r from-yellow-400 via-orange-500 to-red-500 rounded-full shadow-lg"
                   initial={{ width: 0 }}
-                  animate={{ width: `${(foundKeywords.length / keywords.length) * 100}%` }}
+                  animate={{ width: `${(foundKeywords.length / crosswordData.length) * 100}%` }}
                   transition={{ duration: 1, ease: "easeOut" }}
                 />
               </div>
               <div className="text-center">
                 <motion.span
-                  className="text-sm text-white/60"
+                  className="text-lg text-white/70"
                   animate={{ opacity: [0.6, 1, 0.6] }}
                   transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
                 >
-                  {foundKeywords.length === 0 && "Bắt đầu hành trình tìm kiếm!"}
-                  {foundKeywords.length > 0 && foundKeywords.length < keywords.length && "Tiếp tục khám phá!"}
-                  {foundKeywords.length === keywords.length && "🎉 Hoàn thành xuất sắc!"}
+                  {foundKeywords.length === 0 && "Bắt đầu tìm kiếm từ khóa!"}
+                  {foundKeywords.length > 0 && foundKeywords.length < crosswordData.length && "Tiếp tục khám phá!"}
+                  {foundKeywords.length === crosswordData.length && "🎉 Đã mở khóa slogan!"}
                 </motion.span>
               </div>
             </div>
 
             {/* Instructions */}
             <div className="space-y-4 mb-8">
-              <motion.div
-                className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 5 }}
-              >
-                <span className="text-2xl text-yellow-400">🎯</span>
-                <div>
-                  <div className="font-semibold text-white">Tìm từ khóa ẩn</div>
-                  <div className="text-sm text-white/70">Khám phá các trang nội dung để tìm từ khóa</div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 5 }}
-              >
-                <span className="text-2xl text-yellow-400">💡</span>
-                <div>
-                  <div className="font-semibold text-white">Click để thu thập</div>
-                  <div className="text-sm text-white/70">Nhấp vào từ khóa được đánh dấu để thu thập</div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
-                whileHover={{ x: 5 }}
-              >
-                <span className="text-2xl text-yellow-400">🏆</span>
-                <div>
-                  <div className="font-semibold text-white">Khám phá slogan</div>
-                  <div className="text-sm text-white/70">Hoàn thành tất cả để mở khóa bí mật!</div>
-                </div>
-              </motion.div>
+              {[
+                {
+                  icon: "🎯",
+                  title: "Tìm từ khóa ẩn",
+                  description: "Khám phá các trang nội dung để tìm từ khóa"
+                },
+                {
+                  icon: "💡",
+                  title: "Click để thu thập",
+                  description: "Nhấp vào từ khóa được đánh dấu để thu thập"
+                },
+                {
+                  icon: "🏆",
+                  title: "Khám phá slogan",
+                  description: "Hoàn thành tất cả để mở khóa bí mật!"
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  className="flex items-start gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                  whileHover={{ x: 5 }}
+                >
+                  <span className="text-2xl">{item.icon}</span>
+                  <div>
+                    <div className="font-semibold text-white text-lg">{item.title}</div>
+                    <div className="text-white/70 text-sm">{item.description}</div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
 
             {/* Navigation */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-3">
               {[
                 {
                   name: "Trang chủ",
                   href: "/",
-                  color: "from-blue-500 to-purple-500",
                   keywords: homeKeywords,
                   icon: "🏠",
-                },
-                {
-                  name: "Kinh tế",
-                  href: "/economy",
-                  color: "from-red-500 to-yellow-500",
-                  keywords: ["ĐIỆN TỬ", "CAO TỐC", "KINH TẾ XANH", "NGÀNH MŨI NHỌN"],
-                  icon: "💰",
+                  color: "from-red-500 to-orange-500"
                 },
                 {
                   name: "Văn hóa",
                   href: "/culture",
-                  color: "from-yellow-500 to-red-500",
-                  keywords: ["ĐỔI MỚI", "CỐ ĐÔ HUẾ", "NGUỒN LỰC"],
+                  keywords: ["DÂN GIAN", "SỐ HÓA", "NGUỒN LỰC"],
                   icon: "🎭",
+                  color: "from-amber-500 to-yellow-500"
+                },
+                {
+                  name: "Kinh tế",
+                  href: "/economy",
+                  keywords: ["ĐIỆN TỬ", "CAO TỐC", "KINH TẾ XANH", "NGÀNH MŨI NHỌN"],
+                  icon: "💰",
+                  color: "from-orange-500 to-amber-500"
                 },
                 {
                   name: "Xã hội",
                   href: "/society",
-                  color: "from-green-500 to-blue-500",
                   keywords: ["NGHÈO", "HÀNH CHÍNH", "MẠNG LƯỚI Y TẾ"],
                   icon: "👨‍👩‍👧‍👦",
+                  color: "from-yellow-500 to-red-500"
                 },
                 {
                   name: "Thống kê",
                   href: "/statistics",
-                  color: "from-purple-500 to-pink-500",
                   keywords: ["HIỆN ĐẠI"],
                   icon: "📊",
+                  color: "from-red-600 to-orange-600"
                 },
-              ].map((page) => {
+              ].map((page, index) => {
                 const foundCount = page.keywords.filter((k) => foundKeywords.includes(k)).length
                 const totalCount = page.keywords.length
 
                 return (
-                  <motion.div key={page.name} className="relative group" whileHover={{ scale: 1.02 }}>
+                  <motion.div 
+                    key={page.name} 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                  >
                     <Link href={page.href}>
-                      <div
-                        className={`p-3 text-center rounded-xl font-semibold bg-linear-to-r ${page.color} text-white shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden`}
-                      >
+                      <div className={`p-4 rounded-xl font-semibold bg-linear-to-r ${page.color} text-white shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden backdrop-blur-sm`}>
                         <div className="relative z-10">
-                          <div className="flex items-center justify-center gap-2 mb-1">
-                            <span className="text-lg">{page.icon}</span>
-                            <div className="text-sm font-bold">{page.name}</div>
-                          </div>
-                          <div className="text-xs opacity-90">
-                            {foundCount}/{totalCount} từ khóa
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">{page.icon}</span>
+                              <div className="font-bold text-lg">{page.name}</div>
+                            </div>
+                            <div className="text-sm bg-white/20 px-3 py-1 rounded-full">
+                              {foundCount}/{totalCount} từ khóa
+                            </div>
                           </div>
                         </div>
-
-                        {/* Progress indicator */}
-                        <motion.div
-                          className="absolute bottom-0 left-0 h-1 bg-white/30"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${(foundCount / totalCount) * 100}%` }}
-                          transition={{ duration: 0.5 }}
-                        />
                       </div>
                     </Link>
                   </motion.div>
@@ -326,56 +425,91 @@ export default function GamePage() {
           </motion.div>
         </div>
 
-        {/* Slogan Preview */}
-        {foundKeywords.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-md rounded-3xl p-8 border border-white/20 text-center"
-          >
-            <h3 className="text-2xl font-bold text-yellow-300 mb-4">
-              {foundKeywords.length === keywords.length ? "SLOGAN HOÀN CHỈNH" : "SLOGAN ĐANG ĐƯỢC HOÀN THIỆN"}
-            </h3>
-            <div className="text-3xl md:text-4xl font-black tracking-wider">
-              {foundKeywords.length === keywords.length ? (
-                <motion.span
-                  className="bg-linear-to-r from-yellow-300 via-red-300 to-yellow-300 bg-clip-text text-transparent"
+        {/* Reset Confirmation Dialog */}
+        <AnimatePresence>
+          {showResetDialog && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 p-4"
+            >
+              <motion.div
+                className="bg-linear-to-br from-red-600/90 to-orange-600/90 rounded-3xl p-8 md:p-10 text-center shadow-2xl border border-white/20 max-w-md w-full backdrop-blur-lg"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 100, damping: 10 }}
+              >
+                <motion.div
+                  className="text-6xl mb-4"
                   animate={{
-                    backgroundPosition: ["0%", "100%"],
+                    scale: [1, 1.2, 1],
                   }}
-                  transition={{
-                    duration: 3,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "reverse",
-                  }}
-                  style={{
-                    backgroundSize: "200% 200%",
-                  }}
+                  transition={{ duration: 0.5, repeat: 2 }}
                 >
-                  VIỆT NAM ĐỔI MỚI
-                </motion.span>
-              ) : (
-                <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-                  {keywords.map((keyword, index) => (
-                    <motion.span
-                      key={keyword}
-                      className={`px-2 py-1 rounded-lg ${
-                        foundKeywords.includes(keyword)
-                          ? "bg-green-500/20 text-green-300 border border-green-400"
-                          : "bg-white/5 text-white/30 border border-white/10"
-                      }`}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      {foundKeywords.includes(keyword) ? keyword : "?"}
-                    </motion.span>
-                  ))}
+                  ⚠️
+                </motion.div>
+
+                <motion.h2
+                  className="text-3xl md:text-4xl font-black text-white mb-4"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  RESET GAME?
+                </motion.h2>
+
+                <motion.div
+                  className="text-lg text-white/90 mb-2 p-4 bg-white/10 rounded-2xl border border-white/20"
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <div className="font-bold text-yellow-300 mb-1">
+                    {foundKeywords.length} từ khóa sẽ bị xóa!
+                  </div>
+                  <div className="text-sm">
+                    Tất cả tiến trình của bạn sẽ bị mất
+                  </div>
+                </motion.div>
+
+                <motion.p
+                  className="text-white/80 mb-6 text-sm"
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  Bạn có chắc muốn reset tiến trình game?
+                </motion.p>
+
+                <div className="flex gap-4">
+                  <motion.button
+                    onClick={cancelReset}
+                    className="flex-1 px-4 py-3 bg-white/20 text-white font-bold rounded-2xl border border-white/30 hover:bg-white/30 transition-all duration-300 backdrop-blur-sm"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    Hủy
+                  </motion.button>
+                  <motion.button
+                    onClick={confirmReset}
+                    className="flex-1 px-4 py-3 bg-linear-to-r from-red-500 to-orange-500 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    Reset Game
+                  </motion.button>
                 </div>
-              )}
-            </div>
-          </motion.div>
-        )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Celebration Animation */}
         <AnimatePresence>
@@ -387,7 +521,7 @@ export default function GamePage() {
               className="fixed inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 p-4"
             >
               <motion.div
-                className="bg-linear-to-br from-yellow-400 via-red-500 to-yellow-600 rounded-3xl p-8 md:p-12 text-center shadow-2xl border border-white/20 max-w-md w-full"
+                className="bg-linear-to-br from-red-600/90 to-orange-600/90 rounded-3xl p-8 md:p-12 text-center shadow-2xl border border-white/20 max-w-md w-full backdrop-blur-lg"
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", stiffness: 100, damping: 10 }}
@@ -395,12 +529,12 @@ export default function GamePage() {
                 <motion.div
                   className="text-8xl mb-6"
                   animate={{
-                    scale: [1, 1.2, 1],
-                    rotate: [0, 10, -10, 0],
+                    scale: [1, 1.3, 1],
+                    rotate: [0, 15, -15, 0],
                   }}
-                  transition={{ duration: 0.5, repeat: 3 }}
+                  transition={{ duration: 0.7, repeat: 3 }}
                 >
-                  🏆
+                  🎉
                 </motion.div>
 
                 <motion.h2
@@ -418,42 +552,29 @@ export default function GamePage() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
                 >
-                  Bạn đã tìm thấy tất cả từ khóa và khám phá được slogan bí mật!
+                  Bạn đã khám phá được slogan bí mật!
                 </motion.p>
 
                 <motion.div
-                  className="text-3xl font-black text-yellow-300 bg-white/10 rounded-2xl p-6 mb-6 border border-white/20"
+                  className="text-2xl md:text-3xl font-black bg-linear-to-r from-yellow-300 via-orange-300 to-red-300 bg-clip-text text-transparent bg-white/10 rounded-2xl p-6 mb-6 border border-white/20 wrap-break-word leading-tight"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.6, type: "spring" }}
                 >
-                  VIỆT NAM ĐỔI MỚI
+                  VIETNAMMUONDOI
                 </motion.div>
 
-                <div className="flex gap-3">
-                  <motion.button
-                    onClick={() => setShowCelebration(false)}
-                    className="flex-1 px-6 py-4 bg-white text-red-600 font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                  >
-                    Tiếp tục khám phá
-                  </motion.button>
-                  <motion.button
-                    onClick={handleResetGame}
-                    className="flex-1 px-6 py-4 bg-red-500 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    initial={{ y: 30, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.9 }}
-                  >
-                    Chơi lại
-                  </motion.button>
-                </div>
+                <motion.button
+                  onClick={() => setShowCelebration(false)}
+                  className="w-full px-6 py-4 bg-white text-red-600 font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  Hoàn thành dự án
+                </motion.button>
               </motion.div>
             </motion.div>
           )}
