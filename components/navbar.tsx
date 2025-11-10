@@ -22,6 +22,7 @@ export default function Navbar() {
     { name: "Văn hóa", href: "/culture" },
     { name: "Xã hội", href: "/society" },
     { name: "Thống kê", href: "/statistics" },
+    { name: "Trò chơi", href: "/game" },
   ];
 
   return (
