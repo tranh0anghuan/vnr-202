@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { GameProvider } from "@/contexts/GameContext";
+import Chatbot from "@/components/chatbot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Việt Nam Đổi Mới 2018–NAY",
-  description: "Việt Nam Đổi Mới 2018–NAY",
+  description: "Thành tựu Đổi mới Việt Nam giai đoạn 2018 đến nay",
 };
 
 export default function RootLayout({
@@ -28,13 +29,14 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-red-50 via-amber-50 to-yellow-50 min-h-screen`}
       >
         <GameProvider>
           <Navbar />
           {children}
           <Footer />
         </GameProvider>
+        <Chatbot />
       </body>
     </html>
   );

@@ -726,6 +726,8 @@ export default function HomePage() {
                   <motion.div whileHover={{ x: 5 }}>
                     <Link
                       href="https://baochinhphu.vn/tang-truong-cua-viet-nam-gay-an-tuong-voi-gioi-dau-tu-quoc-te-102251007100945146.htm"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700 transition-colors group/btn"
                     >
                       <span>Khám phá thành tựu</span>
@@ -816,7 +818,9 @@ export default function HomePage() {
                   <motion.div whileHover={{ x: 5 }}>
                     <Link
                       href="https://daibieunhandan.vn/bao-ton-va-phat-huy-gia-tri-nghe-thuat-truyen-thong-trong-boi-canh-phat-trien-kinh-te-thi-truong-va-hoi-nhap-quoc-te-10361093.html"
-                      className="inline-flex items-center gap-2 text-yellow-600 font-semibold hover:text-yellow-700 transition-colors group/btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-yellow-600 font-semibold hover:text-yellow-700 transition-all duration-300 group/btn"
                     >
                       <span>Khám phá di sản</span>
                       <motion.span
@@ -926,7 +930,9 @@ export default function HomePage() {
                   <motion.div whileHover={{ x: 5 }}>
                     <Link
                       href="https://nhandan.vn/danh-ngan-sach-thuc-day-bao-hiem-y-te-toan-dan-post891435.html"
-                      className="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-colors group/btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 transition-all duration-300 group/btn"
                     >
                       <span>Xem tiến bộ</span>
                       <motion.span
@@ -1279,25 +1285,6 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-yellow-400 rounded-full animate-ping opacity-30"></div>
             </motion.div>
           </div>
-
-          <AnimatedItem variants={fadeInUp}>
-            <motion.div
-              className="text-center mt-16 p-8 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10"
-              whileHover={{ scale: 1.02 }}
-            >
-              <h3 className="text-2xl font-bold text-yellow-300 mb-4">Hành trình vẫn đang tiếp diễn...</h3>
-              <p className="text-white/80 text-lg mb-6">
-                Việt Nam tiếp tục viết nên những trang sử mới trong hành trình phát triển và đổi mới
-              </p>
-              <motion.button
-                className="px-8 py-4 bg-linear-to-r from-yellow-500 to-red-500 rounded-2xl font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Theo dõi hành trình
-              </motion.button>
-            </motion.div>
-          </AnimatedItem>
         </div>
       </AnimatedSection>
 

@@ -513,7 +513,7 @@ export default function StatisticsPage() {
                 >
                   Phần này tập trung trình bày <span className="text-yellow-300 font-semibold">dữ liệu chính thức</span>{" "}
                   và <span className="text-yellow-300 font-semibold">đồ họa dễ hiểu</span> về GDP theo năm, xuất khẩu
-                  theo ngành, FDI theo vùng, tỉ lệ BHYT. Tất cả đều hướng tới một xã hội{" "}
+                  theo ngành, FDI theo vùng, tỉ lệ BHYT, du lịch, giáo dục. Tất cả đều hướng tới một xã hội{" "}
                   <Keyword
                     word="hiện đại"
                     keyword="HIỆN ĐẠI"
@@ -1290,7 +1290,10 @@ export default function StatisticsPage() {
                 <div className="relative h-96 bg-linear-to-br from-purple-50 to-red-50 rounded-2xl p-6 border border-purple-200">
                   <div className="absolute inset-0 flex items-end justify-between px-6 pb-8">
                     {statisticsData.tourism.data.map((item, index) => (
-                      <div key={item.year} className="flex flex-col items-center">
+                      <div
+                        key={item.year}
+                        className="flex flex-col items-center"
+                      >
                         <motion.div
                           className={`w-10 rounded-t-lg shadow-lg ${
                             item.year === 2020 || item.year === 2021

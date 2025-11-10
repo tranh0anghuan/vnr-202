@@ -23,6 +23,7 @@ export default function Navbar() {
     { name: "Xã hội", href: "/society" },
     { name: "Thống kê", href: "/statistics" },
     { name: "Trò chơi", href: "/game" },
+    { name: "AI", href: "/ai-report" },
   ];
 
   return (
