@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-red-50 via-amber-50 to-yellow-50 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-linear-to-br from-red-50 via-amber-50 to-yellow-50 min-h-screen`}
       >
         <GameProvider>
           <Navbar />
