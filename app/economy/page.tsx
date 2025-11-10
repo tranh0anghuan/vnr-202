@@ -173,7 +173,7 @@ function Keyword({
   )
 }
 
-// Component Hint Panel cho Economy
+// Component Hint Panel cho Economy - ĐÃ CẬP NHẬT với từ khóa mới
 function EconomyHintPanel() {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -188,6 +188,7 @@ function EconomyHintPanel() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
+        style={{ marginTop: '8px' }}
       >
         <span>💡</span>
         <span className="hidden sm:inline">Gợi ý</span>
@@ -224,9 +225,9 @@ function EconomyHintPanel() {
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• 2 từ, 7 chữ cái</li>
-                      <li>• Liên quan đến công nghiệp chế tạo</li>
+                      <li>• Ngành công nghiệp chế tạo chủ lực, chiếm tỷ trọng cao trong xuất khẩu</li>
+                      <li>• Giúp Việt Nam trở thành trung tâm lắp ráp và sản xuất toàn cầu</li>
                       <li>• Tìm trong phần Ngành Mũi Nhọn</li>
-                      <li>• Ngành công nghiệp trọng điểm</li>
                       <li>• Chữ cái cần tìm: <strong>E</strong></li>
                     </ul>
                   </div>
@@ -238,9 +239,9 @@ function EconomyHintPanel() {
                     </h4>
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• 2 từ, 7 chữ cái</li>
-                      <li>• Liên quan đến hạ tầng giao thông</li>
+                      <li>• Tuyến giao thông huyết mạch Bắc–Nam, tăng năng lực vận tải</li>
+                      <li>• Các dự án hạ tầng trọng điểm được đẩy mạnh để kết nối vùng</li>
                       <li>• Tìm trong phần Dự Án Tiêu Biểu</li>
-                      <li>• Dự án hạ tầng trọng điểm</li>
                       <li>• Chữ cái cần tìm: <strong>T</strong></li>
                     </ul>
                   </div>
@@ -252,9 +253,9 @@ function EconomyHintPanel() {
                     </h4>
                     <ul className="text-sm text-green-700 space-y-1">
                       <li>• 3 từ, 10 chữ cái</li>
-                      <li>• Liên quan đến phát triển bền vững</li>
+                      <li>• Mô hình phát triển bền vững, ưu tiên bảo vệ môi trường và tài nguyên</li>
+                      <li>• Định hướng chuyển đổi từ tăng trưởng số lượng sang chất lượng</li>
                       <li>• Tìm trong phần Kết Luận & Tầm Nhìn</li>
-                      <li>• Mô hình phát triển tương lai</li>
                       <li>• Chữ cái cần tìm: <strong>A</strong></li>
                     </ul>
                   </div>
@@ -266,9 +267,9 @@ function EconomyHintPanel() {
                     </h4>
                     <ul className="text-sm text-purple-700 space-y-1">
                       <li>• 3 từ, 13 chữ cái</li>
-                      <li>• Liên quan đến lĩnh vực ưu tiên</li>
+                      <li>• Các lĩnh vực được ưu tiên phát triển như chế tạo, công nghệ cao và dịch vụ</li>
+                      <li>• Tạo ra bước đột phá để nâng cao năng suất và giá trị kinh tế quốc gia</li>
                       <li>• Tìm trong phần Ngành Mũi Nhọn</li>
-                      <li>• Các ngành then chốt của nền kinh tế</li>
                       <li>• Chữ cái cần tìm: <strong>M</strong></li>
                     </ul>
                   </div>
@@ -370,7 +371,7 @@ export default function VietnamEconomyPage() {
     .game-float-btn {
       position: fixed;
       bottom: 20px;
-      right: 20px;
+      left: 20px;
       z-index: 1000;
     }
 
@@ -757,7 +758,7 @@ export default function VietnamEconomyPage() {
 
   function getRiskImpact(limitation: string) {
     const impacts: { [key: string]: string } = {
-      "Cấu trúc kinhế chuyển dịch chậm": "Cao",
+      "Cấu trúc kinh tế chuyển dịch chậm": "Cao",
       "Áp lực về môi trường và quản lý tài nguyên": "Trung bình",
       "Phụ thuộc chuỗi cung ứng nước ngoài ở một số ngành": "Cao",
     }
@@ -1659,7 +1660,7 @@ export default function VietnamEconomyPage() {
                                     <Keyword 
                                       word="điện tử" 
                                       keyword="ĐIỆN TỬ" 
-                                      hint="Ngành công nghiệp trọng điểm với sản phẩm công nghệ cao" 
+                                      hint="Ngành công nghiệp chế tạo chủ lực, chiếm tỷ trọng cao trong xuất khẩu. Giúp Việt Nam trở thành trung tâm lắp ráp và sản xuất toàn cầu."
                                       inheritFontWeight={true}
                                     />
                                   </>
@@ -1797,7 +1798,7 @@ export default function VietnamEconomyPage() {
                 Các <Keyword 
                   word="ngành mũi nhọn" 
                   keyword="NGÀNH MŨI NHỌN" 
-                  hint="Các lĩnh vực ưu tiên phát triển của nền kinh tế" 
+                  hint="Các lĩnh vực được ưu tiên phát triển như chế tạo, công nghệ cao và dịch vụ. Tạo ra bước đột phá để nâng cao năng suất và giá trị kinh tế quốc gia."
                   inheritFontWeight={true}
                 /> này đang định hình tương lai kinh tế Việt Nam, tạo động lực tăng trưởng bền vững và nâng cao năng lực cạnh tranh quốc tế.
               </p>
@@ -1962,7 +1963,7 @@ export default function VietnamEconomyPage() {
                             <Keyword 
                               word="Cao tốc" 
                               keyword="CAO TỐC" 
-                              hint="Hệ thống đường bộ cao tốc kết nối các vùng miền" 
+                              hint="Tuyến giao thông huyết mạch Bắc–Nam, tăng năng lực vận tải. Các dự án hạ tầng trọng điểm được đẩy mạnh để kết nối vùng."
                               inheritFontWeight={true}
                             />{" "}
                             Bắc--Nam
@@ -2242,7 +2243,7 @@ export default function VietnamEconomyPage() {
                         triển bền vững—bao gồm cả <Keyword 
                           word="kinh tế xanh" 
                           keyword="KINH TẾ XANH" 
-                          hint="Mô hình phát triển bền vững thân thiện với môi trường" 
+                          hint="Mô hình phát triển bền vững, ưu tiên bảo vệ môi trường và tài nguyên. Định hướng chuyển đổi từ tăng trưởng số lượng sang chất lượng."
                           inheritFontWeight={true}
                         /> và bảo vệ môi trường.
                       </p>
@@ -2804,12 +2805,7 @@ export default function VietnamEconomyPage() {
                         <p className="text-white/70 text-sm text-center leading-relaxed">
                           {area.title === "Kinh Tế Xanh" ? (
                             <>
-                              Phát triển <Keyword 
-                                word="kinh tế xanh" 
-                                keyword="KINH TẾ XANH" 
-                                hint="Mô hình phát triển bền vững thân thiện với môi trường" 
-                                inheritFontWeight={true}
-                              />, bảo vệ môi trường
+                              Phát triển kinh tế xanh, bảo vệ môi trường
                             </>
                           ) : (
                             area.description
@@ -2834,13 +2830,7 @@ export default function VietnamEconomyPage() {
                       viewport={{ once: true }}
                       transition={{ delay: 1.2 }}
                     >
-                      Cần đẩy mạnh đổi mới thể chế, nâng cao năng suất lao động và phát triển{" "}
-                      <Keyword 
-                        word="kinh tế xanh" 
-                        keyword="KINH TẾ XANH" 
-                        hint="Mô hình phát triển bền vững thân thiện với môi trường" 
-                        inheritFontWeight={true}
-                      /> để chuyển từ{" "}
+                      Cần đẩy mạnh đổi mới thể chế, nâng cao năng suất lao động và phát triển kinh tế xanh để chuyển từ{" "}
                       <span className="text-yellow-300 font-semibold">tăng trưởng số lượng</span> sang{" "}
                       <span className="text-green-300 font-semibold">chất lượng bền vững</span>.
                     </motion.p>
