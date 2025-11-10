@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { GameProvider } from "@/contexts/GameContext";
 import Chatbot from "@/components/chatbot";
 
 const geistSans = Geist({
@@ -28,13 +29,14 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-red-50 via-amber-50 to-yellow-50 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-linear-to-br from-red-50 via-amber-50 to-yellow-50 min-h-screen`}
       >
-        <Navbar />
-        {children}
+        <GameProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </GameProvider>
         <Chatbot />
-
-        <Footer />
       </body>
     </html>
   );

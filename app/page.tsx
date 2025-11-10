@@ -1,12 +1,13 @@
-// app/page.tsx
-"use client";
+"use client"
 
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { useInView, Variants, cubicBezier } from "framer-motion";
-import { useRef } from "react";
-import Image from "next/image";
-import Navbar from "@/components/navbar";
+import type React from "react"
+
+import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { useInView, type Variants } from "framer-motion"
+import { useRef, useState } from "react"
+import Image from "next/image"
+import { useGame } from "@/contexts/GameContext"
 
 // Animation variants với easing hợp lệ
 const containerVariants = {
@@ -17,7 +18,7 @@ const containerVariants = {
       staggerChildren: 0.2,
     },
   },
-};
+}
 
 const itemVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -26,10 +27,10 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94], // "easeOut" equivalent
+      ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-};
+}
 
 const slideInLeft = {
   hidden: { opacity: 0, x: -100 },
@@ -41,7 +42,7 @@ const slideInLeft = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-};
+}
 
 const slideInRight = {
   hidden: { opacity: 0, x: 100 },
@@ -53,7 +54,7 @@ const slideInRight = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-};
+}
 
 const scaleUp = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -65,7 +66,7 @@ const scaleUp = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-};
+}
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -77,16 +78,8 @@ const fadeInUp: Variants = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-};
+}
 
-// Hoặc sử dụng easing functions được định nghĩa sẵn
-const easingFunctions = {
-  easeOut: [0, 0, 0.2, 1],
-  easeInOut: [0.4, 0, 0.2, 1],
-  easeOutBack: [0.34, 1.56, 0.64, 1],
-};
-
-// Alternative: Sử dụng string easing hợp lệ
 const slideInLeftAlt: Variants = {
   hidden: { opacity: 0, x: -100 },
   visible: {
@@ -97,7 +90,7 @@ const slideInLeftAlt: Variants = {
       ease: "easeOut",
     },
   },
-};
+}
 
 const slideInRightAlt: Variants = {
   hidden: { opacity: 0, x: 100 },
@@ -109,18 +102,18 @@ const slideInRightAlt: Variants = {
       ease: "easeOut",
     },
   },
-};
+}
 
 // Animated component wrapper
 function AnimatedSection({
   children,
   className = "",
 }: {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
     <motion.div
@@ -132,7 +125,7 @@ function AnimatedSection({
     >
       {children}
     </motion.div>
-  );
+  )
 }
 
 function AnimatedItem({
@@ -140,18 +133,247 @@ function AnimatedItem({
   variants = itemVariants,
   className = "",
 }: {
-  children: React.ReactNode;
-  variants?: any;
-  className?: string;
+  children: React.ReactNode
+  variants?: any
+  className?: string
 }) {
   return (
     <motion.div variants={variants} className={className}>
       {children}
     </motion.div>
-  );
+  )
+}
+
+// Component cho từ khóa có thể click với hint - ĐÃ SỬA (bỏ icon bóng đèn)
+function Keyword({
+  word,
+  keyword,
+  hint,
+  className = "",
+  inheritFontWeight = false,
+}: {
+  word: string
+  keyword: string
+  hint: string
+  className?: string
+  inheritFontWeight?: boolean
+}) {
+  const { foundKeywords, addKeyword } = useGame()
+  const [isRecentlyFound, setIsRecentlyFound] = useState(false)
+
+  const isFound = foundKeywords.includes(keyword)
+
+  const handleClick = () => {
+    if (!isFound) {
+      addKeyword(keyword)
+      setIsRecentlyFound(true)
+      setTimeout(() => setIsRecentlyFound(false), 2000)
+    }
+  }
+
+  return (
+    <span className="keyword-wrapper relative inline-block">
+      <motion.span
+        onClick={handleClick}
+        className={`
+          keyword 
+          ${isFound ? "found" : "not-found"} 
+          ${isRecentlyFound ? "recently-found" : ""}
+          ${inheritFontWeight ? "inherit-weight" : ""}
+          ${className}
+        `}
+        whileHover={{ scale: isFound ? 1 : 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        title={isFound ? "Đã tìm thấy!" : `Click để thu thập từ khóa: ${hint}`}
+        style={{
+          cursor: isFound ? "default" : "pointer",
+          display: "inline-block",
+          margin: "0 2px",
+        }}
+      >
+        {word}
+      </motion.span>
+    </span>
+  )
+}
+
+// Component Hint Panel cho Home
+function HomeHintPanel() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      {/* Hint Button */}
+      <motion.button
+        onClick={() => setIsOpen(true)}
+        className="fixed top-20 right-4 z-40 bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-xl shadow-2xl font-semibold flex items-center gap-2"
+        whileHover={{ scale: 1.05, x: -5 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1 }}
+      >
+        <span>💡</span>
+        <span className="hidden sm:inline">Gợi ý</span>
+      </motion.button>
+
+      {/* Hint Panel */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 300 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 300 }}
+            className="fixed top-0 right-0 h-full w-80 bg-white/95 backdrop-blur-sm z-50 shadow-2xl border-l border-gray-200"
+          >
+            <div className="p-6 h-full flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                  <span>💡</span>
+                  Gợi ý Tìm từ khóa - Trang chủ
+                </h3>
+                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <span className="text-xl">×</span>
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="space-y-4">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                      <span>💰</span>
+                      Từ khóa "VỐN"
+                    </h4>
+                    <ul className="text-sm text-yellow-700 space-y-1">
+                      <li>• 1 từ, 4 chữ cái</li>
+                      <li>• Liên quan đến tiền và đầu tư</li>
+                      <li>• Tìm trong phần Lĩnh vực nổi bật</li>
+                      <li>• Xuất hiện trong các bài báo về đầu tư</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                      <span>🌍</span>
+                      Từ khóa "FDI"
+                    </h4>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• 3 chữ cái</li>
+                      <li>• Liên quan đến đầu tư nước ngoài</li>
+                      <li>• Tìm trong phần tin nổi bật</li>
+                      <li>• Thường đi kèm với số tiền (tỷ USD)</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-red-800 mb-2 flex items-center gap-2">
+                      <span>💎</span>
+                      Mẹo tìm kiếm
+                    </h4>
+                    <ul className="text-sm text-red-700 space-y-1">
+                      <li>• Tìm các từ được gạch chân nhẹ</li>
+                      <li>• Di chuột vào từ để xem gợi ý</li>
+                      <li>• Click vào từ để thu thập từ khóa</li>
+                      <li>• Từ khóa đã tìm thấy sẽ chuyển màu xanh</li>
+                      <li>• Mỗi từ khóa chỉ xuất hiện 1 lần duy nhất</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500 text-center">Tìm tất cả từ khóa để khám phá slogan bí mật!</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Backdrop */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/20 z-40"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  )
 }
 
 export default function HomePage() {
+  const { foundKeywords } = useGame()
+
+  // CSS styles cho keyword system - ĐÃ SỬA (xóa hoàn toàn gạch chân)
+  const keywordStyles = `
+    .keyword {
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: relative;
+      border: 1px solid transparent;
+      display: inline-block;
+    }
+    
+    .keyword.inherit-weight {
+      font-weight: inherit;
+    }
+    
+    .keyword.not-found {
+      background: transparent;
+      color: inherit;
+      font-weight: inherit;
+      /* HOÀN TOÀN BÌNH THƯỜNG - KHÔNG GẠCH CHÂN */
+    }
+    
+    .keyword.not-found:hover {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: #f59e0b;
+    }
+    
+    .keyword.found {
+      background: linear-gradient(45deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+      border-color: #059669;
+      font-weight: 600;
+    }
+    
+    .keyword.recently-found {
+      animation: pulse-glow 2s ease-in-out;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+      }
+      50% { 
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+        transform: scale(1.1);
+      }
+    }
+    
+    .game-float-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .keyword-wrapper {
+      display: inline-block;
+      position: relative;
+    }
+  `
+
   const timelineEvents = [
     {
       year: 2018,
@@ -217,9 +439,7 @@ export default function HomePage() {
       year: 2024,
       title: "Mở rộng các khu công nghiệp công nghệ cao và chính sách xanh",
       description: "Phát triển hạ tầng đồng bộ với bảo vệ môi trường",
-      links: [
-        "https://nhandan.vn/thuc-day-phat-trien-khu-cong-nghiep-thong-minh-ben-vung-post851473.html",
-      ],
+      links: ["https://nhandan.vn/thuc-day-phat-trien-khu-cong-nghiep-thong-minh-ben-vung-post851473.html"],
       image: "/images/timeline-2024.jpg",
       category: "Môi trường",
     },
@@ -233,28 +453,31 @@ export default function HomePage() {
       image: "/images/timeline-2025.jpg",
       category: "Kinh tế",
     },
-  ];
+  ]
 
   const featuredNews = [
     {
-      title:
-        "Báo Chính phủ: Tăng trưởng của Việt Nam gây ấn tượng với giới đầu tư quốc tế",
-      summary:
-        "Việt Nam tiếp tục thu hút mạnh mẽ dòng vốn FDI với nhiều dự án quy mô lớn",
+      title: "Báo Chính phủ: Tăng trưởng của Việt Nam gây ấn tượng với giới đầu tư quốc tế",
+      summary: "Việt Nam tiếp tục thu hút mạnh mẽ dòng vốn FDI với nhiều dự án quy mô lớn",
       image: "/media/image1.png",
       link: "https://baochinhphu.vn/tang-truong-cua-viet-nam-gay-an-tuong-voi-gioi-dau-tu-quoc-te-102251007100945146.htm",
     },
     {
-      title:
-        "Bộ Văn hóa, Thể thao và Du lịch: Bảo tồn và phát huy giá trị nghệ thuật truyền thống",
+      title: "Bộ Văn hóa, Thể thao và Du lịch: Bảo tồn và phát huy giá trị nghệ thuật truyền thống",
       summary: "Kết hợp hài hòa giữa bảo tồn di sản và sáng tạo đương đại",
       image: "/media/image3.png",
       link: "https://daibieunhandan.vn/bao-ton-va-phat-huy-gia-tri-nghe-thuat-truyen-thong-trong-boi-canh-phat-trien-kinh-te-thi-truong-va-hoi-nhap-quoc-te-10361093.html",
     },
-  ];
+  ]
 
   return (
     <div className="min-h-screen bg-vn-gradient-1 text-foreground overflow-x-hidden">
+      
+      <style jsx>{keywordStyles}</style>
+
+      {/* Hint Panel Component */}
+      <HomeHintPanel />
+
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-vn-gradient-4 text-white p-4">
         {/* Background decorative elements */}
@@ -272,7 +495,7 @@ export default function HomePage() {
           }}
           transition={{
             duration: 3,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
           }}
         />
@@ -284,7 +507,7 @@ export default function HomePage() {
           }}
           transition={{
             duration: 2.5,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
             delay: 0.5,
           }}
@@ -300,7 +523,7 @@ export default function HomePage() {
           <AnimatedItem variants={itemVariants}>
             <div className="">
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-red-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-yellow-300 via-yellow-400 to-red-400 bg-clip-text text-transparent">
                   Việt Nam
                 </span>
                 <br />
@@ -309,9 +532,7 @@ export default function HomePage() {
                 </span>
               </h1>
               <div className="inline-flex my-6 items-center px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-                <span className="text-yellow-300 text-sm md:text-base font-semibold">
-                  2018 – Nay
-                </span>
+                <span className="text-yellow-300 text-sm md:text-base font-semibold">2018 – Nay</span>
               </div>
             </div>
           </AnimatedItem>
@@ -325,11 +546,6 @@ export default function HomePage() {
                 transition: { duration: 0.3 },
               }}
             >
-              {/* Decorative top border */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="w-32 h-1 bg-gradient-to-r from-yellow-400 to-red-500 rounded-full"></div>
-              </div>
-
               <div className="space-y-6">
                 <motion.p
                   className="text-xl md:text-2xl lg:text-3xl leading-relaxed font-medium text-white/95"
@@ -338,12 +554,9 @@ export default function HomePage() {
                   transition={{ delay: 0.4 }}
                 >
                   Từ năm 2018 đến nay, Việt Nam trải qua quá trình{" "}
-                  <span className="text-yellow-300 font-semibold">
-                    chuyển mình mạnh mẽ
-                  </span>{" "}
-                  trên nhiều mặt: tăng trưởng kinh tế ổn định, hạ tầng đầu tư mở
-                  rộng, văn hóa đan xen giữa truyền thống và sáng tạo, cùng
-                  những tiến bộ xã hội đáng kể về y tế, giáo dục và an sinh.
+                  <span className="text-yellow-300 font-semibold">chuyển mình mạnh mẽ</span> trên nhiều mặt: tăng trưởng
+                  kinh tế ổn định, hạ tầng đầu tư mở rộng, văn hóa đan xen giữa truyền thống và sáng tạo, cùng những
+                  tiến bộ xã hội đáng kể về y tế, giáo dục và an sinh.
                 </motion.p>
 
                 <motion.div
@@ -354,19 +567,10 @@ export default function HomePage() {
                 >
                   <p className="text-lg md:text-xl text-white/80 leading-relaxed">
                     Trang web này giới thiệu những{" "}
-                    <span className="text-yellow-200 font-medium">
-                      thành tựu nổi bật
-                    </span>
-                    ,{" "}
-                    <span className="text-yellow-200 font-medium">
-                      số liệu minh bạch
-                    </span>{" "}
-                    và{" "}
-                    <span className="text-yellow-200 font-medium">
-                      câu chuyện thực tế
-                    </span>{" "}
-                    để giúp học sinh, sinh viên và công chúng hiểu sâu hơn về
-                    con đường đổi mới của đất nước.
+                    <span className="text-yellow-200 font-medium">thành tựu nổi bật</span>,{" "}
+                    <span className="text-yellow-200 font-medium">số liệu minh bạch</span> và{" "}
+                    <span className="text-yellow-200 font-medium">câu chuyện thực tế</span> để giúp học sinh, sinh viên
+                    và công chúng hiểu sâu hơn về con đường đổi mới của đất nước.
                   </p>
                 </motion.div>
               </div>
@@ -387,11 +591,10 @@ export default function HomePage() {
               }}
             >
               <div className="inline-flex flex-col items-center">
-                {/* Decorative lines */}
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-20 h-0.5 bg-gradient-to-r from-transparent to-yellow-400"></div>
+                  <div className="w-20 h-0.5 bg-linear-to-r from-transparent to-yellow-400"></div>
                   <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                  <div className="w-20 h-0.5 bg-gradient-to-l from-transparent to-red-400"></div>
+                  <div className="w-20 h-0.5 bg-linear-to-l from-transparent to-red-400"></div>
                 </div>
 
                 <div className="text-center">
@@ -402,12 +605,11 @@ export default function HomePage() {
                     }}
                     transition={{
                       duration: 3,
-                      repeat: Infinity,
+                      repeat: Number.POSITIVE_INFINITY,
                       repeatType: "reverse",
                     }}
                     style={{
-                      background:
-                        "linear-gradient(45deg, #fbbf24, #f59e0b, #dc2626, #b91c1c)",
+                      background: "linear-gradient(45deg, #fbbf24, #f59e0b, #dc2626, #b91c1c)",
                       backgroundSize: "300% 300%",
                       backgroundClip: "text",
                       WebkitBackgroundClip: "text",
@@ -422,14 +624,12 @@ export default function HomePage() {
           </AnimatedItem>
         </motion.div>
 
-        {/* Bottom gradient overlay */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white/5 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-white/5 to-transparent"></div>
       </section>
 
       {/* Featured Sections */}
-      <AnimatedSection className="py-20 px-4 bg-gradient-to-b from-white to-red-50/30">
+      <AnimatedSection className="py-20 px-4 bg-linear-to-b from-white to-red-50/30">
         <div className="container mx-auto max-w-6xl">
-          {/* Section Header */}
           <AnimatedItem variants={fadeInUp}>
             <div className="text-center mb-16">
               <motion.div
@@ -439,26 +639,22 @@ export default function HomePage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-semibold text-primary uppercase tracking-wide">
-                  Thành Tựu Nổi Bật
-                </span>
+                <span className="text-sm font-semibold text-primary uppercase tracking-wide">Thành Tựu Nổi Bật</span>
                 <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
               </motion.div>
               <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 Lĩnh vực
-                <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                   {" "}
                   Nổi bật
                 </span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Khám phá những bước tiến ấn tượng của Việt Nam qua các lĩnh vực
-                then chốt
+                Khám phá những bước tiến ấn tượng của Việt Nam qua các lĩnh vực then chốt
               </p>
             </div>
           </AnimatedItem>
 
-          {/* Cards Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Economy Card */}
             <AnimatedItem variants={slideInLeft}>
@@ -467,7 +663,6 @@ export default function HomePage() {
                 whileHover={{ y: -8, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {/* Image Section */}
                 <div className="relative h-48 overflow-hidden">
                   <Image
                     src="/images/ket-cau-ha-tang-duong-cao-toc.jpg"
@@ -475,26 +670,18 @@ export default function HomePage() {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-
-                  {/* Category badge */}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"></div>
                   <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                     Kinh tế
                   </div>
-
-                  {/* Icon overlay */}
                   <div className="absolute bottom-4 right-4 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     <span className="text-xl">💰</span>
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-8">
-                  {/* Icon Container */}
                   <motion.div
-                    className="relative z-10 w-16 h-16 bg-gradient-to-br from-red-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg -mt-12"
+                    className="relative z-10 w-16 h-16 bg-linear-to-br from-red-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg -mt-12"
                     whileHover={{
                       rotate: [0, -5, 5, 0],
                       scale: 1.1,
@@ -508,7 +695,7 @@ export default function HomePage() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         repeatDelay: 3,
                       }}
                     >
@@ -520,28 +707,22 @@ export default function HomePage() {
                     Kinh tế Phát triển
                   </h3>
                   <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-                    Tăng trưởng GDP ấn tượng, thu hút mạnh mẽ dòng vốn FDI,
-                    chuyển dịch cơ cấu kinh tế và triển khai các dự án hạ tầng
-                    chiến lược quy mô lớn.
+                    Tăng trưởng GDP ấn tượng, thu hút mạnh mẽ dòng{" "}
+                    <Keyword word="vốn" keyword="VỐN" hint="4 chữ cái, liên quan đến tiền và đầu tư" inheritFontWeight={true} /> FDI, chuyển dịch
+                    cơ cấu kinh tế và triển khai các dự án hạ tầng chiến lược quy mô lớn.
                   </p>
 
-                  {/* Stats Badge */}
                   <div className="flex items-center gap-4 mb-6">
                     <div className="flex items-center gap-2 px-3 py-1 bg-red-50 rounded-full">
                       <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-sm font-semibold text-green-700">
-                        +6.9% GDP
-                      </span>
+                      <span className="text-sm font-semibold text-green-700">+6.9% GDP</span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1 bg-yellow-50 rounded-full">
                       <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm font-semibold text-blue-700">
-                        $21.5B FDI
-                      </span>
+                      <span className="text-sm font-semibold text-blue-700">$21.5B FDI</span>
                     </div>
                   </div>
 
-                  {/* Action Button */}
                   <motion.div whileHover={{ x: 5 }}>
                     <Link
                       href="https://baochinhphu.vn/tang-truong-cua-viet-nam-gay-an-tuong-voi-gioi-dau-tu-quoc-te-102251007100945146.htm"
@@ -552,7 +733,7 @@ export default function HomePage() {
                       <span>Khám phá thành tựu</span>
                       <motion.span
                         animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
+                        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                       >
                         →
                       </motion.span>
@@ -569,7 +750,6 @@ export default function HomePage() {
                 whileHover={{ y: -8, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {/* Image Section */}
                 <div className="relative h-48 overflow-hidden">
                   <Image
                     src="/images/le-hoi.jpg"
@@ -577,26 +757,18 @@ export default function HomePage() {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-
-                  {/* Category badge */}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"></div>
                   <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                     Văn hóa
                   </div>
-
-                  {/* Icon overlay */}
                   <div className="absolute bottom-4 right-4 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     <span className="text-xl">🎭</span>
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-8">
-                  {/* Icon Container */}
                   <motion.div
-                    className="relative z-10 w-16 h-16 bg-gradient-to-br from-yellow-500 to-red-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg -mt-12"
+                    className="relative z-10 w-16 h-16 bg-linear-to-br from-yellow-500 to-red-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg -mt-12"
                     whileHover={{
                       rotate: [0, 5, -5, 0],
                       scale: 1.1,
@@ -611,7 +783,7 @@ export default function HomePage() {
                       }}
                       transition={{
                         duration: 3,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         repeatDelay: 2,
                       }}
                     >
@@ -623,18 +795,12 @@ export default function HomePage() {
                     Văn hóa Rực rỡ
                   </h3>
                   <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-                    Bảo tồn di sản văn hóa truyền thống, sáng tạo nghệ thuật
-                    đương đại và tổ chức các sự kiện quốc tế thu hút đông đảo
-                    công chúng.
+                    Bảo tồn di sản văn hóa truyền thống, sáng tạo nghệ thuật đương đại và tổ chức các sự kiện quốc tế
+                    thu hút đông đảo công chúng.
                   </p>
 
-                  {/* Features List */}
                   <div className="space-y-2 mb-6">
-                    {[
-                      "Di sản UNESCO",
-                      "Nghệ thuật đương đại",
-                      "Lễ hội quốc tế",
-                    ].map((item, index) => (
+                    {["Di sản UNESCO", "Nghệ thuật đương đại", "Lễ hội quốc tế"].map((item, index) => (
                       <motion.div
                         key={item}
                         className="flex items-center gap-3"
@@ -649,7 +815,6 @@ export default function HomePage() {
                     ))}
                   </div>
 
-                  {/* Action Button */}
                   <motion.div whileHover={{ x: 5 }}>
                     <Link
                       href="https://daibieunhandan.vn/bao-ton-va-phat-huy-gia-tri-nghe-thuat-truyen-thong-trong-boi-canh-phat-trien-kinh-te-thi-truong-va-hoi-nhap-quoc-te-10361093.html"
@@ -660,7 +825,7 @@ export default function HomePage() {
                       <span>Khám phá di sản</span>
                       <motion.span
                         animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
+                        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                       >
                         →
                       </motion.span>
@@ -677,7 +842,6 @@ export default function HomePage() {
                 whileHover={{ y: -8, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {/* Image Section */}
                 <div className="relative h-48 overflow-hidden">
                   <Image
                     src="/images/y-te.jpg"
@@ -685,26 +849,18 @@ export default function HomePage() {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-
-                  {/* Category badge */}
+                  <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"></div>
                   <div className="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                     Xã hội
                   </div>
-
-                  {/* Icon overlay */}
                   <div className="absolute bottom-4 right-4 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     <span className="text-xl">🏥</span>
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-8">
-                  {/* Icon Container */}
                   <motion.div
-                    className="relative z-10 w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg -mt-12"
+                    className="relative z-10 w-16 h-16 bg-linear-to-br from-green-500 to-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg -mt-12"
                     whileHover={{
                       scale: 1.1,
                       y: [0, -5, 0],
@@ -719,7 +875,7 @@ export default function HomePage() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Infinity,
+                        repeat: Number.POSITIVE_INFINITY,
                         repeatDelay: 4,
                       }}
                     >
@@ -731,11 +887,10 @@ export default function HomePage() {
                     Xã hội Đổi thay
                   </h3>
                   <p className="text-gray-600 leading-relaxed mb-6 text-lg">
-                    Tiến bộ vượt bậc trong y tế, mở rộng bảo hiểm toàn dân, cải
-                    cách giáo dục và hoàn thiện hệ thống an sinh xã hội.
+                    Tiến bộ vượt bậc trong y tế, mở rộng bảo hiểm toàn dân, cải cách giáo dục và hoàn thiện hệ thống an
+                    sinh xã hội.
                   </p>
 
-                  {/* Progress Indicators */}
                   <div className="space-y-3 mb-6">
                     {[
                       {
@@ -757,9 +912,7 @@ export default function HomePage() {
                       <div key={item.label} className="space-y-1">
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">{item.label}</span>
-                          <span className="font-semibold text-gray-700">
-                            {item.value}%
-                          </span>
+                          <span className="font-semibold text-gray-700">{item.value}%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <motion.div
@@ -774,7 +927,6 @@ export default function HomePage() {
                     ))}
                   </div>
 
-                  {/* Action Button */}
                   <motion.div whileHover={{ x: 5 }}>
                     <Link
                       href="https://nhandan.vn/danh-ngan-sach-thuc-day-bao-hiem-y-te-toan-dan-post891435.html"
@@ -785,7 +937,7 @@ export default function HomePage() {
                       <span>Xem tiến bộ</span>
                       <motion.span
                         animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
+                        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                       >
                         →
                       </motion.span>
@@ -800,13 +952,11 @@ export default function HomePage() {
 
       {/* Timeline Section */}
       <AnimatedSection className="py-20 px-4 bg-vn-gradient-2 text-white relative overflow-hidden">
-        {/* Background decorative elements */}
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-0 left-0 w-72 h-72 bg-red-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
 
         <div className="container mx-auto max-w-6xl relative z-10">
-          {/* Section Header */}
           <AnimatedItem variants={fadeInUp}>
             <div className="text-center mb-16">
               <motion.div
@@ -816,54 +966,44 @@ export default function HomePage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-yellow-300 uppercase tracking-wider">
-                  Dòng thời gian
-                </span>
+                <span className="text-sm font-semibold text-yellow-300 uppercase tracking-wider">Dòng thời gian</span>
                 <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
               </motion.div>
               <h2 className="text-4xl md:text-5xl font-bold mb-4">
                 Hành trình
-                <span className="bg-gradient-to-r from-yellow-400 to-red-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-yellow-400 to-red-400 bg-clip-text text-transparent">
                   {" "}
                   Đổi mới
                 </span>
               </h2>
               <p className="text-xl text-white/80 max-w-2xl mx-auto">
-                Khám phá những cột mốc quan trọng trong hành trình phát triển
-                của Việt Nam từ 2018 đến nay
+                Khám phá những cột mốc quan trọng trong hành trình phát triển của Việt Nam từ 2018 đến nay
               </p>
             </div>
           </AnimatedItem>
 
-          {/* Timeline */}
           <div className="relative">
-            {/* Animated Timeline line with gradient */}
             <motion.div
-              className="absolute left-1/2 transform -translate-x-1/2 w-1.5 bg-gradient-to-b from-yellow-400 via-red-500 to-yellow-400 h-full shadow-2xl"
+              className="absolute left-1/2 transform -translate-x-1/2 w-1.5 bg-linear-to-b from-yellow-400 via-red-500 to-yellow-400 h-full shadow-2xl"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               transition={{ duration: 2, ease: "easeOut" }}
             >
-              {/* Glow effect */}
               <div className="absolute inset-0 bg-yellow-400 blur-sm opacity-50"></div>
             </motion.div>
 
-            {/* Timeline nodes with connecting lines */}
             <div className="space-y-16">
               {timelineEvents.map((event, index) => (
                 <motion.div
                   key={event.year}
-                  className={`relative flex items-center ${
-                    index % 2 === 0 ? "flex-row" : "flex-row-reverse"
-                  }`}
+                  className={`relative flex items-center ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, margin: "-50px" }}
                   variants={index % 2 === 0 ? slideInLeftAlt : slideInRightAlt}
                 >
-                  {/* Year marker with glow effect */}
                   <motion.div
-                    className="relative flex-shrink-0 w-28 h-28 bg-gradient-to-br from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center z-10 shadow-2xl border-2 border-white/20"
+                    className="relative shrink-0 w-28 h-28 bg-linear-to-br from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center z-10 shadow-2xl border-2 border-white/20"
                     whileHover={{
                       scale: 1.15,
                       rotate: index % 2 === 0 ? 5 : -5,
@@ -871,10 +1011,7 @@ export default function HomePage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {/* Background pattern */}
                     <div className="absolute inset-2 bg-white/10 rounded-xl"></div>
-
-                    {/* Year text */}
                     <div className="relative text-center">
                       <motion.span
                         className="text-2xl font-black text-white block leading-none"
@@ -884,8 +1021,6 @@ export default function HomePage() {
                       </motion.span>
                       <div className="w-8 h-0.5 bg-white/60 rounded-full mx-auto mt-1"></div>
                     </div>
-
-                    {/* Decorative corner */}
                     <div
                       className={`absolute ${
                         index % 2 === 0 ? "-right-2 -top-2" : "-left-2 -top-2"
@@ -893,19 +1028,15 @@ export default function HomePage() {
                     ></div>
                   </motion.div>
 
-                  {/* Connecting line */}
                   <div
-                    className={`absolute top-1/2 transform -translate-y-1/2 w-8 h-0.5 bg-gradient-to-r ${
+                    className={`absolute top-1/2 transform -translate-y-1/2 w-8 h-0.5 bg-linear-to-r ${
                       index % 2 === 0
                         ? "from-yellow-400/50 to-yellow-400 left-28"
                         : "from-yellow-400 to-yellow-400/50 right-28"
                     }`}
                   ></div>
 
-                  {/* Content card */}
-                  <div
-                    className={`flex-1 ${index % 2 === 0 ? "ml-16" : "mr-16"}`}
-                  >
+                  <div className={`flex-1 ${index % 2 === 0 ? "ml-16" : "mr-16"}`}>
                     <motion.div
                       className="group relative bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl hover:shadow-3xl transition-all duration-500 overflow-hidden"
                       whileHover={{
@@ -915,47 +1046,36 @@ export default function HomePage() {
                       }}
                     >
                       <div className="flex flex-col md:flex-row">
-                        {/* Image Section */}
                         <div className="relative md:w-1/3 h-48 md:h-auto overflow-hidden">
                           <Image
-                            src={
-                              event.image ||
-                              `/images/timeline-${event.year}.jpg`
-                            }
+                            src={event.image || `/images/timeline-${event.year || "/placeholder.svg"}.jpg`}
                             alt={`Sự kiện ${event.year} - ${event.title}`}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-500"
                           />
-
-                          {/* Overlay gradient */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent md:bg-gradient-to-r md:from-black/40 md:to-transparent"></div>
-
-                          {/* Year badge on image */}
+                          <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent md:bg-linear-to-r md:from-black/40 md:to-transparent"></div>
                           <div className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                             {event.year}
                           </div>
-
-                          {/* Category icon */}
                           <div className="absolute bottom-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
                             <span className="text-lg">
                               {event.category === "Kinh tế"
                                 ? "📈"
                                 : event.category === "Xã hội"
-                                ? "🏥"
-                                : event.category === "Công nghệ"
-                                ? "💻"
-                                : event.category === "Du lịch"
-                                ? "✈️"
-                                : event.category === "Hạ tầng"
-                                ? "🏗️"
-                                : event.category === "Môi trường"
-                                ? "🌱"
-                                : "🎨"}
+                                  ? "🏥"
+                                  : event.category === "Công nghệ"
+                                    ? "💻"
+                                    : event.category === "Du lịch"
+                                      ? "✈️"
+                                      : event.category === "Hạ tầng"
+                                        ? "🏗️"
+                                        : event.category === "Môi trường"
+                                          ? "🌱"
+                                          : "🎨"}
                             </span>
                           </div>
                         </div>
 
-                        {/* Content Section */}
                         <div className="flex-1 p-6 md:p-8">
                           <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-4">
@@ -964,16 +1084,16 @@ export default function HomePage() {
                                   event.category === "Kinh tế"
                                     ? "bg-green-400"
                                     : event.category === "Xã hội"
-                                    ? "bg-blue-400"
-                                    : event.category === "Công nghệ"
-                                    ? "bg-purple-400"
-                                    : event.category === "Du lịch"
-                                    ? "bg-orange-400"
-                                    : event.category === "Hạ tầng"
-                                    ? "bg-indigo-400"
-                                    : event.category === "Môi trường"
-                                    ? "bg-emerald-400"
-                                    : "bg-pink-400"
+                                      ? "bg-blue-400"
+                                      : event.category === "Công nghệ"
+                                        ? "bg-purple-400"
+                                        : event.category === "Du lịch"
+                                          ? "bg-orange-400"
+                                          : event.category === "Hạ tầng"
+                                            ? "bg-indigo-400"
+                                            : event.category === "Môi trường"
+                                              ? "bg-emerald-400"
+                                              : "bg-pink-400"
                                 } shadow-lg`}
                               ></div>
                               <h3 className="text-2xl font-bold text-yellow-300 group-hover:text-yellow-200 transition-colors">
@@ -981,11 +1101,8 @@ export default function HomePage() {
                               </h3>
                             </div>
 
-                            <p className="text-white/90 text-lg leading-relaxed mb-6">
-                              {event.description}
-                            </p>
+                            <p className="text-white/90 text-lg leading-relaxed mb-6">{event.description}</p>
 
-                            {/* Additional details based on year */}
                             <div className="mb-6">
                               {event.year === 2018 && (
                                 <div className="flex items-center gap-2 text-white/70 text-sm">
@@ -1045,37 +1162,29 @@ export default function HomePage() {
                               )}
                             </div>
 
-                            {/* Action button với dropdown links */}
-                            <motion.div
-                              className="flex items-center gap-4"
-                              whileHover={{ x: 5 }}
-                            >
+                            <motion.div className="flex items-center gap-4" whileHover={{ x: 5 }}>
                               <div className="relative group/dropdown">
                                 <motion.a
                                   href={event.links[0]}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="group/btn relative px-6 py-3 bg-gradient-to-r from-yellow-500 to-red-500 rounded-xl font-semibold text-white shadow-lg overflow-hidden inline-flex items-center gap-2"
+                                  className="group/btn relative px-6 py-3 bg-linear-to-r from-yellow-500 to-red-500 rounded-xl font-semibold text-white shadow-lg overflow-hidden inline-flex items-center gap-2"
                                   whileHover={{ scale: 1.05 }}
                                   whileTap={{ scale: 0.95 }}
                                 >
-                                  {/* Button background effect */}
-                                  <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-yellow-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                                  <span className="relative">
-                                    Khám phá chi tiết
-                                  </span>
+                                  <div className="absolute inset-0 bg-linear-to-r from-red-500 to-yellow-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                                  <span className="relative">Khám phá chi tiết</span>
                                   <motion.span
                                     animate={{ x: [0, 4, 0] }}
                                     transition={{
                                       duration: 1.5,
-                                      repeat: Infinity,
+                                      repeat: Number.POSITIVE_INFINITY,
                                     }}
                                   >
                                     →
                                   </motion.span>
                                 </motion.a>
 
-                                {/* Dropdown menu for multiple links - FIXED POSITIONING */}
                                 {event.links.length > 1 && (
                                   <div className="absolute top-full left-0 mt-2 w-72 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border border-white/20 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-300 z-50 transform origin-top">
                                     <div className="p-3">
@@ -1083,43 +1192,40 @@ export default function HomePage() {
                                         📚 Tài liệu tham khảo:
                                       </p>
                                       <div className="space-y-1 max-h-60 overflow-y-auto">
-                                        {event.links
-                                          .slice(1)
-                                          .map((link, linkIndex) => (
-                                            <motion.a
-                                              key={linkIndex}
-                                              href={link}
-                                              target="_blank"
-                                              rel="noopener noreferrer"
-                                              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 group/link border border-transparent hover:border-red-100"
-                                              whileHover={{ x: 3, scale: 1.02 }}
-                                              initial={{ opacity: 0, y: 5 }}
-                                              animate={{ opacity: 1, y: 0 }}
-                                              transition={{
-                                                delay: linkIndex * 0.1,
-                                              }}
-                                            >
-                                              <div className="w-2 h-2 bg-yellow-400 rounded-full flex-shrink-0"></div>
-                                              <span className="text-gray-700 text-sm font-medium group-hover/link:text-red-600 transition-colors flex-1 truncate">
-                                                {linkIndex === 0
-                                                  ? "Bài phân tích"
-                                                  : linkIndex === 1
+                                        {event.links.slice(1).map((link, linkIndex) => (
+                                          <motion.a
+                                            key={linkIndex}
+                                            href={link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 group/link border border-transparent hover:border-red-100"
+                                            whileHover={{ x: 3, scale: 1.02 }}
+                                            initial={{ opacity: 0, y: 5 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{
+                                              delay: linkIndex * 0.1,
+                                            }}
+                                          >
+                                            <div className="w-2 h-2 bg-yellow-400 rounded-full shrink-0"></div>
+                                            <span className="text-gray-700 text-sm font-medium group-hover/link:text-red-600 transition-colors flex-1 truncate">
+                                              {linkIndex === 0
+                                                ? "Bài phân tích"
+                                                : linkIndex === 1
                                                   ? "Báo cáo chính thức"
                                                   : "Tài liệu bổ sung"}{" "}
-                                                {linkIndex + 1}
-                                              </span>
-                                              <motion.span
-                                                className="text-gray-400 group-hover/link:text-red-500 text-lg flex-shrink-0"
-                                                whileHover={{ scale: 1.2 }}
-                                              >
-                                                ↗
-                                              </motion.span>
-                                            </motion.a>
-                                          ))}
+                                              {linkIndex + 1}
+                                            </span>
+                                            <motion.span
+                                              className="text-gray-400 group-hover/link:text-red-500 text-lg shrink-0"
+                                              whileHover={{ scale: 1.2 }}
+                                            >
+                                              ↗
+                                            </motion.span>
+                                          </motion.a>
+                                        ))}
                                       </div>
                                     </div>
 
-                                    {/* Source info */}
                                     <div className="border-t border-white/20 p-3 bg-white/50 rounded-b-xl">
                                       <p className="text-xs text-gray-500 text-center">
                                         Nguồn: Các cơ quan báo chí chính thống
@@ -1129,7 +1235,6 @@ export default function HomePage() {
                                 )}
                               </div>
 
-                              {/* Link counter badge */}
                               {event.links.length > 1 && (
                                 <motion.div
                                   className="px-3 py-1 bg-white/20 rounded-full border border-white/30 relative z-40"
@@ -1140,37 +1245,29 @@ export default function HomePage() {
                                 >
                                   <span className="text-xs text-white/90 font-medium flex items-center gap-1">
                                     <span>+{event.links.length - 1}</span>
-                                    <span className="text-[10px]">
-                                      tài liệu
-                                    </span>
+                                    <span className="text-[10px]">tài liệu</span>
                                   </span>
                                 </motion.div>
                               )}
 
-                              {/* Category badge */}
                               <motion.div
                                 className="px-3 py-1 bg-white/10 rounded-full border border-white/20 relative z-40"
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: 0.3 }}
                               >
-                                <span className="text-sm text-white/70 font-medium">
-                                  {event.category}
-                                </span>
+                                <span className="text-sm text-white/70 font-medium">{event.category}</span>
                               </motion.div>
                             </motion.div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Corner decoration */}
                       <div
                         className={`absolute ${
                           index % 2 === 0 ? "top-4 right-4" : "top-4 left-4"
                         } w-8 h-8 border-t-2 border-r-2 ${
-                          index % 2 === 0
-                            ? "border-yellow-400"
-                            : "border-red-400"
+                          index % 2 === 0 ? "border-yellow-400" : "border-red-400"
                         } rounded-tr-xl opacity-50`}
                       ></div>
                     </motion.div>
@@ -1179,7 +1276,6 @@ export default function HomePage() {
               ))}
             </div>
 
-            {/* Timeline end marker */}
             <motion.div
               className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-yellow-400 rounded-full shadow-2xl border-2 border-white"
               initial={{ scale: 0 }}
@@ -1193,9 +1289,8 @@ export default function HomePage() {
       </AnimatedSection>
 
       {/* Featured News Section */}
-      <AnimatedSection className="py-20 px-4 bg-gradient-to-b from-white to-red-50/20">
+      <AnimatedSection className="py-20 px-4 bg-linear-to-b from-white to-red-50/20">
         <div className="container mx-auto max-w-6xl">
-          {/* Section Header */}
           <AnimatedItem variants={fadeInUp}>
             <div className="text-center mb-16">
               <motion.div
@@ -1205,66 +1300,44 @@ export default function HomePage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-primary uppercase tracking-wide">
-                  Cập nhật mới nhất
-                </span>
+                <span className="text-sm font-semibold text-primary uppercase tracking-wide">Cập nhật mới nhất</span>
                 <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
               </motion.div>
               <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 Tin
-                <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                   {" "}
                   Nổi bật
                 </span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Những bài báo và báo cáo mới nhất về hành trình phát triển của
-                Việt Nam
+                Những bài báo và báo cáo mới nhất về hành trình phát triển của Việt Nam
               </p>
             </div>
           </AnimatedItem>
 
-          {/* News Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {featuredNews.map((news, index) => (
-              <AnimatedItem
-                key={index}
-                variants={index === 0 ? slideInLeftAlt : slideInRightAlt}
-              >
+              <AnimatedItem key={index} variants={index === 0 ? slideInLeftAlt : slideInRightAlt}>
                 <motion.article
                   className="group relative bg-white rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 overflow-hidden border border-red-100"
                   whileHover={{ y: -8, scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {/* Background Pattern */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-50/50 to-yellow-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-linear-to-br from-red-50/50 to-yellow-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                  {/* Image Container */}
                   <motion.div
                     className="relative h-64 overflow-hidden"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.4 }}
                   >
-                    {/* Real Image */}
                     <Image
-                      src={
-                        index === 0
-                          ? "/images/news-economy.jpg"
-                          : "/images/news-culture.jpg"
-                      }
-                      alt={
-                        index === 0
-                          ? "Phát triển kinh tế và đầu tư Việt Nam"
-                          : "Di sản văn hóa Việt Nam"
-                      }
+                      src={index === 0 ? "/images/news-economy.jpg" : "/images/news-culture.jpg"}
+                      alt={index === 0 ? "Phát triển kinh tế và đầu tư Việt Nam" : "Di sản văn hóa Việt Nam"}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent z-10"></div>
-
-                    {/* Featured Badge */}
+                    <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/20 to-transparent z-10"></div>
                     <motion.div
                       className="absolute top-4 left-4 z-20 px-3 py-1 bg-red-500 text-white text-sm font-semibold rounded-full shadow-lg"
                       initial={{ opacity: 0, x: -20 }}
@@ -1274,8 +1347,6 @@ export default function HomePage() {
                     >
                       Nổi bật
                     </motion.div>
-
-                    {/* Date Badge */}
                     <motion.div
                       className="absolute top-4 right-4 z-20 px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-700 text-sm font-medium rounded-full shadow-lg"
                       initial={{ opacity: 0, x: 20 }}
@@ -1285,8 +1356,6 @@ export default function HomePage() {
                     >
                       {index === 0 ? "07/10/2025" : "06/03/2025"}
                     </motion.div>
-
-                    {/* Category Overlay */}
                     <div className="absolute bottom-4 left-4 z-20">
                       <motion.div
                         className="inline-flex items-center gap-2 px-3 py-2 bg-black/50 backdrop-blur-sm rounded-full text-white"
@@ -1295,18 +1364,12 @@ export default function HomePage() {
                         transition={{ delay: 0.4 }}
                         viewport={{ once: true }}
                       >
-                        <span className="text-lg">
-                          {index === 0 ? "📈" : "🎨"}
-                        </span>
+                        <span className="text-lg">{index === 0 ? "📈" : "🎨"}</span>
                         <span className="text-sm font-semibold">
-                          {index === 0
-                            ? "Kinh tế & Đầu tư"
-                            : "Văn hóa & Di sản"}
+                          {index === 0 ? "Kinh tế & Đầu tư" : "Văn hóa & Di sản"}
                         </span>
                       </motion.div>
                     </div>
-
-                    {/* Read Time Overlay */}
                     <div className="absolute bottom-4 right-4 z-20">
                       <motion.div
                         className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full"
@@ -1315,16 +1378,12 @@ export default function HomePage() {
                         transition={{ delay: 0.5 }}
                         viewport={{ once: true }}
                       >
-                        <span className="text-white text-xs font-medium">
-                          5 phút đọc
-                        </span>
+                        <span className="text-white text-xs font-medium">5 phút đọc</span>
                       </motion.div>
                     </div>
                   </motion.div>
 
-                  {/* Content */}
                   <div className="relative p-8">
-                    {/* Source Badge */}
                     <motion.div
                       className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 border border-red-200 rounded-full mb-4"
                       initial={{ opacity: 0, y: 10 }}
@@ -1334,13 +1393,10 @@ export default function HomePage() {
                     >
                       <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                       <span className="text-sm font-medium text-red-700">
-                        {index === 0
-                          ? "Báo Chính phủ"
-                          : "Bộ Văn hóa, Thể thao và Du lịch"}
+                        {index === 0 ? "Báo Chính phủ" : "Bộ Văn hóa, Thể thao và Du lịch"}
                       </span>
                     </motion.div>
 
-                    {/* Title */}
                     <motion.h3
                       className="text-2xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-red-700 transition-colors duration-300"
                       initial={{ opacity: 0, y: 10 }}
@@ -1351,7 +1407,6 @@ export default function HomePage() {
                       {news.title}
                     </motion.h3>
 
-                    {/* Summary */}
                     <motion.p
                       className="text-gray-600 leading-relaxed mb-6 text-lg"
                       initial={{ opacity: 0, y: 10 }}
@@ -1359,10 +1414,17 @@ export default function HomePage() {
                       transition={{ delay: 0.6 }}
                       viewport={{ once: true }}
                     >
-                      {news.summary}
+                      {index === 0 ? (
+                        <>
+                          Việt Nam tiếp tục thu hút mạnh mẽ dòng vốn{" "}
+                          <Keyword word="FDI" keyword="FDI" hint="3 chữ cái, liên quan đến đầu tư nước ngoài" inheritFontWeight={true} /> với nhiều
+                          dự án quy mô lớn
+                        </>
+                      ) : (
+                        news.summary
+                      )}
                     </motion.p>
 
-                    {/* Stats & Highlights */}
                     <motion.div
                       className="grid grid-cols-2 gap-4 mb-6"
                       initial={{ opacity: 0 }}
@@ -1373,43 +1435,28 @@ export default function HomePage() {
                       {index === 0 ? (
                         <>
                           <div className="text-center p-3 bg-green-50 rounded-xl border border-green-200">
-                            <div className="text-lg font-bold text-green-700">
-                              +6.9%
-                            </div>
-                            <div className="text-xs text-green-600">
-                              Tăng trưởng GDP
-                            </div>
+                            <div className="text-lg font-bold text-green-700">+6.9%</div>
+                            <div className="text-xs text-green-600">Tăng trưởng GDP</div>
                           </div>
                           <div className="text-center p-3 bg-blue-50 rounded-xl border border-blue-200">
-                            <div className="text-lg font-bold text-blue-700">
-                              $21.5B
-                            </div>
-                            <div className="text-xs text-blue-600">Vốn FDI</div>
+                            <div className="text-lg font-bold text-blue-700">$21.5B</div>
+                            <div className="text-xs text-blue-600">FDI</div>
                           </div>
                         </>
                       ) : (
                         <>
                           <div className="text-center p-3 bg-yellow-50 rounded-xl border border-yellow-200">
-                            <div className="text-lg font-bold text-yellow-700">
-                              15+
-                            </div>
-                            <div className="text-xs text-yellow-600">
-                              Di sản UNESCO
-                            </div>
+                            <div className="text-lg font-bold text-yellow-700">15+</div>
+                            <div className="text-xs text-yellow-600">Di sản UNESCO</div>
                           </div>
                           <div className="text-center p-3 bg-purple-50 rounded-xl border border-purple-200">
-                            <div className="text-lg font-bold text-purple-700">
-                              50+
-                            </div>
-                            <div className="text-xs text-purple-600">
-                              Lễ hội quốc tế
-                            </div>
+                            <div className="text-lg font-bold text-purple-700">50+</div>
+                            <div className="text-xs text-purple-600">Lễ hội quốc tế</div>
                           </div>
                         </>
                       )}
                     </motion.div>
 
-                    {/* Action Button */}
                     <motion.div
                       className="flex items-center justify-between"
                       initial={{ opacity: 0, y: 10 }}
@@ -1420,36 +1467,30 @@ export default function HomePage() {
                       <motion.div whileHover={{ x: 5 }}>
                         <Link
                           href={news.link}
-                          className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                          className="group/btn inline-flex items-center gap-3 px-6 py-3 bg-linear-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                           target="_blank"
                         >
                           <span>Đọc bài viết</span>
                           <motion.span
                             animate={{ x: [0, 4, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
+                            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                           >
                             →
                           </motion.span>
                         </Link>
                       </motion.div>
 
-                      {/* Share Button */}
                       <motion.button
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors duration-300"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                       >
-                        <svg
-                          className="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />
                         </svg>
                       </motion.button>
                     </motion.div>
 
-                    {/* Tags */}
                     <motion.div
                       className="flex flex-wrap gap-2 mt-6"
                       initial={{ opacity: 0 }}
@@ -1459,13 +1500,7 @@ export default function HomePage() {
                     >
                       {(index === 0
                         ? ["Kinh tế", "FDI", "Tăng trưởng", "Đầu tư", "Hạ tầng"]
-                        : [
-                            "Di sản",
-                            "Nghệ thuật",
-                            "Bảo tồn",
-                            "Văn hóa",
-                            "UNESCO",
-                          ]
+                        : ["Di sản", "Nghệ thuật", "Bảo tồn", "Văn hóa", "UNESCO"]
                       ).map((tag, tagIndex) => (
                         <motion.span
                           key={tag}
@@ -1483,7 +1518,6 @@ export default function HomePage() {
                     </motion.div>
                   </div>
 
-                  {/* Hover Effect Border */}
                   <div className="absolute inset-0 rounded-3xl border-2 border-transparent group-hover:border-red-200 transition-all duration-500 pointer-events-none"></div>
                 </motion.article>
               </AnimatedItem>
@@ -1491,6 +1525,39 @@ export default function HomePage() {
           </div>
         </div>
       </AnimatedSection>
+
+      {/* Game Navigation Floating Button */}
+      <motion.div
+        className="game-float-btn"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <Link href="/game">
+          <motion.div
+            className="bg-linear-to-r from-yellow-500 to-red-500 text-white p-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 group"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="relative">
+              <span className="text-xl">🎮</span>
+              {foundKeywords.length > 0 && (
+                <motion.div
+                  className="absolute -top-2 -right-2 w-5 h-5 bg-green-500 rounded-full text-xs flex items-center justify-center text-white"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                >
+                  {foundKeywords.length}
+                </motion.div>
+              )}
+            </div>
+            <span>Mini Game</span>
+            <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}>
+              →
+            </motion.span>
+          </motion.div>
+        </Link>
+      </motion.div>
     </div>
-  );
+  )
 }

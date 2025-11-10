@@ -95,11 +95,11 @@ export default function Footer({
                   className="flex items-center gap-3 mb-6"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 bg-linear-to-br from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-lg">VN</span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-300 to-red-300 bg-clip-text text-transparent">
+                    <h3 className="text-2xl font-bold bg-linear-to-r from-yellow-300 to-red-300 bg-clip-text text-transparent">
                       Việt Nam Đổi Mới
                     </h3>
                     <p className="text-white/60 text-sm">2018 - Nay</p>

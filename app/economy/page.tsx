@@ -1,11 +1,13 @@
-// app/page.tsx
-"use client";
+// app/economy/page.tsx
+"use client"
 
-import { motion, Variants } from "framer-motion";
-import { useInView } from "framer-motion";
-import { JSX, useRef } from "react";
-import Image from "next/image";
-import Navbar from "@/components/navbar";
+import type React from "react"
+import { motion, type Variants, AnimatePresence } from "framer-motion"
+import { useInView } from "framer-motion"
+import { type JSX, useRef, useState } from "react"
+import Image from "next/image"
+import { useGame } from "@/contexts/GameContext"
+import Link from "next/link"
 
 // Animation variants
 const containerVariants = {
@@ -16,7 +18,7 @@ const containerVariants = {
       staggerChildren: 0.2,
     },
   },
-};
+}
 
 const itemVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -28,43 +30,7 @@ const itemVariants = {
       ease: "easeOut",
     },
   },
-};
-
-const slideInLeft = {
-  hidden: { opacity: 0, x: -100 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.8,
-      ease: "easeOut",
-    },
-  },
-};
-
-const slideInRight = {
-  hidden: { opacity: 0, x: 100 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.8,
-      ease: "easeOut",
-    },
-  },
-};
-
-const scaleUp = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
-};
+}
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -76,18 +42,54 @@ const fadeInUp: Variants = {
       ease: "easeOut",
     },
   },
-};
+}
+
+const slideInLeft: Variants = {
+  hidden: { opacity: 0, x: -100 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  },
+}
+
+const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 100 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  },
+}
+
+const scaleUp = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+}
 
 // Animated component wrappers
 function AnimatedSection({
   children,
   className = "",
 }: {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
     <motion.div
@@ -99,7 +101,7 @@ function AnimatedSection({
     >
       {children}
     </motion.div>
-  );
+  )
 }
 
 function AnimatedItem({
@@ -107,18 +109,277 @@ function AnimatedItem({
   variants = itemVariants,
   className = "",
 }: {
-  children: React.ReactNode;
-  variants?: any;
-  className?: string;
+  children: React.ReactNode
+  variants?: any
+  className?: string
 }) {
   return (
     <motion.div variants={variants} className={className}>
       {children}
     </motion.div>
-  );
+  )
+}
+
+// Component cho từ khóa có thể click với hint - ĐÃ SỬA (bỏ icon bóng đèn)
+function Keyword({
+  word,
+  keyword,
+  hint,
+  className = "",
+  inheritFontWeight = false,
+}: {
+  word: string
+  keyword: string
+  hint: string
+  className?: string
+  inheritFontWeight?: boolean
+}) {
+  const { foundKeywords, addKeyword } = useGame()
+  const [isRecentlyFound, setIsRecentlyFound] = useState(false)
+
+  const isFound = foundKeywords.includes(keyword)
+
+  const handleClick = () => {
+    if (!isFound) {
+      addKeyword(keyword)
+      setIsRecentlyFound(true)
+      setTimeout(() => setIsRecentlyFound(false), 2000)
+    }
+  }
+
+  return (
+    <span className="keyword-wrapper relative inline-block">
+      <motion.span
+        onClick={handleClick}
+        className={`
+          keyword 
+          ${isFound ? "found" : "not-found"} 
+          ${isRecentlyFound ? "recently-found" : ""}
+          ${inheritFontWeight ? "inherit-weight" : ""}
+          ${className}
+        `}
+        whileHover={{ scale: isFound ? 1 : 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        title={isFound ? "Đã tìm thấy!" : `Click để thu thập từ khóa: ${hint}`}
+        style={{
+          cursor: isFound ? "default" : "pointer",
+          display: "inline-block",
+          margin: "0 2px",
+        }}
+      >
+        {word}
+      </motion.span>
+    </span>
+  )
+}
+
+// Component Hint Panel cho Economy
+function EconomyHintPanel() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      {/* Hint Button */}
+      <motion.button
+        onClick={() => setIsOpen(true)}
+        className="fixed top-20 right-4 z-40 bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-xl shadow-2xl font-semibold flex items-center gap-2"
+        whileHover={{ scale: 1.05, x: -5 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1 }}
+      >
+        <span>💡</span>
+        <span className="hidden sm:inline">Gợi ý</span>
+      </motion.button>
+
+      {/* Hint Panel */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, x: 300 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 300 }}
+            className="fixed top-0 right-0 h-full w-80 bg-white/95 backdrop-blur-sm z-50 shadow-2xl border-l border-gray-200"
+          >
+            <div className="p-6 h-full flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                  <span>💡</span>
+                  Gợi ý Tìm từ khóa - Kinh tế
+                </h3>
+                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                  <span className="text-xl">×</span>
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto">
+                <div className="space-y-4">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                      <span>💻</span>
+                      Từ khóa "ĐIỆN TỬ"
+                    </h4>
+                    <ul className="text-sm text-yellow-700 space-y-1">
+                      <li>• 2 từ, 7 chữ cái</li>
+                      <li>• Liên quan đến công nghiệp chế tạo</li>
+                      <li>• Tìm trong phần Ngành Mũi Nhọn</li>
+                      <li>• Ngành công nghiệp trọng điểm</li>
+                      <li>• Chữ cái cần tìm: <strong>E</strong></li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                      <span>🛣️</span>
+                      Từ khóa "CAO TỐC"
+                    </h4>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      <li>• 2 từ, 7 chữ cái</li>
+                      <li>• Liên quan đến hạ tầng giao thông</li>
+                      <li>• Tìm trong phần Dự Án Tiêu Biểu</li>
+                      <li>• Dự án hạ tầng trọng điểm</li>
+                      <li>• Chữ cái cần tìm: <strong>T</strong></li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
+                      <span>🌱</span>
+                      Từ khóa "KINH TẾ XANH"
+                    </h4>
+                    <ul className="text-sm text-green-700 space-y-1">
+                      <li>• 3 từ, 10 chữ cái</li>
+                      <li>• Liên quan đến phát triển bền vững</li>
+                      <li>• Tìm trong phần Kết Luận & Tầm Nhìn</li>
+                      <li>• Mô hình phát triển tương lai</li>
+                      <li>• Chữ cái cần tìm: <strong>A</strong></li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-purple-800 mb-2 flex items-center gap-2">
+                      <span>🎯</span>
+                      Từ khóa "NGÀNH MŨI NHỌN"
+                    </h4>
+                    <ul className="text-sm text-purple-700 space-y-1">
+                      <li>• 3 từ, 13 chữ cái</li>
+                      <li>• Liên quan đến lĩnh vực ưu tiên</li>
+                      <li>• Tìm trong phần Ngành Mũi Nhọn</li>
+                      <li>• Các ngành then chốt của nền kinh tế</li>
+                      <li>• Chữ cái cần tìm: <strong>M</strong></li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                    <h4 className="font-semibold text-red-800 mb-2 flex items-center gap-2">
+                      <span>💎</span>
+                      Mẹo tìm kiếm
+                    </h4>
+                    <ul className="text-sm text-red-700 space-y-1">
+                      <li>• Tìm các từ được gạch chân nhẹ</li>
+                      <li>• Di chuột vào từ để xem gợi ý</li>
+                      <li>• Click vào từ để thu thập từ khóa</li>
+                      <li>• Từ khóa đã tìm thấy sẽ chuyển màu xanh</li>
+                      <li>• Mỗi từ khóa chỉ xuất hiện 1 lần duy nhất</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="pt-4 border-t border-gray-200">
+                <p className="text-xs text-gray-500 text-center">Tìm tất cả từ khóa để khám phá slogan bí mật!</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Backdrop */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/20 z-40"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  )
 }
 
 export default function VietnamEconomyPage() {
+  const { foundKeywords } = useGame()
+
+  // CSS styles cho keyword system - ĐÃ SỬA (xóa hoàn toàn gạch chân)
+  const keywordStyles = `
+    .keyword {
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      position: relative;
+      border: 1px solid transparent;
+      display: inline-block;
+    }
+    
+    .keyword.inherit-weight {
+      font-weight: inherit;
+    }
+    
+    .keyword.not-found {
+      background: transparent;
+      color: inherit;
+      font-weight: inherit;
+      /* HOÀN TOÀN BÌNH THƯỜNG - KHÔNG GẠCH CHÂN */
+    }
+    
+    .keyword.not-found:hover {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: #f59e0b;
+    }
+    
+    .keyword.found {
+      background: linear-gradient(45deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+      border-color: #059669;
+      font-weight: 600;
+    }
+    
+    .keyword.recently-found {
+      animation: pulse-glow 2s ease-in-out;
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+      }
+      50% { 
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+        transform: scale(1.1);
+      }
+    }
+    
+    .game-float-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .keyword-wrapper {
+      display: inline-block;
+      position: relative;
+    }
+  `
+
   // Dữ liệu cho các chỉ số then chốt
   const keyIndicators = [
     {
@@ -163,7 +424,7 @@ export default function VietnamEconomyPage() {
       image: null,
       link: null,
     },
-  ];
+  ]
 
   // Dữ liệu cho các ngành mũi nhọn
   const keyIndustries = [
@@ -195,7 +456,7 @@ export default function VietnamEconomyPage() {
       image: "/images/economy7.jpg",
       link: "https://dost.hochiminhcity.gov.vn/hoat-dong-so-khcn/tphcm-day-manh-khoi-nghiep-sang-tao-but-pha-huong-den-nam-2030/",
     },
-  ];
+  ]
 
   // Dữ liệu cho dự án hạ tầng
   const infrastructureProjects = [
@@ -220,14 +481,14 @@ export default function VietnamEconomyPage() {
       image: "/images/economy10.jpg",
       link: "https://tuoitre.vn/tp-hcm-se-thi-diem-mo-hinh-do-thi-tu-chu-trong-thanh-pho-nhiem-ky-toi-20251014101950316.htm",
     },
-  ];
+  ]
 
   // Dữ liệu cho hạn chế & rủi ro
   const limitations = [
     "Cấu trúc kinh tế chuyển dịch chậm",
     "Áp lực về môi trường và quản lý tài nguyên",
     "Phụ thuộc chuỗi cung ứng nước ngoài ở một số ngành",
-  ];
+  ]
 
   function getIndicatorIcon(title: string) {
     const icons: { [key: string]: string } = {
@@ -237,17 +498,12 @@ export default function VietnamEconomyPage() {
       "Năng suất lao động & việc làm": "👨‍💼",
       "Lạm phát & chính sách tiền tệ": "💰",
       "Tài chính số & Fintech": "💻",
-    };
-    return icons[title] || "📊";
+    }
+    return icons[title] || "📊"
   }
 
   function hasProgressData(title: string) {
-    return [
-      "GDP",
-      "Thương mại & xuất khẩu",
-      "FDI",
-      "Tài chính số & Fintech",
-    ].includes(title);
+    return ["GDP", "Thương mại & xuất khẩu", "FDI", "Tài chính số & Fintech"].includes(title)
   }
 
   function getProgressValue(title: string) {
@@ -256,8 +512,8 @@ export default function VietnamEconomyPage() {
       "Thương mại & xuất khẩu": "+14.4%",
       FDI: "+32.6%",
       "Tài chính số & Fintech": "+6.66%",
-    };
-    return values[title] || "";
+    }
+    return values[title] || ""
   }
 
   function getProgressWidth(title: string) {
@@ -266,19 +522,14 @@ export default function VietnamEconomyPage() {
       "Thương mại & xuất khẩu": "75%",
       FDI: "90%",
       "Tài chính số & Fintech": "70%",
-    };
-    return widths[title] || "60%";
+    }
+    return widths[title] || "60%"
   }
 
   function getIndustryIcon(title: string) {
     const icons: { [key: string]: JSX.Element } = {
       "Công nghiệp chế tạo & điện tử": (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -288,12 +539,7 @@ export default function VietnamEconomyPage() {
         </svg>
       ),
       "Nông nghiệp công nghệ cao": (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -303,12 +549,7 @@ export default function VietnamEconomyPage() {
         </svg>
       ),
       "Dịch vụ & du lịch": (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -318,12 +559,7 @@ export default function VietnamEconomyPage() {
         </svg>
       ),
       "Công nghệ thông tin & startup": (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -332,8 +568,8 @@ export default function VietnamEconomyPage() {
           />
         </svg>
       ),
-    };
-    return icons[title] || <span>🏭</span>;
+    }
+    return icons[title] || <span>🏭</span>
   }
 
   function getIndustryCategory(title: string) {
@@ -342,8 +578,8 @@ export default function VietnamEconomyPage() {
       "Nông nghiệp công nghệ cao": "Nông Nghiệp",
       "Dịch vụ & du lịch": "Dịch Vụ",
       "Công nghệ thông tin & startup": "Công Nghệ",
-    };
-    return categories[title] || "Ngành Then Chốt";
+    }
+    return categories[title] || "Ngành Then Chốt"
   }
 
   function getIndustryStats(title: string) {
@@ -364,8 +600,8 @@ export default function VietnamEconomyPage() {
         { value: "7%", label: "Đóng góp GDP" },
         { value: "15%", label: "Tăng trưởng" },
       ],
-    };
-    return stats[title] || [{ value: "N/A", label: "Dữ liệu" }];
+    }
+    return stats[title] || [{ value: "N/A", label: "Dữ liệu" }]
   }
 
   function getIndustryFeatures(title: string) {
@@ -394,8 +630,8 @@ export default function VietnamEconomyPage() {
         "Chuyển đổi số quốc gia",
         "Nguồn nhân lực chất lượng",
       ],
-    };
-    return features[title] || ["Đang cập nhật..."];
+    }
+    return features[title] || ["Đang cập nhật..."]
   }
 
   function getProjectIcon(title: string) {
@@ -403,8 +639,8 @@ export default function VietnamEconomyPage() {
       "Cao tốc Bắc--Nam": "🛣️",
       "Sân bay Long Thành (giai đoạn triển khai)": "✈️",
       "Đô thị thông minh (các thành phố thí điểm)": "🏙️",
-    };
-    return icons[title] || "🏗️";
+    }
+    return icons[title] || "🏗️"
   }
 
   function getProjectType(title: string) {
@@ -412,27 +648,26 @@ export default function VietnamEconomyPage() {
       "Cao tốc Bắc--Nam": "Giao Thông",
       "Sân bay Long Thành (giai đoạn triển khai)": "Hàng Không",
       "Đô thị thông minh (các thành phố thí điểm)": "Đô Thị",
-    };
-    return types[title] || "Hạ Tầng";
+    }
+    return types[title] || "Hạ Tầng"
   }
 
   function getProjectDetails(title: string) {
-    const details: { [key: string]: Array<{ value: string; label: string }> } =
-      {
-        "Cao tốc Bắc--Nam": [
-          { value: "1,206km", label: "Tổng chiều dài" },
-          { value: "2025", label: "Hoàn thành" },
-        ],
-        "Sân bay Long Thành (giai đoạn triển khai)": [
-          { value: "5,000ha", label: "Diện tích" },
-          { value: "100tr", label: "Hành khách/năm" },
-        ],
-        "Đô thị thông minh (các thành phố thí điểm)": [
-          { value: "5+", label: "Thành phố" },
-          { value: "IoT", label: "Công nghệ" },
-        ],
-      };
-    return details[title] || [{ value: "N/A", label: "Thông tin" }];
+    const details: { [key: string]: Array<{ value: string; label: string }> } = {
+      "Cao tốc Bắc--Nam": [
+        { value: "1,206km", label: "Tổng chiều dài" },
+        { value: "2025", label: "Hoàn thành" },
+      ],
+      "Sân bay Long Thành (giai đoạn triển khai)": [
+        { value: "5,000ha", label: "Diện tích" },
+        { value: "100tr", label: "Hành khách/năm" },
+      ],
+      "Đô thị thông minh (các thành phố thí điểm)": [
+        { value: "5+", label: "Thành phố" },
+        { value: "IoT", label: "Công nghệ" },
+      ],
+    }
+    return details[title] || [{ value: "N/A", label: "Thông tin" }]
   }
 
   function getProjectProgress(title: string) {
@@ -440,8 +675,8 @@ export default function VietnamEconomyPage() {
       "Cao tốc Bắc--Nam": "85%",
       "Sân bay Long Thành (giai đoạn triển khai)": "60%",
       "Đô thị thông minh (các thành phố thí điểm)": "75%",
-    };
-    return progress[title] || "50%";
+    }
+    return progress[title] || "50%"
   }
 
   function getProjectProgressWidth(title: string) {
@@ -449,8 +684,8 @@ export default function VietnamEconomyPage() {
       "Cao tốc Bắc--Nam": "85%",
       "Sân bay Long Thành (giai đoạn triển khai)": "60%",
       "Đô thị thông minh (các thành phố thí điểm)": "75%",
-    };
-    return widths[title] || "50%";
+    }
+    return widths[title] || "50%"
   }
 
   function getProjectTimeline(title: string) {
@@ -458,8 +693,8 @@ export default function VietnamEconomyPage() {
       "Cao tốc Bắc--Nam": "2021-2025",
       "Sân bay Long Thành (giai đoạn triển khai)": "2021-2026",
       "Đô thị thông minh (các thành phố thí điểm)": "2020-2025",
-    };
-    return timelines[title] || "Đang triển khai";
+    }
+    return timelines[title] || "Đang triển khai"
   }
 
   const impactMetrics = [
@@ -467,7 +702,7 @@ export default function VietnamEconomyPage() {
     { value: "23%", label: "Tăng thu nhập" },
     { value: "67%", label: "Đào tạo kỹ năng" },
     { value: "42%", label: "Phát triển vùng" },
-  ];
+  ]
 
   const focusAreas = [
     "Đào tạo nguồn nhân lực",
@@ -476,17 +711,11 @@ export default function VietnamEconomyPage() {
     "An sinh xã hội",
     "Kinh tế xanh",
     "Bảo vệ môi trường",
-  ];
+  ]
 
   function getRiskIcon(index: number) {
     const icons = [
-      <svg
-        key={0}
-        className="w-6 h-6 text-white"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg key={0} className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -494,13 +723,7 @@ export default function VietnamEconomyPage() {
           d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
         />
       </svg>,
-      <svg
-        key={1}
-        className="w-6 h-6 text-white"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg key={1} className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -508,13 +731,7 @@ export default function VietnamEconomyPage() {
           d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
         />
       </svg>,
-      <svg
-        key={2}
-        className="w-6 h-6 text-white"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg key={2} className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -522,8 +739,8 @@ export default function VietnamEconomyPage() {
           d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
         />
       </svg>,
-    ];
-    return icons[index] || icons[0];
+    ]
+    return icons[index] || icons[0]
   }
 
   function getRiskDescription(limitation: string) {
@@ -534,19 +751,17 @@ export default function VietnamEconomyPage() {
         "Tăng trưởng kinh tế đặt ra thách thức lớn về bảo vệ môi trường và sử dụng bền vững tài nguyên thiên nhiên.",
       "Phụ thuộc chuỗi cung ứng nước ngoài ở một số ngành":
         "Sự phụ thuộc vào nguyên liệu và công nghệ nhập khẩu có thể ảnh hưởng đến an ninh kinh tế quốc gia.",
-    };
-    return (
-      descriptions[limitation] || "Đang được nghiên cứu và đánh giá chi tiết."
-    );
+    }
+    return descriptions[limitation] || "Đang được nghiên cứu và đánh giá chi tiết."
   }
 
   function getRiskImpact(limitation: string) {
     const impacts: { [key: string]: string } = {
-      "Cấu trúc kinh tế chuyển dịch chậm": "Cao",
+      "Cấu trúc kinhế chuyển dịch chậm": "Cao",
       "Áp lực về môi trường và quản lý tài nguyên": "Trung bình",
       "Phụ thuộc chuỗi cung ứng nước ngoài ở một số ngành": "Cao",
-    };
-    return impacts[limitation] || "Đang đánh giá";
+    }
+    return impacts[limitation] || "Đang đánh giá"
   }
 
   function getRiskImpactWidth(limitation: string) {
@@ -554,8 +769,8 @@ export default function VietnamEconomyPage() {
       "Cấu trúc kinh tế chuyển dịch chậm": "85%",
       "Áp lực về môi trường và quản lý tài nguyên": "65%",
       "Phụ thuộc chuỗi cung ứng nước ngoài ở một số ngành": "80%",
-    };
-    return widths[limitation] || "50%";
+    }
+    return widths[limitation] || "50%"
   }
 
   const focusAreas2 = [
@@ -563,24 +778,14 @@ export default function VietnamEconomyPage() {
       title: "Đổi Mới Thể Chế",
       description: "Cải cách hệ thống, tạo môi trường kinh doanh thuận lợi",
       icon: (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
             d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
           />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       ),
     },
@@ -588,18 +793,8 @@ export default function VietnamEconomyPage() {
       title: "Năng Suất Lao Động",
       description: "Nâng cao kỹ năng, ứng dụng công nghệ hiện đại",
       icon: (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M13 10V3L4 14h7v7l9-11h-7z"
-          />
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
     },
@@ -607,12 +802,7 @@ export default function VietnamEconomyPage() {
       title: "Kinh Tế Xanh",
       description: "Phát triển bền vững, bảo vệ môi trường",
       icon: (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -622,10 +812,20 @@ export default function VietnamEconomyPage() {
         </svg>
       ),
     },
-  ];
+  ]
+
+  const vn_red_gradient = "bg-linear-to-br from-red-600 via-yellow-500 to-red-600"
+  const vn_gradient_2 = "bg-linear-to-br from-red-500 via-yellow-500 to-red-600"
+  const vn_gradient_4 = "bg-linear-to-br from-red-700 via-red-800 to-yellow-600"
 
   return (
     <div className="vn-red min-h-screen scroll-smooth overflow-x-hidden">
+      
+      <style jsx>{keywordStyles}</style>
+
+      {/* Hint Panel Component */}
+      <EconomyHintPanel />
+
       {/* Floating Background Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <motion.div
@@ -636,7 +836,7 @@ export default function VietnamEconomyPage() {
           }}
           transition={{
             duration: 8,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
           }}
         ></motion.div>
@@ -648,7 +848,7 @@ export default function VietnamEconomyPage() {
           }}
           transition={{
             duration: 6,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
             delay: 1,
           }}
@@ -661,7 +861,7 @@ export default function VietnamEconomyPage() {
           }}
           transition={{
             duration: 10,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             ease: "easeInOut",
             delay: 2,
           }}
@@ -718,7 +918,7 @@ export default function VietnamEconomyPage() {
             {/* Main Title */}
             <AnimatedItem variants={itemVariants}>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-yellow-300 via-yellow-400 to-red-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-yellow-300 via-yellow-400 to-red-400 bg-clip-text text-transparent">
                   Kinh tế Việt Nam
                 </span>
                 <br />
@@ -731,7 +931,7 @@ export default function VietnamEconomyPage() {
             {/* Decorative line */}
             <AnimatedItem variants={scaleUp}>
               <motion.div
-                className="w-32 h-1 bg-gradient-to-r from-yellow-400 to-red-500 mx-auto mb-6 rounded-full"
+                className="w-32 h-1 bg-linear-to-r from-yellow-400 to-red-500 mx-auto mb-6 rounded-full"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
@@ -760,7 +960,7 @@ export default function VietnamEconomyPage() {
         </div>
 
         {/* Bottom gradient overlay */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/5 to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-white/5 to-transparent"></div>
 
         {/* Animated waves */}
         <div className="absolute bottom-0 left-0 right-0">
@@ -783,7 +983,7 @@ export default function VietnamEconomyPage() {
                   "M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z",
                 ],
               }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
             ></motion.path>
           </motion.svg>
         </div>
@@ -792,23 +992,19 @@ export default function VietnamEconomyPage() {
       <main className="container mx-auto px-16 py-8 relative">
         {/* Mở bài */}
         <AnimatedSection>
-          <motion.section
-            className="mb-16 group"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.section className="mb-16 group" whileHover={{ y: -5 }} transition={{ duration: 0.4 }}>
             {/* Main Card với gradient border */}
             <div className="relative">
               {/* Gradient Border Effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 via-yellow-500 to-red-600 rounded-3xl blur opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-200"></div>
+              <div className="absolute -inset-0.5 bg-linear-to-r from-red-600 via-yellow-500 to-red-600 rounded-3xl blur opacity-30 group-hover:opacity-70 transition duration-1000 group-hover:duration-200"></div>
 
               <div className="relative bg-white rounded-3xl shadow-2xl p-8 lg:p-12 border border-gray-100 overflow-hidden">
                 {/* Background Pattern với gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-red-50/50 via-white to-yellow-50/30"></div>
+                <div className="absolute inset-0 bg-linear-to-br from-red-50/50 via-white to-yellow-50/30"></div>
 
                 {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-red-100 to-transparent rounded-full -translate-y-32 translate-x-32"></div>
-                <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-yellow-100 to-transparent rounded-full translate-y-24 -translate-x-24"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-red-100 to-transparent rounded-full -translate-y-32 translate-x-32"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-linear-to-tr from-yellow-100 to-transparent rounded-full translate-y-24 -translate-x-24"></div>
 
                 {/* Animated Orbs */}
                 <motion.div
@@ -819,7 +1015,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                   }}
                 />
@@ -831,7 +1027,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                     delay: 1,
                   }}
@@ -846,13 +1042,8 @@ export default function VietnamEconomyPage() {
                     viewport={{ once: true }}
                   >
                     <div className="relative">
-                      <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg">
-                        <svg
-                          className="w-6 h-6 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
+                      <div className="w-12 h-12 bg-linear-to-br from-red-600 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -862,18 +1053,18 @@ export default function VietnamEconomyPage() {
                         </svg>
                       </div>
                       <motion.div
-                        className="absolute -inset-1 bg-gradient-to-r from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"
+                        className="absolute -inset-1 bg-linear-to-r from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"
                         animate={{ rotate: [0, 180, 360] }}
                         transition={{
                           duration: 8,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           ease: "linear",
                         }}
                       />
                     </div>
                     <div>
                       <motion.h2
-                        className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-red-700 to-yellow-600 bg-clip-text text-transparent"
+                        className="text-2xl lg:text-3xl font-bold bg-linear-to-r from-red-700 to-yellow-600 bg-clip-text text-transparent"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -911,13 +1102,9 @@ export default function VietnamEconomyPage() {
                         transition={{ delay: 0.4 }}
                       >
                         Từ năm 2018, nền kinh tế Việt Nam tiếp tục khẳng định{" "}
-                        <span className="font-semibold text-red-600">
-                          sức bật mạnh mẽ
-                        </span>{" "}
-                        trong bối cảnh toàn cầu biến động. Việt Nam duy trì mức
-                        tăng trưởng dương, cải thiện môi trường đầu tư, thu hút
-                        FDI vào chuỗi cung ứng công nghệ cao và thúc đẩy xuất
-                        khẩu.
+                        <span className="font-semibold text-red-600">sức bật mạnh mẽ</span> trong bối cảnh toàn cầu biến
+                        động. Việt Nam duy trì mức tăng trưởng dương, cải thiện môi trường đầu tư, thu hút FDI vào chuỗi
+                        cung ứng công nghệ cao và thúc đẩy xuất khẩu.
                       </motion.p>
 
                       <motion.p
@@ -927,17 +1114,14 @@ export default function VietnamEconomyPage() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.5 }}
                       >
-                        Các dự án hạ tầng lớn và chính sách hỗ trợ doanh nghiệp
-                        đã góp phần tạo nên{" "}
-                        <span className="font-semibold text-yellow-600">
-                          bức tranh phát triển rõ nét
-                        </span>{" "}
-                        với nhiều điểm sáng ấn tượng.
+                        Các dự án hạ tầng lớn và chính sách hỗ trợ doanh nghiệp đã góp phần tạo nên{" "}
+                        <span className="font-semibold text-yellow-600">bức tranh phát triển rõ nét</span> với nhiều
+                        điểm sáng ấn tượng.
                       </motion.p>
 
                       {/* Stats Highlight */}
                       <motion.div
-                        className="bg-gradient-to-r from-red-50 to-yellow-50 rounded-2xl p-6 border border-red-100"
+                        className="bg-linear-to-r from-red-50 to-yellow-50 rounded-2xl p-6 border border-red-100"
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
@@ -945,13 +1129,8 @@ export default function VietnamEconomyPage() {
                         whileHover={{ scale: 1.02 }}
                       >
                         <div className="flex items-center gap-4">
-                          <div className="flex-shrink-0 w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
-                            <svg
-                              className="w-6 h-6 text-white"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
+                          <div className="shrink-0 w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -970,9 +1149,7 @@ export default function VietnamEconomyPage() {
                             >
                               ~6,93%
                             </motion.p>
-                            <p className="text-gray-600 text-sm">
-                              Tăng trưởng GDP Quý I 2025
-                            </p>
+                            <p className="text-gray-600 text-sm">Tăng trưởng GDP Quý I 2025</p>
                           </div>
                         </div>
                       </motion.div>
@@ -987,7 +1164,7 @@ export default function VietnamEconomyPage() {
                       >
                         <motion.a
                           href="https://xaydungchinhsach.chinhphu.vn/tang-truong-gdp-quy-i-2025-dat-693-cao-hon-cung-ky-5-nam-qua-119250406134047291.htm"
-                          className="group/btn inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-red-600 to-yellow-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                          className="group/btn inline-flex items-center gap-3 px-6 py-4 bg-linear-to-r from-red-600 to-yellow-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
                           target="_blank"
                           rel="noopener noreferrer"
                           whileHover={{ scale: 1.05, y: -2 }}
@@ -997,14 +1174,9 @@ export default function VietnamEconomyPage() {
                           <motion.span
                             className="relative"
                             animate={{ x: [0, 4, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
+                            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                           >
-                            <svg
-                              className="w-5 h-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -1015,7 +1187,7 @@ export default function VietnamEconomyPage() {
                           </motion.span>
 
                           {/* Button glow effect */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover/btn:opacity-100 transition duration-500 -z-10"></div>
+                          <div className="absolute inset-0 bg-linear-to-r from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover/btn:opacity-100 transition duration-500 -z-10"></div>
                         </motion.a>
                       </motion.div>
                     </motion.div>
@@ -1043,7 +1215,7 @@ export default function VietnamEconomyPage() {
                           />
 
                           {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                          <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent"></div>
 
                           {/* Image Badge */}
                           <div className="absolute top-4 left-4">
@@ -1065,7 +1237,7 @@ export default function VietnamEconomyPage() {
                           }}
                           transition={{
                             duration: 4,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut",
                           }}
                         />
@@ -1077,7 +1249,7 @@ export default function VietnamEconomyPage() {
                           }}
                           transition={{
                             duration: 3,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             ease: "easeInOut",
                             delay: 1,
                           }}
@@ -1092,9 +1264,7 @@ export default function VietnamEconomyPage() {
                         viewport={{ once: true }}
                         transition={{ delay: 0.6 }}
                       >
-                        <p className="text-gray-600 text-sm">
-                          Biểu đồ tăng trưởng GDP Việt Nam giai đoạn 2018-2025
-                        </p>
+                        <p className="text-gray-600 text-sm">Biểu đồ tăng trưởng GDP Việt Nam giai đoạn 2018-2025</p>
                       </motion.div>
                     </motion.div>
                   </div>
@@ -1114,16 +1284,14 @@ export default function VietnamEconomyPage() {
             viewport={{ once: true }}
           >
             <motion.div
-              className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-50 to-yellow-50 rounded-2xl border border-red-100 mb-4"
+              className="inline-flex items-center gap-3 px-6 py-3 bg-linear-to-r from-red-50 to-yellow-50 rounded-2xl border border-red-100 mb-4"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-red-700 uppercase tracking-wider">
-                Chỉ Số Quan Trọng
-              </span>
+              <span className="text-sm font-semibold text-red-700 uppercase tracking-wider">Chỉ Số Quan Trọng</span>
               <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
             </motion.div>
 
@@ -1134,7 +1302,7 @@ export default function VietnamEconomyPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                 Chỉ Số Then Chốt
               </span>
             </motion.h2>
@@ -1154,17 +1322,13 @@ export default function VietnamEconomyPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {keyIndicators.map((indicator, index) => (
               <AnimatedItem key={index} variants={fadeInUp}>
-                <motion.div
-                  className="group relative h-full"
-                  whileHover={{ y: -8 }}
-                  transition={{ duration: 0.4 }}
-                >
+                <motion.div className="group relative h-full" whileHover={{ y: -8 }} transition={{ duration: 0.4 }}>
                   {/* Gradient Border */}
-                  <div className="absolute -inset-0.5 bg-gradient-to-br from-red-600 via-yellow-500 to-red-600 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
+                  <div className="absolute -inset-0.5 bg-linear-to-br from-red-600 via-yellow-500 to-red-600 rounded-2xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
 
                   <div className="relative bg-white rounded-2xl shadow-xl hover:shadow-2xl border border-gray-100 overflow-hidden h-full transition-all duration-300">
                     {/* Header với gradient background */}
-                    <div className="relative bg-gradient-to-r from-red-600 to-yellow-500 p-6">
+                    <div className="relative bg-linear-to-r from-red-600 to-yellow-500 p-6">
                       <div className="absolute inset-0 bg-black/10"></div>
 
                       {/* Icon và Title */}
@@ -1178,10 +1342,7 @@ export default function VietnamEconomyPage() {
                         </motion.div>
 
                         <div>
-                          <motion.h3
-                            className="text-xl font-bold text-white"
-                            whileHover={{ x: 3 }}
-                          >
+                          <motion.h3 className="text-xl font-bold text-white" whileHover={{ x: 3 }}>
                             {indicator.title}
                           </motion.h3>
                           <motion.div
@@ -1203,7 +1364,7 @@ export default function VietnamEconomyPage() {
                         }}
                         transition={{
                           duration: 3,
-                          repeat: Infinity,
+                          repeat: Number.POSITIVE_INFINITY,
                           delay: index * 0.5,
                         }}
                       />
@@ -1233,21 +1394,19 @@ export default function VietnamEconomyPage() {
                           whileHover={{ scale: 1.05 }}
                         >
                           <Image
-                            src={indicator.image}
+                            src={indicator.image || "/placeholder.svg"}
                             alt={indicator.title}
                             fill
                             className="object-cover group-hover/image:scale-110 transition-transform duration-500"
                           />
 
                           {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                          <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
 
                           {/* Image Badge */}
                           <div className="absolute top-3 left-3">
                             <div className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1">
-                              <span className="text-xs font-semibold text-gray-800">
-                                📊 Biểu đồ
-                              </span>
+                              <span className="text-xs font-semibold text-gray-800">📊 Biểu đồ</span>
                             </div>
                           </div>
                         </motion.div>
@@ -1272,14 +1431,9 @@ export default function VietnamEconomyPage() {
                             <span>Xem dữ liệu chi tiết</span>
                             <motion.span
                               animate={{ x: [0, 4, 0] }}
-                              transition={{ duration: 1.5, repeat: Infinity }}
+                              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                             >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
@@ -1291,13 +1445,8 @@ export default function VietnamEconomyPage() {
                           </motion.a>
 
                           {/* Source Badge */}
-                          <motion.div
-                            className="px-3 py-1 bg-gray-100 rounded-full"
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            <span className="text-xs text-gray-600 font-medium">
-                              NSO
-                            </span>
+                          <motion.div className="px-3 py-1 bg-gray-100 rounded-full" whileHover={{ scale: 1.05 }}>
+                            <span className="text-xs text-gray-600 font-medium">NSO</span>
                           </motion.div>
                         </motion.div>
                       )}
@@ -1313,13 +1462,11 @@ export default function VietnamEconomyPage() {
                         >
                           <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                             <span>Mức độ tăng trưởng</span>
-                            <span className="font-semibold text-green-600">
-                              {getProgressValue(indicator.title)}
-                            </span>
+                            <span className="font-semibold text-green-600">{getProgressValue(indicator.title)}</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <motion.div
-                              className="h-2 rounded-full bg-gradient-to-r from-green-500 to-green-600"
+                              className="h-2 rounded-full bg-linear-to-r from-green-500 to-green-600"
                               initial={{ width: 0 }}
                               whileInView={{
                                 width: getProgressWidth(indicator.title),
@@ -1351,10 +1498,7 @@ export default function VietnamEconomyPage() {
             viewport={{ once: true }}
             transition={{ delay: 0.8 }}
           >
-            <motion.p
-              className="text-gray-600 text-lg"
-              whileHover={{ scale: 1.02 }}
-            >
+            <motion.p className="text-gray-600 text-lg" whileHover={{ scale: 1.02 }}>
               Dữ liệu được cập nhật theo báo cáo chính thức từ Tổng cục Thống kê
             </motion.p>
           </motion.div>
@@ -1370,16 +1514,14 @@ export default function VietnamEconomyPage() {
             viewport={{ once: true }}
           >
             <motion.div
-              className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-50 to-yellow-50 rounded-2xl border border-red-100 mb-6"
+              className="inline-flex items-center gap-3 px-6 py-3 bg-linear-to-r from-red-50 to-yellow-50 rounded-2xl border border-red-100 mb-6"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-red-700 uppercase tracking-wider">
-                Động Lực Tăng Trưởng
-              </span>
+              <span className="text-sm font-semibold text-red-700 uppercase tracking-wider">Động Lực Tăng Trưởng</span>
               <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
             </motion.div>
 
@@ -1390,7 +1532,7 @@ export default function VietnamEconomyPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                 Ngành Mũi Nhọn
               </span>
             </motion.h2>
@@ -1402,31 +1544,21 @@ export default function VietnamEconomyPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
             >
-              Khám phá những lĩnh vực then chốt đang định hình tương lai kinh tế
-              Việt Nam
+              Khám phá những lĩnh vực then chốt đang định hình tương lai kinh tế Việt Nam
             </motion.p>
           </motion.div>
 
           {/* Industries List */}
           <div className="space-y-12">
             {keyIndustries.map((industry, index) => (
-              <AnimatedItem
-                key={index}
-                variants={index % 2 === 0 ? slideInLeft : slideInRight}
-              >
-                <motion.div
-                  className="group relative"
-                  whileHover={{ y: -8 }}
-                  transition={{ duration: 0.4 }}
-                >
+              <AnimatedItem key={index} variants={index % 2 === 0 ? slideInLeft : slideInRight}>
+                <motion.div className="group relative" whileHover={{ y: -8 }} transition={{ duration: 0.4 }}>
                   {/* Gradient Border Effect */}
-                  <div className="absolute -inset-4 bg-gradient-to-r from-red-600 via-yellow-500 to-red-600 rounded-3xl blur opacity-0 group-hover:opacity-20 transition duration-500 -z-10"></div>
+                  <div className="absolute -inset-4 bg-linear-to-r from-red-600 via-yellow-500 to-red-600 rounded-3xl blur opacity-0 group-hover:opacity-20 transition duration-500 -z-10"></div>
 
                   <div className="relative bg-white rounded-3xl shadow-xl hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300">
                     <div
-                      className={`flex flex-col lg:flex-row ${
-                        index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
-                      }`}
+                      className={`flex flex-col lg:flex-row ${index % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"}`}
                     >
                       {/* Image Section */}
                       <div className="lg:w-2/5 relative">
@@ -1436,14 +1568,14 @@ export default function VietnamEconomyPage() {
                           transition={{ duration: 0.4 }}
                         >
                           <Image
-                            src={industry.image}
+                            src={industry.image || "/placeholder.svg"}
                             alt={industry.title}
                             fill
                             className="object-cover group-hover/image:scale-105 transition-transform duration-700"
                           />
 
                           {/* Gradient Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent lg:bg-gradient-to-r lg:from-black/40 lg:via-black/20 lg:to-transparent"></div>
+                          <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/10 to-transparent lg:bg-linear-to-r lg:from-black/40 lg:via-black/20 lg:to-transparent"></div>
 
                           {/* Industry Badge */}
                           <div className="absolute top-6 left-6">
@@ -1470,21 +1602,15 @@ export default function VietnamEconomyPage() {
                               viewport={{ once: true }}
                               transition={{ delay: 0.4 }}
                             >
-                              {getIndustryStats(industry.title).map(
-                                (stat, statIndex) => (
-                                  <div
-                                    key={statIndex}
-                                    className="bg-white/90 backdrop-blur-sm rounded-xl p-3 text-center"
-                                  >
-                                    <div className="text-lg font-bold text-gray-900">
-                                      {stat.value}
-                                    </div>
-                                    <div className="text-xs text-gray-600">
-                                      {stat.label}
-                                    </div>
-                                  </div>
-                                )
-                              )}
+                              {getIndustryStats(industry.title).map((stat, statIndex) => (
+                                <div
+                                  key={statIndex}
+                                  className="bg-white/90 backdrop-blur-sm rounded-xl p-3 text-center"
+                                >
+                                  <div className="text-lg font-bold text-gray-900">{stat.value}</div>
+                                  <div className="text-xs text-gray-600">{stat.label}</div>
+                                </div>
+                              ))}
                             </motion.div>
                           </div>
 
@@ -1497,7 +1623,7 @@ export default function VietnamEconomyPage() {
                             }}
                             transition={{
                               duration: 3,
-                              repeat: Infinity,
+                              repeat: Number.POSITIVE_INFINITY,
                               delay: index * 0.5,
                             }}
                           />
@@ -1516,7 +1642,7 @@ export default function VietnamEconomyPage() {
                             transition={{ delay: 0.2 }}
                           >
                             <motion.div
-                              className="w-14 h-14 bg-gradient-to-br from-red-600 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg"
+                              className="w-14 h-14 bg-linear-to-br from-red-600 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg"
                               whileHover={{ scale: 1.1, rotate: 5 }}
                               transition={{ duration: 0.3 }}
                             >
@@ -1527,10 +1653,22 @@ export default function VietnamEconomyPage() {
                                 className="text-2xl lg:text-3xl font-bold text-gray-900 group-hover:text-red-700 transition-colors duration-300"
                                 whileHover={{ x: 3 }}
                               >
-                                {industry.title}
+                                {industry.title === "Công nghiệp chế tạo & điện tử" ? (
+                                  <>
+                                    Công nghiệp chế tạo &{" "}
+                                    <Keyword 
+                                      word="điện tử" 
+                                      keyword="ĐIỆN TỬ" 
+                                      hint="Ngành công nghiệp trọng điểm với sản phẩm công nghệ cao" 
+                                      inheritFontWeight={true}
+                                    />
+                                  </>
+                                ) : (
+                                  industry.title
+                                )}
                               </motion.h3>
                               <motion.div
-                                className="w-12 h-1 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full mt-2"
+                                className="w-12 h-1 bg-linear-to-r from-red-500 to-yellow-500 rounded-full mt-2"
                                 initial={{ scaleX: 0 }}
                                 whileInView={{ scaleX: 1 }}
                                 viewport={{ once: true }}
@@ -1547,7 +1685,17 @@ export default function VietnamEconomyPage() {
                             viewport={{ once: true }}
                             transition={{ delay: 0.4 }}
                           >
-                            {industry.content}
+                            {industry.title === "Công nghiệp chế tạo & điện tử" ? (
+                              <>
+                                Ngành công nghiệp chế tạo và điện tử
+                                là trụ cột của tăng trưởng Việt Nam. Việt Nam đang trở thành trung tâm lắp ráp toàn cầu
+                                với nhiều nhà đầu tư lớn từ Hàn Quốc, Nhật Bản và Hoa Kỳ chọn đặt nhà máy tại các khu
+                                công nghiệp. Việc này giúp phát triển chuỗi giá trị công nghệ, tạo việc làm kỹ thuật cao
+                                và thúc đẩy xuất khẩu sản phẩm định hướng công nghệ.
+                              </>
+                            ) : (
+                              industry.content
+                            )}
                           </motion.p>
 
                           {/* Features Grid */}
@@ -1558,24 +1706,18 @@ export default function VietnamEconomyPage() {
                             viewport={{ once: true }}
                             transition={{ delay: 0.5 }}
                           >
-                            {getIndustryFeatures(industry.title).map(
-                              (feature, featureIndex) => (
-                                <motion.div
-                                  key={featureIndex}
-                                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-red-50 transition-colors duration-300 group/feature"
-                                  whileHover={{ scale: 1.02, x: 3 }}
-                                >
-                                  <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover/feature:bg-red-200 transition-colors duration-300">
-                                    <span className="text-red-600 text-sm">
-                                      ✓
-                                    </span>
-                                  </div>
-                                  <span className="text-gray-700 font-medium">
-                                    {feature}
-                                  </span>
-                                </motion.div>
-                              )
-                            )}
+                            {getIndustryFeatures(industry.title).map((feature, featureIndex) => (
+                              <motion.div
+                                key={featureIndex}
+                                className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-red-50 transition-colors duration-300 group/feature"
+                                whileHover={{ scale: 1.02, x: 3 }}
+                              >
+                                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center group-hover/feature:bg-red-200 transition-colors duration-300">
+                                  <span className="text-red-600 text-sm">✓</span>
+                                </div>
+                                <span className="text-gray-700 font-medium">{feature}</span>
+                              </motion.div>
+                            ))}
                           </motion.div>
 
                           {/* Action Buttons */}
@@ -1588,7 +1730,7 @@ export default function VietnamEconomyPage() {
                           >
                             <motion.a
                               href={industry.link}
-                              className="group/btn inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-red-600 to-yellow-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                              className="group/btn inline-flex items-center gap-3 px-6 py-4 bg-linear-to-r from-red-600 to-yellow-500 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
                               target="_blank"
                               rel="noopener noreferrer"
                               whileHover={{ scale: 1.05, y: -2 }}
@@ -1597,14 +1739,9 @@ export default function VietnamEconomyPage() {
                               <span>Khám Phá Chi Tiết</span>
                               <motion.span
                                 animate={{ x: [0, 4, 0] }}
-                                transition={{ duration: 1.5, repeat: Infinity }}
+                                transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                               >
-                                <svg
-                                  className="w-5 h-5"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -1649,6 +1786,23 @@ export default function VietnamEconomyPage() {
               </AnimatedItem>
             ))}
           </div>
+
+          {/* Summary với từ khóa NGÀNH MŨI NHỌN */}
+          <AnimatedItem variants={fadeInUp}>
+            <motion.div
+              className="mt-12 p-8 bg-linear-to-r from-red-50 to-yellow-50 rounded-3xl border border-red-100 text-center"
+              whileHover={{ scale: 1.02 }}
+            >
+              <p className="text-lg text-gray-700">
+                Các <Keyword 
+                  word="ngành mũi nhọn" 
+                  keyword="NGÀNH MŨI NHỌN" 
+                  hint="Các lĩnh vực ưu tiên phát triển của nền kinh tế" 
+                  inheritFontWeight={true}
+                /> này đang định hình tương lai kinh tế Việt Nam, tạo động lực tăng trưởng bền vững và nâng cao năng lực cạnh tranh quốc tế.
+              </p>
+            </motion.div>
+          </AnimatedItem>
         </AnimatedSection>
 
         {/* Dự án hạ tầng tiêu biểu */}
@@ -1661,16 +1815,14 @@ export default function VietnamEconomyPage() {
             viewport={{ once: true }}
           >
             <motion.div
-              className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-50 to-yellow-50 rounded-2xl border border-red-100 mb-6"
+              className="inline-flex items-center gap-3 px-6 py-3 bg-linear-to-r from-red-50 to-yellow-50 rounded-2xl border border-red-100 mb-6"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-semibold text-red-700 uppercase tracking-wider">
-                Đột Phá Hạ Tầng
-              </span>
+              <span className="text-sm font-semibold text-red-700 uppercase tracking-wider">Đột Phá Hạ Tầng</span>
               <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
             </motion.div>
 
@@ -1681,7 +1833,7 @@ export default function VietnamEconomyPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <span className="bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent">
                 Dự Án Tiêu Biểu
               </span>
             </motion.h2>
@@ -1693,8 +1845,7 @@ export default function VietnamEconomyPage() {
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
             >
-              Những công trình hạ tầng trọng điểm đang kiến tạo tương lai Việt
-              Nam
+              Những công trình hạ tầng trọng điểm đang kiến tạo tương lai Việt Nam
             </motion.p>
           </motion.div>
 
@@ -1702,13 +1853,9 @@ export default function VietnamEconomyPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {infrastructureProjects.map((project, index) => (
               <AnimatedItem key={index} variants={scaleUp}>
-                <motion.div
-                  className="group relative h-full"
-                  whileHover={{ y: -12 }}
-                  transition={{ duration: 0.4 }}
-                >
+                <motion.div className="group relative h-full" whileHover={{ y: -12 }} transition={{ duration: 0.4 }}>
                   {/* Gradient Border Effect */}
-                  <div className="absolute -inset-0.5 bg-gradient-to-br from-red-600 via-yellow-500 to-red-600 rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
+                  <div className="absolute -inset-0.5 bg-linear-to-br from-red-600 via-yellow-500 to-red-600 rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-500"></div>
 
                   <div className="relative bg-white rounded-2xl shadow-xl hover:shadow-2xl border border-gray-100 overflow-hidden h-full transition-all duration-300">
                     {/* Image Container */}
@@ -1719,14 +1866,14 @@ export default function VietnamEconomyPage() {
                         transition={{ duration: 0.6 }}
                       >
                         <Image
-                          src={project.image}
+                          src={project.image || "/placeholder.svg"}
                           alt={project.title}
                           fill
                           className="object-cover group-hover/image:scale-110 transition-transform duration-700"
                         />
 
                         {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
+                        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/20 to-transparent"></div>
 
                         {/* Status Badge */}
                         <motion.div
@@ -1767,33 +1914,26 @@ export default function VietnamEconomyPage() {
                           }}
                           transition={{
                             duration: 4,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             delay: index * 0.5,
                           }}
                         />
                       </motion.div>
 
                       {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                         <motion.div
                           className="p-4 w-full"
                           initial={{ opacity: 0, y: 20 }}
                           whileHover={{ opacity: 1, y: 0 }}
                         >
                           <div className="flex justify-between items-center text-white">
-                            <span className="text-sm font-medium">
-                              Xem chi tiết
-                            </span>
+                            <span className="text-sm font-medium">Xem chi tiết</span>
                             <motion.div
                               animate={{ x: [0, 5, 0] }}
-                              transition={{ duration: 1.5, repeat: Infinity }}
+                              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                             >
-                              <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
@@ -1817,7 +1957,19 @@ export default function VietnamEconomyPage() {
                         viewport={{ once: true }}
                         transition={{ delay: index * 0.1 + 0.4 }}
                       >
-                        {project.title}
+                        {project.title === "Cao tốc Bắc--Nam" ? (
+                          <>
+                            <Keyword 
+                              word="Cao tốc" 
+                              keyword="CAO TỐC" 
+                              hint="Hệ thống đường bộ cao tốc kết nối các vùng miền" 
+                              inheritFontWeight={true}
+                            />{" "}
+                            Bắc--Nam
+                          </>
+                        ) : (
+                          project.title
+                        )}
                       </motion.h3>
 
                       {/* Description */}
@@ -1839,18 +1991,12 @@ export default function VietnamEconomyPage() {
                         viewport={{ once: true }}
                         transition={{ delay: index * 0.1 + 0.6 }}
                       >
-                        {getProjectDetails(project.title).map(
-                          (detail, detailIndex) => (
-                            <div key={detailIndex} className="text-center">
-                              <div className="text-2xl font-bold text-red-600">
-                                {detail.value}
-                              </div>
-                              <div className="text-xs text-gray-500 mt-1">
-                                {detail.label}
-                              </div>
-                            </div>
-                          )
-                        )}
+                        {getProjectDetails(project.title).map((detail, detailIndex) => (
+                          <div key={detailIndex} className="text-center">
+                            <div className="text-2xl font-bold text-red-600">{detail.value}</div>
+                            <div className="text-xs text-gray-500 mt-1">{detail.label}</div>
+                          </div>
+                        ))}
                       </motion.div>
 
                       {/* Progress Bar */}
@@ -1863,13 +2009,11 @@ export default function VietnamEconomyPage() {
                       >
                         <div className="flex justify-between text-sm text-gray-600 mb-2">
                           <span>Tiến độ dự án</span>
-                          <span className="font-semibold text-green-600">
-                            {getProjectProgress(project.title)}
-                          </span>
+                          <span className="font-semibold text-green-600">{getProjectProgress(project.title)}</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <motion.div
-                            className="h-2 rounded-full bg-gradient-to-r from-green-500 to-green-600"
+                            className="h-2 rounded-full bg-linear-to-r from-green-500 to-green-600"
                             initial={{ width: 0 }}
                             whileInView={{
                               width: getProjectProgressWidth(project.title),
@@ -1893,7 +2037,7 @@ export default function VietnamEconomyPage() {
                       >
                         <motion.a
                           href={project.link}
-                          className="group/btn inline-flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-red-600 to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                          className="group/btn inline-flex items-center gap-2 px-4 py-3 bg-linear-to-r from-red-600 to-yellow-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                           target="_blank"
                           rel="noopener noreferrer"
                           whileHover={{ scale: 1.05, x: 2 }}
@@ -1902,14 +2046,9 @@ export default function VietnamEconomyPage() {
                           <span>Khám Phá Dự Án</span>
                           <motion.span
                             animate={{ x: [0, 3, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
+                            transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                           >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -1926,12 +2065,7 @@ export default function VietnamEconomyPage() {
                           whileHover={{ scale: 1.05 }}
                         >
                           <div className="flex items-center gap-1">
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -1965,7 +2099,7 @@ export default function VietnamEconomyPage() {
             transition={{ delay: 0.8 }}
           >
             <motion.div
-              className="inline-flex items-center gap-4 px-6 py-4 bg-gradient-to-r from-red-50 to-yellow-50 rounded-2xl border border-red-100"
+              className="inline-flex items-center gap-4 px-6 py-4 bg-red-50 rounded-2xl border border-red-100"
               whileHover={{ scale: 1.02 }}
             >
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -1979,15 +2113,11 @@ export default function VietnamEconomyPage() {
 
         {/* Phân tích tác động xã hội */}
         <AnimatedSection className="mb-20">
-          <motion.div
-            className="group relative"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.div className="group relative" whileHover={{ y: -5 }} transition={{ duration: 0.4 }}>
             {/* Background Effects */}
-            <div className="absolute -inset-4 bg-gradient-to-br from-red-600/20 via-yellow-500/20 to-red-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500 -z-10"></div>
+            <div className="absolute -inset-4 bg-linear-to-br from-red-600/20 via-yellow-500/20 to-red-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500 -z-10"></div>
 
-            <div className="relative bg-gradient-to-br from-red-600 via-red-700 to-yellow-600 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="relative bg-linear-to-br from-red-600 via-red-700 to-yellow-600 rounded-3xl shadow-2xl overflow-hidden">
               {/* Background Pattern */}
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -1996,7 +2126,7 @@ export default function VietnamEconomyPage() {
               </div>
 
               {/* Animated Border */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-1000">
+              <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-1000">
                 <motion.div
                   className="w-full h-full"
                   animate={{
@@ -2004,12 +2134,11 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     repeatType: "reverse",
                   }}
                   style={{
-                    background:
-                      "linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)",
+                    background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)",
                     backgroundSize: "200% 200%",
                   }}
                 />
@@ -2045,13 +2174,13 @@ export default function VietnamEconomyPage() {
                     transition={{ delay: 0.3 }}
                   >
                     Phân Tích{" "}
-                    <span className="bg-gradient-to-r from-yellow-300 to-yellow-400 bg-clip-text text-transparent">
+                    <span className="bg-linear-to-r from-yellow-300 to-yellow-400 bg-clip-text text-transparent">
                       Tác Động Xã Hội
                     </span>
                   </motion.h2>
 
                   <motion.div
-                    className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-red-400 rounded-full mx-auto"
+                    className="w-24 h-1 bg-linear-to-r from-yellow-400 to-red-400 rounded-full mx-auto"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
@@ -2076,9 +2205,8 @@ export default function VietnamEconomyPage() {
                       transition={{ duration: 0.3 }}
                     >
                       <p className="text-lg lg:text-xl leading-relaxed text-white/90 text-justify">
-                        Đầu tư và tăng trưởng kinh tế không chỉ tạo ra việc làm
-                        và tăng thu nhập mà còn đặt ra thách thức về đào tạo
-                        nguồn nhân lực, hạ tầng đô thị và phân bố lợi ích.
+                        Đầu tư và tăng trưởng kinh tế không chỉ tạo ra việc làm và tăng thu nhập mà còn đặt ra thách
+                        thức về đào tạo nguồn nhân lực, hạ tầng đô thị và phân bố lợi ích.
                       </p>
                     </motion.div>
 
@@ -2093,12 +2221,9 @@ export default function VietnamEconomyPage() {
                         Thách Thức Phát Triển
                       </h3>
                       <p className="text-white/80 leading-relaxed">
-                        Việc phát triển mạnh ở một số vùng đô thị lớn có thể dẫn
-                        tới{" "}
-                        <span className="text-yellow-300 font-semibold">
-                          chênh lệch vùng miền
-                        </span>{" "}
-                        nếu không có chính sách hỗ trợ kịp thời.
+                        Việc phát triển mạnh ở một số vùng đô thị lớn có thể dẫn tới{" "}
+                        <span className="text-yellow-300 font-semibold">chênh lệch vùng miền</span> nếu không có chính
+                        sách hỗ trợ kịp thời.
                       </p>
                     </motion.div>
 
@@ -2113,9 +2238,13 @@ export default function VietnamEconomyPage() {
                         Giải Pháp Bền Vững
                       </h3>
                       <p className="text-white/80 leading-relaxed">
-                        Cần có chính sách kết hợp đào tạo kỹ năng cho lao động,
-                        mở rộng an sinh xã hội và đảm bảo phát triển bền
-                        vững—bao gồm cả kinh tế xanh và bảo vệ môi trường.
+                        Cần có chính sách kết hợp đào tạo kỹ năng cho lao động, mở rộng an sinh xã hội và đảm bảo phát
+                        triển bền vững—bao gồm cả <Keyword 
+                          word="kinh tế xanh" 
+                          keyword="KINH TẾ XANH" 
+                          hint="Mô hình phát triển bền vững thân thiện với môi trường" 
+                          inheritFontWeight={true}
+                        /> và bảo vệ môi trường.
                       </p>
                     </motion.div>
                   </motion.div>
@@ -2145,17 +2274,15 @@ export default function VietnamEconomyPage() {
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{
                               duration: 2,
-                              repeat: Infinity,
+                              repeat: Number.POSITIVE_INFINITY,
                               delay: index * 0.5,
                             }}
                           >
                             {metric.value}
                           </motion.div>
-                          <div className="text-yellow-200 text-sm font-medium">
-                            {metric.label}
-                          </div>
+                          <div className="text-yellow-200 text-sm font-medium">{metric.label}</div>
                           <motion.div
-                            className="w-full h-1 bg-gradient-to-r from-yellow-400 to-red-400 rounded-full mt-3 opacity-0 group-hover/metric:opacity-100 transition-opacity duration-300"
+                            className="w-full h-1 bg-linear-to-r from-yellow-400 to-red-400 rounded-full mt-3 opacity-0 group-hover/metric:opacity-100 transition-opacity duration-300"
                             whileHover={{ scaleX: 1.1 }}
                           />
                         </motion.div>
@@ -2170,9 +2297,7 @@ export default function VietnamEconomyPage() {
                       viewport={{ once: true }}
                       transition={{ delay: 0.9 }}
                     >
-                      <h3 className="text-xl font-semibold text-yellow-300 mb-4 text-center">
-                        Trọng Tâm Phát Triển
-                      </h3>
+                      <h3 className="text-xl font-semibold text-yellow-300 mb-4 text-center">Trọng Tâm Phát Triển</h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {focusAreas.map((area, index) => (
                           <motion.div
@@ -2190,9 +2315,7 @@ export default function VietnamEconomyPage() {
                             >
                               <span className="text-yellow-300 text-lg">✓</span>
                             </motion.div>
-                            <span className="text-white/80 text-sm font-medium">
-                              {area}
-                            </span>
+                            <span className="text-white/80 text-sm font-medium">{area}</span>
                           </motion.div>
                         ))}
                       </div>
@@ -2207,21 +2330,16 @@ export default function VietnamEconomyPage() {
                       transition={{ delay: 1.1 }}
                     >
                       <motion.button
-                        className="group/btn inline-flex items-center gap-3 px-8 py-4 bg-white text-red-600 font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
+                        className="group/btn inline-flex items-center gap-4 px-8 py-4 bg-white text-red-600 font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300"
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <span>Đóng Góp Ý Kiến</span>
                         <motion.span
                           animate={{ x: [0, 4, 0] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
+                          transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
                         >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -2247,7 +2365,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                   }}
                 />
                 <motion.div
@@ -2258,7 +2376,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     delay: 2,
                   }}
                 />
@@ -2269,17 +2387,13 @@ export default function VietnamEconomyPage() {
 
         {/* Hạn chế & rủi ro */}
         <AnimatedSection className="mb-20">
-          <motion.div
-            className="group relative"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.div className="group relative" whileHover={{ y: -5 }} transition={{ duration: 0.4 }}>
             {/* Background Effects */}
-            <div className="absolute -inset-4 bg-gradient-to-br from-red-50 to-yellow-50 rounded-3xl blur opacity-0 group-hover:opacity-100 transition duration-500 -z-10"></div>
+            <div className="absolute -inset-4 bg-linear-to-br from-red-50 to-yellow-50 rounded-3xl blur opacity-0 group-hover:opacity-100 transition duration-500 -z-10"></div>
 
             <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
               {/* Header Section */}
-              <div className="bg-gradient-to-r from-red-600 to-red-700 p-8 lg:p-10">
+              <div className="bg-linear-to-r from-red-600 to-red-700 p-8 lg:p-10">
                 <motion.div
                   className="text-center"
                   initial={{ opacity: 0, y: 30 }}
@@ -2308,7 +2422,7 @@ export default function VietnamEconomyPage() {
                     transition={{ delay: 0.3 }}
                   >
                     Hạn Chế &{" "}
-                    <span className="bg-gradient-to-r from-yellow-300 to-yellow-400 bg-clip-text text-transparent">
+                    <span className="bg-linear-to-r from-yellow-300 to-yellow-400 bg-clip-text text-transparent">
                       Rủi Ro
                     </span>
                   </motion.h2>
@@ -2320,12 +2434,11 @@ export default function VietnamEconomyPage() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 }}
                   >
-                    Những thách thức cần được giải quyết để đảm bảo phát triển
-                    bền vững
+                    Những thách thức cần được giải quyết để đảm bảo phát triển bền vững
                   </motion.p>
 
                   <motion.div
-                    className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-red-400 rounded-full mx-auto mt-6"
+                    className="w-24 h-1 bg-linear-to-r from-yellow-400 to-red-400 rounded-full mx-auto mt-6"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
@@ -2340,7 +2453,7 @@ export default function VietnamEconomyPage() {
                   {limitations.map((limitation, index) => (
                     <AnimatedItem key={index} variants={fadeInUp}>
                       <motion.div
-                        className="group/card relative bg-gradient-to-br from-white to-red-50 rounded-2xl shadow-lg border border-red-100 overflow-hidden h-full"
+                        className="group/card relative bg-linear-to-br from-white to-red-50 rounded-2xl shadow-lg border border-red-100 overflow-hidden h-full"
                         whileHover={{
                           y: -8,
                           scale: 1.02,
@@ -2349,7 +2462,7 @@ export default function VietnamEconomyPage() {
                         transition={{ duration: 0.4 }}
                       >
                         {/* Gradient Border Effect */}
-                        <div className="absolute -inset-0.5 bg-gradient-to-br from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover/card:opacity-30 transition duration-500"></div>
+                        <div className="absolute -inset-0.5 bg-linear-to-br from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover/card:opacity-30 transition duration-500"></div>
 
                         <div className="relative z-10 p-6 lg:p-8 h-full flex flex-col">
                           {/* Icon Header */}
@@ -2365,15 +2478,15 @@ export default function VietnamEconomyPage() {
                               whileHover={{ scale: 1.1, rotate: 5 }}
                               transition={{ duration: 0.3 }}
                             >
-                              <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg">
+                              <div className="w-12 h-12 bg-linear-to-br from-red-600 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg">
                                 {getRiskIcon(index)}
                               </div>
                               <motion.div
-                                className="absolute -inset-1 bg-gradient-to-br from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover/card:opacity-30 transition duration-500"
+                                className="absolute -inset-1 bg-linear-to-br from-red-600 to-yellow-500 rounded-2xl blur opacity-0 group-hover/card:opacity-30 transition duration-500"
                                 animate={{ rotate: [0, 180, 360] }}
                                 transition={{
                                   duration: 8,
-                                  repeat: Infinity,
+                                  repeat: Number.POSITIVE_INFINITY,
                                   ease: "linear",
                                 }}
                               />
@@ -2387,7 +2500,7 @@ export default function VietnamEconomyPage() {
                                 {limitation}
                               </motion.h3>
                               <motion.div
-                                className="w-8 h-0.5 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full mt-2"
+                                className="w-8 h-0.5 bg-linear-to-r from-red-500 to-yellow-500 rounded-full mt-2"
                                 initial={{ scaleX: 0 }}
                                 whileInView={{ scaleX: 1 }}
                                 viewport={{ once: true }}
@@ -2420,13 +2533,11 @@ export default function VietnamEconomyPage() {
                           >
                             <div className="flex justify-between text-sm text-gray-600 mb-2">
                               <span>Mức độ ảnh hưởng</span>
-                              <span className="font-semibold text-red-600">
-                                {getRiskImpact(limitation)}
-                              </span>
+                              <span className="font-semibold text-red-600">{getRiskImpact(limitation)}</span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2">
                               <motion.div
-                                className="h-2 rounded-full bg-gradient-to-r from-yellow-500 to-red-600"
+                                className="h-2 rounded-full bg-linear-to-r from-yellow-500 to-red-600"
                                 initial={{ width: 0 }}
                                 whileInView={{
                                   width: getRiskImpactWidth(limitation),
@@ -2450,12 +2561,7 @@ export default function VietnamEconomyPage() {
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2 text-sm text-gray-500">
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -2475,7 +2581,7 @@ export default function VietnamEconomyPage() {
                                   animate={{ x: [0, 2, 0] }}
                                   transition={{
                                     duration: 1.5,
-                                    repeat: Infinity,
+                                    repeat: Number.POSITIVE_INFINITY,
                                   }}
                                 >
                                   →
@@ -2487,20 +2593,20 @@ export default function VietnamEconomyPage() {
 
                         {/* Corner Decoration */}
                         <motion.div
-                          className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-yellow-400 rounded-tr-xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
+                          className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-yellow-400 rounded-tr-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           whileHover={{ scale: 1.2 }}
                         />
 
                         {/* Floating Element */}
                         <motion.div
-                          className="absolute bottom-4 left-4 w-3 h-3 bg-red-400 rounded-full opacity-0 group-hover/card:opacity-30"
+                          className="absolute bottom-4 left-4 w-3 h-3 bg-red-400 rounded-full opacity-0 group-hover:opacity-30"
                           animate={{
                             scale: [1, 1.5, 1],
                             opacity: [0, 0.3, 0],
                           }}
                           transition={{
                             duration: 3,
-                            repeat: Infinity,
+                            repeat: Number.POSITIVE_INFINITY,
                             delay: index * 0.5,
                           }}
                         />
@@ -2523,8 +2629,7 @@ export default function VietnamEconomyPage() {
                   >
                     <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
                     <p className="text-gray-700 font-medium">
-                      Các giải pháp đang được nghiên cứu và triển khai để khắc
-                      phục
+                      Các giải pháp đang được nghiên cứu và triển khai để khắc phục
                     </p>
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   </motion.div>
@@ -2536,16 +2641,12 @@ export default function VietnamEconomyPage() {
 
         {/* Kết luận */}
         <AnimatedSection className="mb-20">
-          <motion.div
-            className="group relative"
-            whileHover={{ y: -8 }}
-            transition={{ duration: 0.4 }}
-          >
+          <motion.div className="group relative" whileHover={{ y: -8 }} transition={{ duration: 0.4 }}>
             {/* Background Effects */}
-            <div className="absolute -inset-4 bg-gradient-to-br from-red-600/20 via-yellow-500/20 to-red-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500 -z-10"></div>
+            <div className="absolute -inset-4 bg-linear-to-br from-red-600/20 via-yellow-500/20 to-red-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500 -z-10"></div>
 
             {/* Main Container */}
-            <div className="relative bg-gradient-to-br from-red-700 via-red-800 to-yellow-600 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="relative bg-linear-to-br from-red-700 via-red-800 to-yellow-600 rounded-3xl shadow-2xl overflow-hidden">
               {/* Animated Background Pattern */}
               <div className="absolute inset-0 opacity-10">
                 <motion.div
@@ -2556,7 +2657,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 8,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                   }}
                 />
@@ -2568,7 +2669,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 10,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                     delay: 2,
                   }}
@@ -2581,7 +2682,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 12,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                     delay: 4,
                   }}
@@ -2589,7 +2690,7 @@ export default function VietnamEconomyPage() {
               </div>
 
               {/* Animated Border */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-1000">
+              <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-1000">
                 <motion.div
                   className="w-full h-full"
                   animate={{
@@ -2597,12 +2698,11 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     repeatType: "reverse",
                   }}
                   style={{
-                    background:
-                      "linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)",
+                    background: "linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)",
                     backgroundSize: "200% 200%",
                   }}
                 />
@@ -2638,13 +2738,13 @@ export default function VietnamEconomyPage() {
                     transition={{ delay: 0.3 }}
                   >
                     Kết Luận{" "}
-                    <span className="bg-gradient-to-r from-yellow-300 to-yellow-400 bg-clip-text text-transparent">
+                    <span className="bg-linear-to-r from-yellow-300 to-yellow-400 bg-clip-text text-transparent">
                       & Tầm Nhìn
                     </span>
                   </motion.h2>
 
                   <motion.div
-                    className="w-32 h-1 bg-gradient-to-r from-yellow-400 to-red-400 rounded-full mx-auto"
+                    className="w-32 h-1 bg-linear-to-r from-yellow-400 to-red-400 rounded-full mx-auto"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
@@ -2670,10 +2770,8 @@ export default function VietnamEconomyPage() {
                       transition={{ delay: 0.6 }}
                     >
                       "Kinh tế Việt Nam sau 2018 đã đạt được{" "}
-                      <span className="font-bold text-yellow-300 not-italic">
-                        nhiều thành tựu ấn tượng
-                      </span>{" "}
-                      song hành cùng thách thức cần vượt qua."
+                      <span className="font-bold text-yellow-300 not-italic">nhiều thành tựu ấn tượng</span> song hành
+                      cùng thách thức cần vượt qua."
                     </motion.p>
                   </motion.div>
 
@@ -2696,17 +2794,26 @@ export default function VietnamEconomyPage() {
                         whileHover={{ scale: 1.05, y: -4 }}
                       >
                         <motion.div
-                          className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+                          className="w-12 h-12 bg-linear-to-br from-yellow-400 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
                           whileHover={{ scale: 1.1, rotate: 5 }}
                           transition={{ duration: 0.3 }}
                         >
                           {area.icon}
                         </motion.div>
-                        <h3 className="text-lg font-semibold text-yellow-300 mb-2 text-center">
-                          {area.title}
-                        </h3>
+                        <h3 className="text-lg font-semibold text-yellow-300 mb-2 text-center">{area.title}</h3>
                         <p className="text-white/70 text-sm text-center leading-relaxed">
-                          {area.description}
+                          {area.title === "Kinh Tế Xanh" ? (
+                            <>
+                              Phát triển <Keyword 
+                                word="kinh tế xanh" 
+                                keyword="KINH TẾ XANH" 
+                                hint="Mô hình phát triển bền vững thân thiện với môi trường" 
+                                inheritFontWeight={true}
+                              />, bảo vệ môi trường
+                            </>
+                          ) : (
+                            area.description
+                          )}
                         </p>
                       </motion.div>
                     ))}
@@ -2727,19 +2834,16 @@ export default function VietnamEconomyPage() {
                       viewport={{ once: true }}
                       transition={{ delay: 1.2 }}
                     >
-                      Cần đẩy mạnh đổi mới thể chế, nâng cao năng suất lao động
-                      và phát triển kinh tế xanh để chuyển từ{" "}
-                      <span className="text-yellow-300 font-semibold">
-                        tăng trưởng số lượng
-                      </span>{" "}
-                      sang{" "}
-                      <span className="text-green-300 font-semibold">
-                        chất lượng bền vững
-                      </span>
-                      .
+                      Cần đẩy mạnh đổi mới thể chế, nâng cao năng suất lao động và phát triển{" "}
+                      <Keyword 
+                        word="kinh tế xanh" 
+                        keyword="KINH TẾ XANH" 
+                        hint="Mô hình phát triển bền vững thân thiện với môi trường" 
+                        inheritFontWeight={true}
+                      /> để chuyển từ{" "}
+                      <span className="text-yellow-300 font-semibold">tăng trưởng số lượng</span> sang{" "}
+                      <span className="text-green-300 font-semibold">chất lượng bền vững</span>.
                     </motion.p>
-
-                    {/* Action Buttons */}
                   </motion.div>
                 </div>
 
@@ -2752,7 +2856,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 4,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                   }}
                 />
                 <motion.div
@@ -2763,7 +2867,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     delay: 2,
                   }}
                 />
@@ -2775,7 +2879,7 @@ export default function VietnamEconomyPage() {
                   }}
                   transition={{
                     duration: 5,
-                    repeat: Infinity,
+                    repeat: Number.POSITIVE_INFINITY,
                     delay: 1,
                   }}
                 />
@@ -2784,6 +2888,39 @@ export default function VietnamEconomyPage() {
           </motion.div>
         </AnimatedSection>
       </main>
+
+      {/* Game Navigation Floating Button */}
+      <motion.div
+        className="game-float-btn"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <Link href="/game">
+          <motion.div
+            className="bg-linear-to-r from-yellow-500 to-red-500 text-white p-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 group"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="relative">
+              <span className="text-xl">🎮</span>
+              {foundKeywords.length > 0 && (
+                <motion.div
+                  className="absolute -top-2 -right-2 w-5 h-5 bg-green-500 rounded-full text-xs flex items-center justify-center text-white"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                >
+                  {foundKeywords.length}
+                </motion.div>
+              )}
+            </div>
+            <span>Mini Game</span>
+            <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}>
+              →
+            </motion.span>
+          </motion.div>
+        </Link>
+      </motion.div>
     </div>
-  );
+  )
 }
