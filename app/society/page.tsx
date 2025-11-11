@@ -1,13 +1,13 @@
 // app/society/page.tsx
-"use client"
+"use client";
 
-import type React from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useInView, type Variants } from "framer-motion"
-import { useRef, useState } from "react"
-import Image from "next/image"
-import { useGame } from "@/contexts/GameContext"
-import Link from "next/link"
+import type React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useInView, type Variants } from "framer-motion";
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { useGame } from "@/contexts/GameContext";
+import Link from "next/link";
 
 // Animation variants
 const containerVariants = {
@@ -18,7 +18,7 @@ const containerVariants = {
       staggerChildren: 0.2,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -30,7 +30,7 @@ const itemVariants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -42,7 +42,7 @@ const fadeInUp: Variants = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const slideInLeft = {
   hidden: { opacity: 0, x: -100 },
@@ -54,7 +54,7 @@ const slideInLeft = {
       ease: "easeOut",
     },
   },
-}
+};
 
 const slideInRight = {
   hidden: { opacity: 0, x: 100 },
@@ -66,18 +66,18 @@ const slideInRight = {
       ease: "easeOut",
     },
   },
-}
+};
 
 // Animated component wrapper
 function AnimatedSection({
   children,
   className = "",
 }: {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <motion.div
@@ -89,7 +89,7 @@ function AnimatedSection({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 function AnimatedItem({
@@ -97,15 +97,15 @@ function AnimatedItem({
   variants = itemVariants,
   className = "",
 }: {
-  children: React.ReactNode
-  variants?: any
-  className?: string
+  children: React.ReactNode;
+  variants?: any;
+  className?: string;
 }) {
   return (
     <motion.div variants={variants} className={className}>
       {children}
     </motion.div>
-  )
+  );
 }
 
 // Component cho từ khóa có thể click với hint - ĐÃ SỬA (bỏ icon bóng đèn)
@@ -116,24 +116,24 @@ function Keyword({
   className = "",
   inheritFontWeight = false,
 }: {
-  word: string
-  keyword: string
-  hint: string
-  className?: string
-  inheritFontWeight?: boolean
+  word: string;
+  keyword: string;
+  hint: string;
+  className?: string;
+  inheritFontWeight?: boolean;
 }) {
-  const { foundKeywords, addKeyword } = useGame()
-  const [isRecentlyFound, setIsRecentlyFound] = useState(false)
+  const { foundKeywords, addKeyword } = useGame();
+  const [isRecentlyFound, setIsRecentlyFound] = useState(false);
 
-  const isFound = foundKeywords.includes(keyword)
+  const isFound = foundKeywords.includes(keyword);
 
   const handleClick = () => {
     if (!isFound) {
-      addKeyword(keyword)
-      setIsRecentlyFound(true)
-      setTimeout(() => setIsRecentlyFound(false), 2000)
+      addKeyword(keyword);
+      setIsRecentlyFound(true);
+      setTimeout(() => setIsRecentlyFound(false), 2000);
     }
-  }
+  };
 
   return (
     <span className="keyword-wrapper relative inline-block">
@@ -158,12 +158,12 @@ function Keyword({
         {word}
       </motion.span>
     </span>
-  )
+  );
 }
 
 // Component Hint Panel cho Society
 function SocietyHintPanel() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -176,7 +176,7 @@ function SocietyHintPanel() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
-        style={{ marginTop: '8px' }}
+        style={{ marginTop: "8px" }}
       >
         <span>💡</span>
         <span className="hidden sm:inline">Gợi ý</span>
@@ -198,7 +198,10 @@ function SocietyHintPanel() {
                   <span>💡</span>
                   Gợi ý Tìm từ khóa - Xã hội
                 </h3>
-                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
                   <span className="text-xl">×</span>
                 </button>
               </div>
@@ -213,7 +216,11 @@ function SocietyHintPanel() {
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• 1 từ, 5 chữ cái</li>
-                      <li>• Liên quan đến chính sách xã hội, cần có chính sách giúp nhóm yếu thế này tiếp cận dịch vụ và khơi dậy nội lực.</li>
+                      <li>
+                        • Liên quan đến chính sách xã hội, cần có chính sách
+                        giúp nhóm yếu thế này tiếp cận dịch vụ và khơi dậy nội
+                        lực.
+                      </li>
                       <li>• Vấn đề xã hội quan trọng</li>
                       <li>• Tìm trong phần Hero Section</li>
                     </ul>
@@ -228,7 +235,10 @@ function SocietyHintPanel() {
                       <li>• 2 từ, 9 chữ cái</li>
                       <li>• Liên quan đến dịch vụ công</li>
                       <li>• Hệ thống quản lý nhà nước</li>
-                      <li>• Giúp minh bạch thủ tục và sử dụng dữ liệu dân cư hiệu quả hơn</li>
+                      <li>
+                        • Giúp minh bạch thủ tục và sử dụng dữ liệu dân cư hiệu
+                        quả hơn
+                      </li>
                       <li>• Tìm trong phần Giáo dục & Đào tạo</li>
                     </ul>
                   </div>
@@ -236,13 +246,19 @@ function SocietyHintPanel() {
                   <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                     <h4 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
                       <span>🏥</span>
-                      Từ khóa thứ 3 
+                      Từ khóa thứ 3
                     </h4>
                     <ul className="text-sm text-green-700 space-y-1">
                       <li>• 3 từ, 11 chữ cái</li>
                       <li>• Liên quan đến hệ thống chăm sóc sức khỏe</li>
-                      <li>• Hệ thống cơ sở (tuyến dưới) đóng vai trò chủ chốt trong phòng chống dịch bệnh.</li>
-                      <li>• Lực lượng tiên phong trong ứng phó các dịch bệnh và triển khai chiến dịch tiêm chủng.</li>
+                      <li>
+                        • Hệ thống cơ sở (tuyến dưới) đóng vai trò chủ chốt
+                        trong phòng chống dịch bệnh.
+                      </li>
+                      <li>
+                        • Lực lượng tiên phong trong ứng phó các dịch bệnh và
+                        triển khai chiến dịch tiêm chủng.
+                      </li>
                       <li>• Tìm trong phần Y tế & Phúc lợi</li>
                     </ul>
                   </div>
@@ -265,7 +281,9 @@ function SocietyHintPanel() {
 
               {/* Footer */}
               <div className="pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500 text-center">Tìm tất cả từ khóa để khám phá slogan bí mật!</p>
+                <p className="text-xs text-gray-500 text-center">
+                  Tìm tất cả từ khóa để khám phá slogan bí mật!
+                </p>
               </div>
             </div>
           </motion.div>
@@ -285,14 +303,14 @@ function SocietyHintPanel() {
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
 
 export default function SocietyPage() {
-  const { foundKeywords } = useGame()
+  const { foundKeywords } = useGame();
 
-// CSS styles cho keyword system - ĐÃ SỬA (xóa hoàn toàn gạch chân)
-const keywordStyles = `
+  // CSS styles cho keyword system - ĐÃ SỬA (xóa hoàn toàn gạch chân)
+  const keywordStyles = `
   .keyword {
     cursor: pointer;
     padding: 2px 4px;
@@ -352,7 +370,7 @@ const keywordStyles = `
     display: inline-block;
     position: relative;
   }
-`
+`;
 
   const healthcareStats = [
     {
@@ -378,7 +396,7 @@ const keywordStyles = `
       trend: "",
       color: "text-chart-2",
     },
-  ]
+  ];
 
   const educationStats = [
     {
@@ -402,7 +420,7 @@ const keywordStyles = `
       icon: "💻",
       link: "https://vietnamnet.vn/en/vietnam-becomes-second-largest-global-user-of-free-online-learning-platforms-2370118.html",
     },
-  ]
+  ];
 
   const digitalTransformation = [
     {
@@ -414,7 +432,8 @@ const keywordStyles = `
     },
     {
       title: "BHYT số",
-      description: "Từ 1/6/2025 ngừng thẻ giấy, chuyển sang VssID và căn cước chip",
+      description:
+        "Từ 1/6/2025 ngừng thẻ giấy, chuyển sang VssID và căn cước chip",
       icon: "💳",
       status: "Sắp áp dụng",
       link: "https://dangcongsan.vn/tin-hoat-dong/thuc-day-trien-khai-cac-giai-phap-cong-nghe-phuc-vu-nguoi-dan-doanh-nghiep-gan-voi-du-lieu-dan-cu-dinh-danh-xac-thuc-die.html",
@@ -426,7 +445,7 @@ const keywordStyles = `
       status: "Mở rộng",
       link: "https://english.luatvietnam.vn/legal-news/law-revising-the-law-on-health-insurance-4729-102030-article.html",
     },
-  ]
+  ];
 
   const socialWelfareItems = [
     {
@@ -444,7 +463,7 @@ const keywordStyles = `
       title: "Giảm nghèo đa chiều",
       description: "Mục tiêu giảm xuống dưới 3%",
     },
-  ]
+  ];
 
   const genderEquality = [
     {
@@ -465,17 +484,16 @@ const keywordStyles = `
       description: "Thanh niên tham gia lực lượng lao động số",
       trend: "",
     },
-  ]
+  ];
 
   const challenges = [
     "Bất bình đẳng vùng miền trong tiếp cận dịch vụ cơ bản",
     "Chất lượng giáo dục đại học chưa đồng đều",
     "Áp lực tài chính đối với hệ thống y tế khi dân số già hóa",
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden vn-red">
-      
       <style jsx>{keywordStyles}</style>
 
       {/* Hint Panel Component */}
@@ -503,7 +521,9 @@ const keywordStyles = `
                 transition={{ delay: 0.2 }}
               >
                 <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                <span className="text-sm font-semibold text-yellow-300 uppercase tracking-wide">Xã hội Việt Nam</span>
+                <span className="text-sm font-semibold text-yellow-300 uppercase tracking-wide">
+                  Xã hội Việt Nam
+                </span>
                 <div className="w-2 h-2 bg-red-400 rounded-full"></div>
               </motion.div>
 
@@ -518,7 +538,9 @@ const keywordStyles = `
               </h1>
 
               <div className="inline-flex my-6 items-center px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-                <span className="text-yellow-300 text-sm md:text-base font-semibold">2018 – Nay</span>
+                <span className="text-yellow-300 text-sm md:text-base font-semibold">
+                  2018 – Nay
+                </span>
               </div>
             </div>
           </AnimatedItem>
@@ -537,9 +559,16 @@ const keywordStyles = `
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                Giai đoạn 2018–nay chứng kiến nhiều bước tiến rõ nét về chất lượng cuộc sống tại Việt Nam: mở rộng bảo
-                hiểm y tế, chính sách giảm <Keyword word="nghèo" keyword="NGHÈO" hint="Vấn đề xã hội quan trọng cần giải quyết" inheritFontWeight={true} />, cải tiến giáo dục và chuyển đổi số
-                trong dịch vụ công.
+                Giai đoạn 2018–nay chứng kiến nhiều bước tiến rõ nét về chất
+                lượng cuộc sống tại Việt Nam: mở rộng bảo hiểm y tế, chính sách
+                giảm{" "}
+                <Keyword
+                  word="nghèo"
+                  keyword="NGHÈO"
+                  hint="Vấn đề xã hội quan trọng cần giải quyết"
+                  inheritFontWeight={true}
+                />
+                , cải tiến giáo dục và chuyển đổi số trong dịch vụ công.
               </motion.p>
             </motion.div>
           </AnimatedItem>
@@ -560,7 +589,12 @@ const keywordStyles = `
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Những tiến bộ vượt bậc trong hệ thống chăm sóc sức khỏe với{" "}
-                <Keyword word="mạng lưới y tế" keyword="MẠNG LƯỚI Y TẾ" hint="Hệ thống cơ sở y tế toàn quốc" /> không ngừng được cải tiến
+                <Keyword
+                  word="mạng lưới y tế"
+                  keyword="MẠNG LƯỚI Y TẾ"
+                  hint="Hệ thống cơ sở y tế toàn quốc"
+                />{" "}
+                không ngừng được cải tiến
               </p>
             </div>
           </AnimatedItem>
@@ -573,8 +607,12 @@ const keywordStyles = `
                   className="bg-linear-to-br from-muted to-accent rounded-3xl p-8 text-center border border-border shadow-xl"
                   whileHover={{ y: -5, scale: 1.05 }}
                 >
-                  <div className={`text-5xl font-black ${stat.color} mb-4`}>{stat.value}</div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">{stat.label}</h3>
+                  <div className={`text-5xl font-black ${stat.color} mb-4`}>
+                    {stat.value}
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-2">
+                    {stat.label}
+                  </h3>
                   <p className="text-muted-foreground">{stat.description}</p>
                   <div className="mt-4 text-2xl text-chart-2">{stat.trend}</div>
                   {stat.link && (
@@ -588,7 +626,10 @@ const keywordStyles = `
                       <span>Chi tiết</span>
                       <motion.span
                         animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Number.POSITIVE_INFINITY,
+                        }}
                       >
                         →
                       </motion.span>
@@ -601,7 +642,10 @@ const keywordStyles = `
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <AnimatedItem variants={slideInLeft}>
-              <motion.div className="relative rounded-3xl overflow-hidden shadow-2xl" whileHover={{ scale: 1.05 }}>
+              <motion.div
+                className="relative rounded-3xl overflow-hidden shadow-2xl"
+                whileHover={{ scale: 1.05 }}
+              >
                 <div className="relative h-80 w-full">
                   <Image
                     src="/images/healthcare-system.jpg"
@@ -611,7 +655,9 @@ const keywordStyles = `
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm rounded-full px-4 py-2">
-                    <span className="font-semibold text-foreground">BHYT Toàn dân</span>
+                    <span className="font-semibold text-foreground">
+                      BHYT Toàn dân
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -619,9 +665,14 @@ const keywordStyles = `
 
             <AnimatedItem variants={slideInRight}>
               <div className="space-y-6">
-                <motion.div className="bg-card rounded-2xl p-6 shadow-lg border border-border" whileHover={{ y: -3 }}>
+                <motion.div
+                  className="bg-card rounded-2xl p-6 shadow-lg border border-border"
+                  whileHover={{ y: -3 }}
+                >
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-bold text-chart-1">Mở rộng BHYT</h3>
+                    <h3 className="text-2xl font-bold text-chart-1">
+                      Mở rộng BHYT
+                    </h3>
                     <motion.a
                       href="https://vss.gov.vn/english/news/Pages/vietnam-social-security.aspx?CateID=198&ItemID=12528"
                       target="_blank"
@@ -633,14 +684,21 @@ const keywordStyles = `
                     </motion.a>
                   </div>
                   <p className="text-foreground leading-relaxed">
-                    Việc mở rộng BHYT giúp người dân — đặc biệt nhóm nghèo, vùng sâu vùng xa — tiếp cận chăm sóc sức
-                    khỏe tốt hơn và giảm gánh nặng chi phí y tế. Hệ thống mạng lưới y tế được mở rộng và nâng cấp toàn diện.
+                    Việc mở rộng BHYT giúp người dân — đặc biệt nhóm nghèo, vùng
+                    sâu vùng xa — tiếp cận chăm sóc sức khỏe tốt hơn và giảm
+                    gánh nặng chi phí y tế. Hệ thống mạng lưới y tế được mở rộng
+                    và nâng cấp toàn diện.
                   </p>
                 </motion.div>
 
-                <motion.div className="bg-card rounded-2xl p-6 shadow-lg border border-border" whileHover={{ y: -3 }}>
+                <motion.div
+                  className="bg-card rounded-2xl p-6 shadow-lg border border-border"
+                  whileHover={{ y: -3 }}
+                >
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-bold text-chart-3">Ứng phó COVID-19</h3>
+                    <h3 className="text-2xl font-bold text-chart-3">
+                      Ứng phó COVID-19
+                    </h3>
                     <motion.a
                       href="https://moh.gov.vn/tin-tong-hop/-/asset_publisher/k206Q9qkZOqn/content/chu-ong-ung-pho-voi-dich-covid-19"
                       target="_blank"
@@ -652,14 +710,21 @@ const keywordStyles = `
                     </motion.a>
                   </div>
                   <p className="text-foreground leading-relaxed">
-                    Triển khai chiến dịch tiêm chủng nhanh, cách ly và điều trị rộng khắp; áp dụng công nghệ số trong
-                    quản lý dịch và chăm sóc sức khỏe. Mạng lưới y tế đã chứng tỏ hiệu quả trong việc ứng phó với đại dịch.
+                    Triển khai chiến dịch tiêm chủng nhanh, cách ly và điều trị
+                    rộng khắp; áp dụng công nghệ số trong quản lý dịch và chăm
+                    sóc sức khỏe. Mạng lưới y tế đã chứng tỏ hiệu quả trong việc
+                    ứng phó với đại dịch.
                   </p>
                 </motion.div>
 
-                <motion.div className="bg-card rounded-2xl p-6 shadow-lg border border-border" whileHover={{ y: -3 }}>
+                <motion.div
+                  className="bg-card rounded-2xl p-6 shadow-lg border border-border"
+                  whileHover={{ y: -3 }}
+                >
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-bold text-chart-2">Cải cách Luật BHYT 2024</h3>
+                    <h3 className="text-2xl font-bold text-chart-2">
+                      Cải cách Luật BHYT 2024
+                    </h3>
                     <motion.a
                       href="https://english.luatvietnam.vn/legal-news/law-revising-the-law-on-health-insurance-4729-102030-article.html"
                       target="_blank"
@@ -671,8 +736,10 @@ const keywordStyles = `
                     </motion.a>
                   </div>
                   <p className="text-foreground leading-relaxed">
-                    Cho phép người tham gia đăng ký khám chữa bệnh tại bất cứ cơ sở y tế tuyến cơ sở nào trên toàn quốc,
-                    không lệ thuộc nơi đăng ký hộ khẩu. Điều này giúp tối ưu hóa mạng lưới y tế hiện có.
+                    Cho phép người tham gia đăng ký khám chữa bệnh tại bất cứ cơ
+                    sở y tế tuyến cơ sở nào trên toàn quốc, không lệ thuộc nơi
+                    đăng ký hộ khẩu. Điều này giúp tối ưu hóa mạng lưới y tế
+                    hiện có.
                   </p>
                 </motion.div>
               </div>
@@ -695,7 +762,12 @@ const keywordStyles = `
               </h2>
               <p className="text-xl text-white/80 max-w-2xl mx-auto">
                 Chuyển đổi số giúp nâng cao hiệu quả quản lý trong lĩnh vực{" "}
-                <Keyword word="hành chính" keyword="HÀNH CHÍNH" hint="Hệ thống quản lý nhà nước và dịch vụ công" /> giáo dục
+                <Keyword
+                  word="hành chính"
+                  keyword="HÀNH CHÍNH"
+                  hint="Hệ thống quản lý nhà nước và dịch vụ công"
+                />{" "}
+                giáo dục
               </p>
             </div>
           </AnimatedItem>
@@ -709,8 +781,12 @@ const keywordStyles = `
                   whileHover={{ y: -8, rotate: index === 1 ? 2 : 0 }}
                 >
                   <div className="text-4xl mb-4">{stat.icon}</div>
-                  <div className="text-4xl font-black text-yellow-300 mb-2">{stat.value}</div>
-                  <h3 className="text-xl font-bold text-white mb-2">{stat.label}</h3>
+                  <div className="text-4xl font-black text-yellow-300 mb-2">
+                    {stat.value}
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {stat.label}
+                  </h3>
                   <p className="text-white/80 mb-4">{stat.description}</p>
                   {stat.link && (
                     <motion.a
@@ -723,7 +799,10 @@ const keywordStyles = `
                       <span>Xem thêm</span>
                       <motion.span
                         animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Number.POSITIVE_INFINITY,
+                        }}
                       >
                         →
                       </motion.span>
@@ -742,7 +821,9 @@ const keywordStyles = `
                   whileHover={{ y: -3 }}
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-bold text-yellow-300">Đổi mới chương trình</h3>
+                    <h3 className="text-2xl font-bold text-yellow-300">
+                      Đổi mới chương trình
+                    </h3>
                     <motion.a
                       href="https://nhandan.vn/hanh-trinh-thay-doi-phuong-phap-day-va-hoc-post880922.html"
                       target="_blank"
@@ -754,8 +835,10 @@ const keywordStyles = `
                     </motion.a>
                   </div>
                   <p className="text-white/90 leading-relaxed">
-                    Việt Nam tiếp tục cải cách chương trình giáo dục phổ thông, thay đổi phương pháp dạy-học, tăng cường
-                    ứng dụng công nghệ, chuẩn bị cho chuyển đổi số trong giáo dục. Các thủ tục hành chính được đơn giản hóa đáng kể.
+                    Việt Nam tiếp tục cải cách chương trình giáo dục phổ thông,
+                    thay đổi phương pháp dạy-học, tăng cường ứng dụng công nghệ,
+                    chuẩn bị cho chuyển đổi số trong giáo dục. Các thủ tục hành
+                    chính được đơn giản hóa đáng kể.
                   </p>
                 </motion.div>
 
@@ -764,7 +847,9 @@ const keywordStyles = `
                   whileHover={{ y: -3 }}
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-2xl font-bold text-yellow-300">Học trực tuyến & Chuyển đổi số</h3>
+                    <h3 className="text-2xl font-bold text-yellow-300">
+                      Học trực tuyến & Chuyển đổi số
+                    </h3>
                     <motion.a
                       href="https://vietnamnet.vn/en/vietnam-becomes-second-largest-global-user-of-free-online-learning-platforms-2370118.html"
                       target="_blank"
@@ -776,20 +861,32 @@ const keywordStyles = `
                     </motion.a>
                   </div>
                   <p className="text-white/90 leading-relaxed">
-                    Thị trường giáo dục trực tuyến tại Việt Nam tăng trưởng mạnh — năm 2024 ghi nhận hơn 204 triệu phút
-                    học trên nền tảng miễn phí toàn cầu. Công tác hành chính trong giáo dục được số hóa toàn diện.
+                    Thị trường giáo dục trực tuyến tại Việt Nam tăng trưởng mạnh
+                    — năm 2024 ghi nhận hơn 204 triệu phút học trên nền tảng
+                    miễn phí toàn cầu. Công tác hành chính trong giáo dục được
+                    số hóa toàn diện.
                   </p>
                 </motion.div>
               </div>
             </AnimatedItem>
 
             <AnimatedItem variants={slideInRight}>
-              <motion.div className="relative rounded-3xl overflow-hidden shadow-2xl" whileHover={{ scale: 1.05 }}>
+              <motion.div
+                className="relative rounded-3xl overflow-hidden shadow-2xl"
+                whileHover={{ scale: 1.05 }}
+              >
                 <div className="relative h-80 w-full">
-                  <Image src="/images/digital-education.jpg" alt="Giáo dục số Việt Nam" fill className="object-cover" />
+                  <Image
+                    src="/images/digital-education.jpg"
+                    alt="Giáo dục số Việt Nam"
+                    fill
+                    className="object-cover"
+                  />
                   <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 bg-background/90 backdrop-blur-sm rounded-full px-4 py-2">
-                    <span className="font-semibold text-foreground">Top 10 Toàn cầu</span>
+                    <span className="font-semibold text-foreground">
+                      Top 10 Toàn cầu
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -811,7 +908,8 @@ const keywordStyles = `
                 </span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Các chương trình hỗ trợ toàn diện cho các nhóm dễ bị tổn thương trong xã hội
+                Các chương trình hỗ trợ toàn diện cho các nhóm dễ bị tổn thương
+                trong xã hội
               </p>
             </div>
           </AnimatedItem>
@@ -824,8 +922,12 @@ const keywordStyles = `
                   whileHover={{ y: -8, scale: 1.05 }}
                 >
                   <div className="text-4xl mb-4">{item.icon}</div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
                 </motion.div>
               </AnimatedItem>
             ))}
@@ -837,8 +939,9 @@ const keywordStyles = `
               whileHover={{ scale: 1.02 }}
             >
               <p className="text-lg leading-relaxed">
-                Việc mở rộng BHYT, cải thiện dịch vụ cơ sở và chính sách hỗ trợ xã hội giúp các nhóm yếu thế tiếp cận
-                tốt hơn với các dịch vụ công. Chính phủ đặt mục tiêu giảm nghèo đa chiều xuống dưới 3%.
+                Việc mở rộng BHYT, cải thiện dịch vụ cơ sở và chính sách hỗ trợ
+                xã hội giúp các nhóm yếu thế tiếp cận tốt hơn với các dịch vụ
+                công. Chính phủ đặt mục tiêu giảm nghèo đa chiều xuống dưới 3%.
               </p>
               <motion.a
                 href="https://nhandan.vn/giam-ngheo-giup-nguoi-dan-nang-cao-nang-luc-khoi-day-noi-luc-va-lan-toa-gia-tri-ben-vung-trong-cong-dong-post918622.html"
@@ -850,7 +953,10 @@ const keywordStyles = `
                 <span>Tìm hiểu thêm về chương trình giảm nghèo</span>
                 <motion.span
                   animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Number.POSITIVE_INFINITY,
+                  }}
                 >
                   →
                 </motion.span>
@@ -882,8 +988,12 @@ const keywordStyles = `
                   className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 text-center shadow-xl border border-white/20"
                   whileHover={{ y: -8 }}
                 >
-                  <div className="text-3xl font-black text-yellow-300 mb-2">{item.progress}</div>
-                  <h3 className="text-xl font-bold text-white mb-2">{item.aspect}</h3>
+                  <div className="text-3xl font-black text-yellow-300 mb-2">
+                    {item.progress}
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {item.aspect}
+                  </h3>
                   <p className="text-white/80 mb-3">{item.description}</p>
                   <div className="text-2xl text-green-400">{item.trend}</div>
                 </motion.div>
@@ -897,11 +1007,13 @@ const keywordStyles = `
               whileHover={{ scale: 1.02 }}
             >
               <p className="text-lg text-white/90 text-center leading-relaxed mb-4">
-                Các chính sách thúc đẩy bình đẳng giới trong lao động, nâng cao vị trí lãnh đạo của phụ nữ và khuyến
-                khích thanh niên tham gia khởi nghiệp và đổi mới sáng tạo.
+                Các chính sách thúc đẩy bình đẳng giới trong lao động, nâng cao
+                vị trí lãnh đạo của phụ nữ và khuyến khích thanh niên tham gia
+                khởi nghiệp và đổi mới sáng tạo.
               </p>
               <p className="text-lg text-yellow-300 text-center font-semibold">
-                Thanh niên trở thành lực lượng chủ chốt trong nền kinh tế số, góp phần hình thành văn hóa đổi mới.
+                Thanh niên trở thành lực lượng chủ chốt trong nền kinh tế số,
+                góp phần hình thành văn hóa đổi mới.
               </p>
               <motion.a
                 href="https://molisa.gov.vn/baiviet/231336?tintucID=231336"
@@ -913,7 +1025,10 @@ const keywordStyles = `
                 <span>Khám phá chính sách bình đẳng giới</span>
                 <motion.span
                   animate={{ x: [0, 4, 0] }}
-                  transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Number.POSITIVE_INFINITY,
+                  }}
                 >
                   →
                 </motion.span>
@@ -947,8 +1062,12 @@ const keywordStyles = `
                 >
                   <div className="relative z-10">
                     <div className="text-4xl mb-4">{item.icon}</div>
-                    <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
-                    <p className="text-muted-foreground mb-4 leading-relaxed">{item.description}</p>
+                    <h3 className="text-xl font-bold text-foreground mb-3">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground mb-4 leading-relaxed">
+                      {item.description}
+                    </p>
                     <div className="flex items-center justify-between">
                       <div className="inline-flex items-center gap-2 px-3 py-1 bg-chart-1 text-white rounded-full text-sm font-semibold">
                         {item.status}
@@ -979,8 +1098,8 @@ const keywordStyles = `
               whileHover={{ scale: 1.02 }}
             >
               <p className="text-xl font-semibold">
-                Dịch vụ công trực tuyến giúp rút ngắn thủ tục hành chính, tăng minh bạch và thuận tiện cho người dân và doanh
-                nghiệp
+                Dịch vụ công trực tuyến giúp rút ngắn thủ tục hành chính, tăng
+                minh bạch và thuận tiện cho người dân và doanh nghiệp
               </p>
             </motion.div>
           </AnimatedItem>
@@ -997,7 +1116,9 @@ const keywordStyles = `
                 className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20"
                 whileHover={{ y: -5 }}
               >
-                <h3 className="text-2xl md:text-3xl font-bold text-yellow-300 mb-6 text-center">Thách Thức</h3>
+                <h3 className="text-2xl md:text-3xl font-bold text-yellow-300 mb-6 text-center">
+                  Thách Thức
+                </h3>
                 <ul className="space-y-4">
                   {challenges.map((challenge, index) => (
                     <motion.li
@@ -1009,7 +1130,9 @@ const keywordStyles = `
                       viewport={{ once: true }}
                     >
                       <div className="w-2 h-2 bg-red-400 rounded-full mt-2 shrink-0"></div>
-                      <span className="text-white/90 font-medium">{challenge}</span>
+                      <span className="text-white/90 font-medium">
+                        {challenge}
+                      </span>
                     </motion.li>
                   ))}
                 </ul>
@@ -1023,10 +1146,13 @@ const keywordStyles = `
                 whileHover={{ scale: 1.02 }}
               >
                 <div className="relative z-10">
-                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center">Kết Luận</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+                    Kết Luận
+                  </h3>
                   <p className="text-lg leading-relaxed text-center mb-6">
-                    Thành tựu xã hội sau 2018 là rõ rệt: chất lượng y tế, giáo dục và an sinh được cải thiện đáng kể.
-                    Tuy nhiên, việc đảm bảo <strong>tiếp cận công bằng</strong> dịch vụ và{" "}
+                    Thành tựu xã hội sau 2018 là rõ rệt: chất lượng y tế, giáo
+                    dục và an sinh được cải thiện đáng kể. Tuy nhiên, việc đảm
+                    bảo <strong>tiếp cận công bằng</strong> dịch vụ và{" "}
                     <strong>nâng cao chất lượng</strong>
                     vẫn là bài toán chính sách cần được tiếp tục giải quyết.
                   </p>
@@ -1067,12 +1193,15 @@ const keywordStyles = `
               )}
             </div>
             <span>Mini Game</span>
-            <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}>
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+            >
               →
             </motion.span>
           </motion.div>
         </Link>
       </motion.div>
     </div>
-  )
+  );
 }

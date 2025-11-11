@@ -1,13 +1,13 @@
 // app/statistics/page.tsx
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { motion, AnimatePresence } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef, useState } from "react"
-import { useGame } from "@/contexts/GameContext"
-import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { useGame } from "@/contexts/GameContext";
+import Link from "next/link";
 
 // Animation variants với easing hợp lệ
 const containerVariants = {
@@ -18,7 +18,7 @@ const containerVariants = {
       staggerChildren: 0.2,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -30,7 +30,7 @@ const itemVariants = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-}
+};
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -42,7 +42,7 @@ const fadeInUp = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-}
+};
 
 const scaleUp = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -54,7 +54,7 @@ const scaleUp = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-}
+};
 
 const slideInLeft = {
   hidden: { opacity: 0, x: -100 },
@@ -66,7 +66,7 @@ const slideInLeft = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-}
+};
 
 const slideInRight = {
   hidden: { opacity: 0, x: 100 },
@@ -78,18 +78,18 @@ const slideInRight = {
       ease: [0.25, 0.46, 0.45, 0.94],
     },
   },
-}
+};
 
 // Animated component wrapper
 function AnimatedSection({
   children,
   className = "",
 }: {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <motion.div
@@ -101,7 +101,7 @@ function AnimatedSection({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 function AnimatedItem({
@@ -109,15 +109,15 @@ function AnimatedItem({
   variants = itemVariants,
   className = "",
 }: {
-  children: React.ReactNode
-  variants?: any
-  className?: string
+  children: React.ReactNode;
+  variants?: any;
+  className?: string;
 }) {
   return (
     <motion.div variants={variants} className={className}>
       {children}
     </motion.div>
-  )
+  );
 }
 
 // Component cho từ khóa có thể click với hint - ĐÃ SỬA (bỏ icon bóng đèn)
@@ -128,24 +128,24 @@ function Keyword({
   className = "",
   inheritFontWeight = false,
 }: {
-  word: string
-  keyword: string
-  hint: string
-  className?: string
-  inheritFontWeight?: boolean
+  word: string;
+  keyword: string;
+  hint: string;
+  className?: string;
+  inheritFontWeight?: boolean;
 }) {
-  const { foundKeywords, addKeyword } = useGame()
-  const [isRecentlyFound, setIsRecentlyFound] = useState(false)
+  const { foundKeywords, addKeyword } = useGame();
+  const [isRecentlyFound, setIsRecentlyFound] = useState(false);
 
-  const isFound = foundKeywords.includes(keyword)
+  const isFound = foundKeywords.includes(keyword);
 
   const handleClick = () => {
     if (!isFound) {
-      addKeyword(keyword)
-      setIsRecentlyFound(true)
-      setTimeout(() => setIsRecentlyFound(false), 2000)
+      addKeyword(keyword);
+      setIsRecentlyFound(true);
+      setTimeout(() => setIsRecentlyFound(false), 2000);
     }
-  }
+  };
 
   return (
     <span className="keyword-wrapper relative inline-block">
@@ -170,12 +170,12 @@ function Keyword({
         {word}
       </motion.span>
     </span>
-  )
+  );
 }
 
 // Component Hint Panel cho Statistics - ĐÃ CẬP NHẬT
 function StatisticsHintPanel() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -188,7 +188,7 @@ function StatisticsHintPanel() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
-        style={{ marginTop: '8px' }}
+        style={{ marginTop: "8px" }}
       >
         <span>💡</span>
         <span className="hidden sm:inline">Gợi ý</span>
@@ -210,7 +210,10 @@ function StatisticsHintPanel() {
                   <span>💡</span>
                   Gợi ý Tìm từ khóa - Thống kê
                 </h3>
-                <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
                   <span className="text-xl">×</span>
                 </button>
               </div>
@@ -225,8 +228,14 @@ function StatisticsHintPanel() {
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• 2 từ, 7 chữ cái</li>
-                      <li>• Thể hiện định hướng xã hội mới, tiên tiến và phát triển vượt bậc</li>
-                      <li>• Mục tiêu để nâng cao chất lượng cuộc sống và tính công bằng xã hội</li>
+                      <li>
+                        • Thể hiện định hướng xã hội mới, tiên tiến và phát
+                        triển vượt bậc
+                      </li>
+                      <li>
+                        • Mục tiêu để nâng cao chất lượng cuộc sống và tính công
+                        bằng xã hội
+                      </li>
                       <li>• Tìm trong phần giới thiệu đầu trang</li>
                     </ul>
                   </div>
@@ -249,7 +258,9 @@ function StatisticsHintPanel() {
 
               {/* Footer */}
               <div className="pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500 text-center">Tìm tất cả từ khóa để khám phá slogan bí mật!</p>
+                <p className="text-xs text-gray-500 text-center">
+                  Tìm tất cả từ khóa để khám phá slogan bí mật!
+                </p>
               </div>
             </div>
           </motion.div>
@@ -269,11 +280,11 @@ function StatisticsHintPanel() {
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
 
 export default function StatisticsPage() {
-  const { foundKeywords } = useGame()
+  const { foundKeywords } = useGame();
   const statisticsData = {
     gdp: {
       title: "Tăng trưởng GDP theo năm (2018-2025)",
@@ -307,7 +318,9 @@ export default function StatisticsPage() {
       ],
       total: "405 tỷ USD (2024)",
       growth: "14%/năm",
-      sources: ["https://www.macrotrends.net/global-metrics/countries/vnm/vietnam/gdp-growth-rate"],
+      sources: [
+        "https://www.macrotrends.net/global-metrics/countries/vnm/vietnam/gdp-growth-rate",
+      ],
     },
     fdi: {
       title: "FDI theo vùng & ngành",
@@ -324,7 +337,9 @@ export default function StatisticsPage() {
         { name: "Miền Nam", value: 45, color: "bg-yellow-500" },
         { name: "Miền Trung", value: 20, color: "bg-blue-500" },
       ],
-      sources: ["https://industrial.savills.com.vn/2024/02/foreign-direct-investment-in-vietnam-an-overview/"],
+      sources: [
+        "https://industrial.savills.com.vn/2024/02/foreign-direct-investment-in-vietnam-an-overview/",
+      ],
     },
     health: {
       title: "Tỉ lệ BHYT & Nghèo đa chiều",
@@ -348,7 +363,9 @@ export default function StatisticsPage() {
         { year: 2023, rate: 2.9 },
         { year: 2024, rate: 2.4 },
       ],
-      sources: ["https://vss.gov.vn/english/news/Pages/vietnam-social-security.aspx?CateID=0&ItemID=12689"],
+      sources: [
+        "https://vss.gov.vn/english/news/Pages/vietnam-social-security.aspx?CateID=0&ItemID=12689",
+      ],
     },
     tourism: {
       title: "Du lịch quốc tế (khách quốc tế / năm)",
@@ -364,7 +381,7 @@ export default function StatisticsPage() {
       ],
       sources: ["https://www.nso.gov.vn/en/homepage/"],
     },
-  }
+  };
 
   // CSS styles cho keyword system - ĐÃ SỬA (xóa hoàn toàn gạch chân)
   const keywordStyles = `
@@ -427,7 +444,7 @@ export default function StatisticsPage() {
       display: inline-block;
       position: relative;
     }
-  `
+  `;
 
   return (
     <div className="min-h-screen bg-vn-gradient-1 text-foreground overflow-x-hidden">
@@ -486,7 +503,9 @@ export default function StatisticsPage() {
                 </span>
               </h1>
               <div className="inline-flex my-6 items-center px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-                <span className="text-yellow-300 text-sm md:text-base font-semibold">Dữ liệu trực quan 2018 – Nay</span>
+                <span className="text-yellow-300 text-sm md:text-base font-semibold">
+                  Dữ liệu trực quan 2018 – Nay
+                </span>
               </div>
             </div>
           </AnimatedItem>
@@ -511,9 +530,16 @@ export default function StatisticsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  Phần này tập trung trình bày <span className="text-yellow-300 font-semibold">dữ liệu chính thức</span>{" "}
-                  và <span className="text-yellow-300 font-semibold">đồ họa dễ hiểu</span> về GDP theo năm, xuất khẩu
-                  theo ngành, FDI theo vùng, tỉ lệ BHYT, du lịch, giáo dục. Tất cả đều hướng tới một xã hội{" "}
+                  Phần này tập trung trình bày{" "}
+                  <span className="text-yellow-300 font-semibold">
+                    dữ liệu chính thức
+                  </span>{" "}
+                  và{" "}
+                  <span className="text-yellow-300 font-semibold">
+                    đồ họa dễ hiểu
+                  </span>{" "}
+                  về GDP theo năm, xuất khẩu theo ngành, FDI theo vùng, tỉ lệ
+                  BHYT, du lịch, giáo dục. Tất cả đều hướng tới một xã hội{" "}
                   <Keyword
                     word="hiện đại"
                     keyword="HIỆN ĐẠI"
@@ -531,9 +557,12 @@ export default function StatisticsPage() {
                 >
                   <p className="text-lg text-white/80 leading-relaxed text-center">
                     Người dùng có thể tải infographic hoặc dữ liệu để phục vụ{" "}
-                    <span className="text-yellow-200 font-medium">học tập và nghiên cứu</span>. Mục tiêu là giúp dễ dàng
-                    tiếp cận thông tin, cung cấp nền tảng số liệu cho việc giảng dạy, học tập và phân tích xu hướng phát
-                    triển của đất nước.
+                    <span className="text-yellow-200 font-medium">
+                      học tập và nghiên cứu
+                    </span>
+                    . Mục tiêu là giúp dễ dàng tiếp cận thông tin, cung cấp nền
+                    tảng số liệu cho việc giảng dạy, học tập và phân tích xu
+                    hướng phát triển của đất nước.
                   </p>
                 </motion.div>
               </div>
@@ -573,7 +602,8 @@ export default function StatisticsPage() {
                       repeatType: "reverse",
                     }}
                     style={{
-                      background: "linear-gradient(45deg, #fbbf24, #f59e0b, #dc2626, #b91c1c)",
+                      background:
+                        "linear-gradient(45deg, #fbbf24, #f59e0b, #dc2626, #b91c1c)",
                       backgroundSize: "300% 300%",
                       backgroundClip: "text",
                       WebkitBackgroundClip: "text",
@@ -604,11 +634,17 @@ export default function StatisticsPage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-semibold text-primary uppercase tracking-wide">Kinh tế vĩ mô</span>
+                <span className="text-sm font-semibold text-primary uppercase tracking-wide">
+                  Kinh tế vĩ mô
+                </span>
                 <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
               </motion.div>
-              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">{statisticsData.gdp.title}</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">{statisticsData.gdp.description}</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                {statisticsData.gdp.title}
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                {statisticsData.gdp.description}
+              </p>
             </div>
           </AnimatedItem>
 
@@ -651,18 +687,29 @@ export default function StatisticsPage() {
                   <div className="relative h-80 bg-linear-to-br from-red-50 to-yellow-50 rounded-2xl p-6 border border-red-200">
                     <div className="absolute inset-0 flex items-end justify-between px-6 pb-6">
                       {statisticsData.gdp.data.map((item, index) => (
-                        <div key={item.year} className="flex flex-col items-center">
+                        <div
+                          key={item.year}
+                          className="flex flex-col items-center"
+                        >
                           <motion.div
                             className={`w-8 rounded-t-lg shadow-lg ${
-                              item.year === 2020 ? "bg-red-400" : item.year >= 2021 ? "bg-green-500" : "bg-yellow-500"
+                              item.year === 2020
+                                ? "bg-red-400"
+                                : item.year >= 2021
+                                ? "bg-green-500"
+                                : "bg-yellow-500"
                             }`}
                             initial={{ height: 0 }}
                             whileInView={{ height: `${item.growth * 8}px` }}
                             transition={{ duration: 1, delay: index * 0.1 }}
                             viewport={{ once: true }}
                           />
-                          <span className="text-sm font-semibold mt-2">{item.year}</span>
-                          <span className="text-xs text-muted-foreground">{item.growth}%</span>
+                          <span className="text-sm font-semibold mt-2">
+                            {item.year}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {item.growth}%
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -700,7 +747,9 @@ export default function StatisticsPage() {
                   className="group bg-white rounded-2xl p-6 border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300"
                   whileHover={{ y: -5 }}
                 >
-                  <h4 className="text-lg font-semibold text-primary mb-4">Điểm nổi bật</h4>
+                  <h4 className="text-lg font-semibold text-primary mb-4">
+                    Điểm nổi bật
+                  </h4>
                   <ul className="space-y-3">
                     {statisticsData.gdp.data.map((item) => (
                       <motion.li
@@ -710,7 +759,11 @@ export default function StatisticsPage() {
                       >
                         <div
                           className={`w-3 h-3 rounded-full shadow ${
-                            item.year === 2020 ? "bg-red-500" : item.year >= 2021 ? "bg-green-500" : "bg-yellow-500"
+                            item.year === 2020
+                              ? "bg-red-500"
+                              : item.year >= 2021
+                              ? "bg-green-500"
+                              : "bg-yellow-500"
                           }`}
                         />
                         <div>
@@ -728,7 +781,9 @@ export default function StatisticsPage() {
                   className="group bg-red-50 rounded-2xl p-6 border border-red-200 shadow-lg hover:shadow-xl transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <h4 className="text-lg font-semibold text-primary mb-3">Nguồn dữ liệu</h4>
+                  <h4 className="text-lg font-semibold text-primary mb-3">
+                    Nguồn dữ liệu
+                  </h4>
                   <div className="space-y-2">
                     {statisticsData.gdp.sources.map((source, index) => (
                       <motion.a
@@ -741,7 +796,9 @@ export default function StatisticsPage() {
                       >
                         <span className="flex items-center gap-2">
                           <span className="text-red-500">📊</span>
-                          <span className="group-hover/link:underline">{source}</span>
+                          <span className="group-hover/link:underline">
+                            {source}
+                          </span>
                         </span>
                       </motion.a>
                     ))}
@@ -770,11 +827,17 @@ export default function StatisticsPage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-yellow-300 uppercase tracking-wider">Xuất khẩu</span>
+                <span className="text-sm font-semibold text-yellow-300 uppercase tracking-wider">
+                  Xuất khẩu
+                </span>
                 <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
               </motion.div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">{statisticsData.exports.title}</h2>
-              <p className="text-xl text-white/80 max-w-2xl mx-auto">{statisticsData.exports.description}</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                {statisticsData.exports.title}
+              </h2>
+              <p className="text-xl text-white/80 max-w-2xl mx-auto">
+                {statisticsData.exports.description}
+              </p>
             </div>
           </AnimatedItem>
 
@@ -792,33 +855,42 @@ export default function StatisticsPage() {
                   {/* Pie Chart Visualization */}
                   <div className="relative h-80 flex items-center justify-center">
                     <div className="relative w-64 h-64">
-                      {statisticsData.exports.categories.map((category, index) => {
-                        const startAngle = statisticsData.exports.categories
-                          .slice(0, index)
-                          .reduce((acc, cat) => acc + (cat.value / 100) * 360, 0)
-                        const angle = (category.value / 100) * 360
+                      {statisticsData.exports.categories.map(
+                        (category, index) => {
+                          const startAngle = statisticsData.exports.categories
+                            .slice(0, index)
+                            .reduce(
+                              (acc, cat) => acc + (cat.value / 100) * 360,
+                              0
+                            );
+                          const angle = (category.value / 100) * 360;
 
-                        return (
-                          <motion.div
-                            key={category.name}
-                            className="absolute inset-0 rounded-full shadow-2xl"
-                            style={{
-                              clipPath: `conic-gradient(from ${startAngle}deg, ${category.color} 0deg, ${category.color} ${angle}deg, transparent ${angle}deg)`,
-                            }}
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            transition={{ duration: 0.8, delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                          />
-                        )
-                      })}
+                          return (
+                            <motion.div
+                              key={category.name}
+                              className="absolute inset-0 rounded-full shadow-2xl"
+                              style={{
+                                clipPath: `conic-gradient(from ${startAngle}deg, ${category.color} 0deg, ${category.color} ${angle}deg, transparent ${angle}deg)`,
+                              }}
+                              initial={{ scale: 0 }}
+                              whileInView={{ scale: 1 }}
+                              transition={{ duration: 0.8, delay: index * 0.1 }}
+                              viewport={{ once: true }}
+                            />
+                          );
+                        }
+                      )}
 
                       {/* Center circle */}
                       <div className="absolute inset-0 m-auto w-32 h-32 bg-white/10 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center border border-white/20">
                         <div className="text-center text-white">
                           <div className="text-2xl font-bold">2024</div>
-                          <div className="text-sm text-white/70">Tổng xuất khẩu</div>
-                          <div className="text-lg font-semibold text-yellow-300">{statisticsData.exports.total}</div>
+                          <div className="text-sm text-white/70">
+                            Tổng xuất khẩu
+                          </div>
+                          <div className="text-lg font-semibold text-yellow-300">
+                            {statisticsData.exports.total}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -845,24 +917,34 @@ export default function StatisticsPage() {
                   className="group bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300"
                   whileHover={{ y: -5 }}
                 >
-                  <h4 className="text-lg font-semibold text-yellow-300 mb-4">Phân loại ngành hàng</h4>
+                  <h4 className="text-lg font-semibold text-yellow-300 mb-4">
+                    Phân loại ngành hàng
+                  </h4>
                   <div className="space-y-4">
-                    {statisticsData.exports.categories.map((category, index) => (
-                      <motion.div
-                        key={category.name}
-                        className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10 group-hover:bg-white/10 transition-colors"
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        viewport={{ once: true }}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-4 h-4 rounded shadow ${category.color}`} />
-                          <span className="font-medium text-white">{category.name}</span>
-                        </div>
-                        <span className="font-semibold text-yellow-300">{category.value}%</span>
-                      </motion.div>
-                    ))}
+                    {statisticsData.exports.categories.map(
+                      (category, index) => (
+                        <motion.div
+                          key={category.name}
+                          className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10 group-hover:bg-white/10 transition-colors"
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          viewport={{ once: true }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-4 h-4 rounded shadow ${category.color}`}
+                            />
+                            <span className="font-medium text-white">
+                              {category.name}
+                            </span>
+                          </div>
+                          <span className="font-semibold text-yellow-300">
+                            {category.value}%
+                          </span>
+                        </motion.div>
+                      )
+                    )}
                   </div>
                 </motion.div>
 
@@ -870,7 +952,9 @@ export default function StatisticsPage() {
                   className="group bg-yellow-500/10 backdrop-blur-sm rounded-2xl p-6 border border-yellow-400/20 shadow-lg hover:shadow-xl transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <h4 className="text-lg font-semibold text-yellow-300 mb-3">Nguồn dữ liệu</h4>
+                  <h4 className="text-lg font-semibold text-yellow-300 mb-3">
+                    Nguồn dữ liệu
+                  </h4>
                   <div className="space-y-2">
                     {statisticsData.exports.sources.map((source, index) => (
                       <motion.a
@@ -883,7 +967,9 @@ export default function StatisticsPage() {
                       >
                         <span className="flex items-center gap-2">
                           <span className="text-yellow-400">📊</span>
-                          <span className="group-hover/link:underline">{source}</span>
+                          <span className="group-hover/link:underline">
+                            {source}
+                          </span>
                         </span>
                       </motion.a>
                     ))}
@@ -907,11 +993,17 @@ export default function StatisticsPage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <span className="text-sm font-semibold text-primary uppercase tracking-wide">Đầu tư nước ngoài</span>
+                <span className="text-sm font-semibold text-primary uppercase tracking-wide">
+                  Đầu tư nước ngoài
+                </span>
                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
               </motion.div>
-              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">{statisticsData.fdi.title}</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">{statisticsData.fdi.description}</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                {statisticsData.fdi.title}
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                {statisticsData.fdi.description}
+              </p>
             </div>
           </AnimatedItem>
 
@@ -1042,15 +1134,21 @@ export default function StatisticsPage() {
                           />
                         </div>
                         <div className="text-center">
-                          <div className="font-semibold text-primary">{region.name}</div>
-                          <div className="text-2xl font-bold text-primary">{region.value}%</div>
+                          <div className="font-semibold text-primary">
+                            {region.name}
+                          </div>
+                          <div className="text-2xl font-bold text-primary">
+                            {region.value}%
+                          </div>
                         </div>
                       </motion.div>
                     ))}
                   </div>
 
                   <div className="text-center p-4 bg-red-100 rounded-2xl border border-red-200">
-                    <p className="text-lg font-semibold text-red-800">Miền Nam thu hút 45% tổng vốn FDI</p>
+                    <p className="text-lg font-semibold text-red-800">
+                      Miền Nam thu hút 45% tổng vốn FDI
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -1063,7 +1161,9 @@ export default function StatisticsPage() {
               className="mt-12 bg-blue-50 rounded-2xl p-6 border border-blue-200 max-w-2xl mx-auto shadow-lg"
               whileHover={{ scale: 1.05 }}
             >
-              <h4 className="text-lg font-semibold text-primary mb-3 text-center">Nguồn dữ liệu</h4>
+              <h4 className="text-lg font-semibold text-primary mb-3 text-center">
+                Nguồn dữ liệu
+              </h4>
               <div className="space-y-2 text-center">
                 {statisticsData.fdi.sources.map((source, index) => (
                   <motion.a
@@ -1076,7 +1176,9 @@ export default function StatisticsPage() {
                   >
                     <span className="flex items-center gap-2 justify-center">
                       <span className="text-blue-500">📊</span>
-                      <span className="group-hover/link:underline">{source}</span>
+                      <span className="group-hover/link:underline">
+                        {source}
+                      </span>
                     </span>
                   </motion.a>
                 ))}
@@ -1103,11 +1205,17 @@ export default function StatisticsPage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-green-300 uppercase tracking-wider">An sinh xã hội</span>
+                <span className="text-sm font-semibold text-green-300 uppercase tracking-wider">
+                  An sinh xã hội
+                </span>
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
               </motion.div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">{statisticsData.health.title}</h2>
-              <p className="text-xl text-white/80 max-w-2xl mx-auto">{statisticsData.health.description}</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                {statisticsData.health.title}
+              </h2>
+              <p className="text-xl text-white/80 max-w-2xl mx-auto">
+                {statisticsData.health.description}
+              </p>
             </div>
           </AnimatedItem>
 
@@ -1124,34 +1232,42 @@ export default function StatisticsPage() {
 
                   {/* Health Insurance Coverage */}
                   <div className="space-y-4">
-                    {statisticsData.health.healthInsurance.map((item, index) => (
-                      <motion.div
-                        key={item.year}
-                        className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10"
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        viewport={{ once: true }}
-                      >
-                        <span className="font-semibold text-white">{item.year}</span>
-                        <div className="flex items-center gap-4">
-                          <div className="w-32 bg-white/20 rounded-full h-3">
-                            <motion.div
-                              className="h-3 bg-green-500 rounded-full shadow"
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${item.coverage}%` }}
-                              transition={{ duration: 1, delay: index * 0.1 }}
-                              viewport={{ once: true }}
-                            />
+                    {statisticsData.health.healthInsurance.map(
+                      (item, index) => (
+                        <motion.div
+                          key={item.year}
+                          className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10"
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          viewport={{ once: true }}
+                        >
+                          <span className="font-semibold text-white">
+                            {item.year}
+                          </span>
+                          <div className="flex items-center gap-4">
+                            <div className="w-32 bg-white/20 rounded-full h-3">
+                              <motion.div
+                                className="h-3 bg-green-500 rounded-full shadow"
+                                initial={{ width: 0 }}
+                                whileInView={{ width: `${item.coverage}%` }}
+                                transition={{ duration: 1, delay: index * 0.1 }}
+                                viewport={{ once: true }}
+                              />
+                            </div>
+                            <span className="font-bold text-green-300 w-12">
+                              {item.coverage}%
+                            </span>
                           </div>
-                          <span className="font-bold text-green-300 w-12">{item.coverage}%</span>
-                        </div>
-                      </motion.div>
-                    ))}
+                        </motion.div>
+                      )
+                    )}
                   </div>
 
                   <div className="mt-6 text-center p-4 bg-green-500/20 backdrop-blur-sm rounded-2xl border border-green-400/30">
-                    <p className="text-lg font-semibold text-green-300">Đến 5/2025: 96.46% dân số được bao phủ BHYT</p>
+                    <p className="text-lg font-semibold text-green-300">
+                      Đến 5/2025: 96.46% dân số được bao phủ BHYT
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -1178,7 +1294,9 @@ export default function StatisticsPage() {
                         transition={{ delay: index * 0.1 }}
                         viewport={{ once: true }}
                       >
-                        <span className="font-semibold text-white">{item.year}</span>
+                        <span className="font-semibold text-white">
+                          {item.year}
+                        </span>
                         <div className="flex items-center gap-4">
                           <div className="w-32 bg-white/20 rounded-full h-3">
                             <motion.div
@@ -1189,14 +1307,18 @@ export default function StatisticsPage() {
                               viewport={{ once: true }}
                             />
                           </div>
-                          <span className="font-bold text-red-300 w-12">{item.rate}%</span>
+                          <span className="font-bold text-red-300 w-12">
+                            {item.rate}%
+                          </span>
                         </div>
                       </motion.div>
                     ))}
                   </div>
 
                   <div className="mt-6 text-center p-4 bg-red-500/20 backdrop-blur-sm rounded-2xl border border-red-400/30">
-                    <p className="text-lg font-semibold text-red-300">Giảm từ 7.1% (2018) xuống 2.4% (2024)</p>
+                    <p className="text-lg font-semibold text-red-300">
+                      Giảm từ 7.1% (2018) xuống 2.4% (2024)
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -1209,7 +1331,9 @@ export default function StatisticsPage() {
               className="mt-12 bg-green-500/10 backdrop-blur-sm rounded-2xl p-6 border border-green-400/20 max-w-2xl mx-auto shadow-lg"
               whileHover={{ scale: 1.05 }}
             >
-              <h4 className="text-lg font-semibold text-green-300 mb-3 text-center">Nguồn dữ liệu</h4>
+              <h4 className="text-lg font-semibold text-green-300 mb-3 text-center">
+                Nguồn dữ liệu
+              </h4>
               <div className="space-y-2 text-center">
                 {statisticsData.health.sources.map((source, index) => (
                   <motion.a
@@ -1222,7 +1346,9 @@ export default function StatisticsPage() {
                   >
                     <span className="flex items-center gap-2 justify-center">
                       <span className="text-green-400">📊</span>
-                      <span className="group-hover/link:underline">{source}</span>
+                      <span className="group-hover/link:underline">
+                        {source}
+                      </span>
                     </span>
                   </motion.a>
                 ))}
@@ -1244,11 +1370,17 @@ export default function StatisticsPage() {
                 viewport={{ once: true }}
               >
                 <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <span className="text-sm font-semibold text-primary uppercase tracking-wide">Du lịch</span>
+                <span className="text-sm font-semibold text-primary uppercase tracking-wide">
+                  Du lịch
+                </span>
                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
               </motion.div>
-              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">{statisticsData.tourism.title}</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">{statisticsData.tourism.description}</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                {statisticsData.tourism.title}
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                {statisticsData.tourism.description}
+              </p>
             </div>
           </AnimatedItem>
 
@@ -1299,16 +1431,20 @@ export default function StatisticsPage() {
                             item.year === 2020 || item.year === 2021
                               ? "bg-red-400"
                               : item.year >= 2022
-                                ? "bg-green-500"
-                                : "bg-purple-500"
+                              ? "bg-green-500"
+                              : "bg-purple-500"
                           }`}
                           initial={{ height: 0 }}
                           whileInView={{ height: `${item.visitors * 1.5}px` }}
                           transition={{ duration: 1, delay: index * 0.1 }}
                           viewport={{ once: true }}
                         />
-                        <span className="text-sm font-semibold mt-2">{item.year}</span>
-                        <span className="text-xs text-muted-foreground">{item.visitors}M</span>
+                        <span className="text-sm font-semibold mt-2">
+                          {item.year}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {item.visitors}M
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -1324,15 +1460,21 @@ export default function StatisticsPage() {
                 {/* Legend and Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-primary">Giai đoạn chính</h4>
+                    <h4 className="font-semibold text-primary">
+                      Giai đoạn chính
+                    </h4>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 bg-purple-500 rounded shadow"></div>
-                        <span className="text-sm">Tăng trưởng ổn định (2018-2019)</span>
+                        <span className="text-sm">
+                          Tăng trưởng ổn định (2018-2019)
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 bg-red-400 rounded shadow"></div>
-                        <span className="text-sm">Ảnh hưởng COVID-19 (2020-2021)</span>
+                        <span className="text-sm">
+                          Ảnh hưởng COVID-19 (2020-2021)
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-4 h-4 bg-green-500 rounded shadow"></div>
@@ -1342,12 +1484,16 @@ export default function StatisticsPage() {
                   </div>
 
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-primary">Thông tin nổi bật</h4>
+                    <h4 className="font-semibold text-primary">
+                      Thông tin nổi bật
+                    </h4>
                     <div className="space-y-2 text-sm">
                       {statisticsData.tourism.data.map((item) => (
                         <div key={item.year} className="flex justify-between">
                           <span className="font-medium">{item.year}:</span>
-                          <span className="text-muted-foreground">{item.event}</span>
+                          <span className="text-muted-foreground">
+                            {item.event}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -1359,7 +1505,9 @@ export default function StatisticsPage() {
                   className="mt-6 bg-purple-50 rounded-2xl p-4 border border-purple-200"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <h4 className="text-lg font-semibold text-primary mb-2 text-center">Nguồn dữ liệu</h4>
+                  <h4 className="text-lg font-semibold text-primary mb-2 text-center">
+                    Nguồn dữ liệu
+                  </h4>
                   <div className="space-y-1 text-center">
                     {statisticsData.tourism.sources.map((source, index) => (
                       <motion.a
@@ -1372,7 +1520,9 @@ export default function StatisticsPage() {
                       >
                         <span className="flex items-center gap-2 justify-center">
                           <span className="text-purple-500">📊</span>
-                          <span className="group-hover/link:underline">{source}</span>
+                          <span className="group-hover/link:underline">
+                            {source}
+                          </span>
                         </span>
                       </motion.a>
                     ))}
@@ -1410,12 +1560,15 @@ export default function StatisticsPage() {
               )}
             </div>
             <span>Mini Game</span>
-            <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}>
+            <motion.span
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
+            >
               →
             </motion.span>
           </motion.div>
         </Link>
       </motion.div>
     </div>
-  )
+  );
 }
