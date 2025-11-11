@@ -272,7 +272,7 @@ export default function GamePage() {
                     transition={{ delay: 0.5 }}
                   >
                     <span className="bg-linear-to-r from-yellow-300 via-orange-300 to-red-300 bg-clip-text text-transparent">
-                      VIETNAMMUONDOI
+                      VIỆT NAM ĐỔI MỚI
                     </span>
                   </motion.div>
                 </motion.div>
@@ -561,7 +561,7 @@ export default function GamePage() {
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.6, type: "spring" }}
                 >
-                  VIETNAMMUONDOI
+                  VIỆT NAM ĐỔI MỚI
                 </motion.div>
 
                 <motion.button

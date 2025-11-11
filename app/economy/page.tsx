@@ -221,56 +221,52 @@ function EconomyHintPanel() {
                   <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
                     <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
                       <span>💻</span>
-                      Từ khóa "ĐIỆN TỬ"
+                      Từ khóa thứ 1
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
-                      <li>• 2 từ, 7 chữ cái</li>
+                      <li>• 2 từ, 6 chữ cái</li>
                       <li>• Ngành công nghiệp chế tạo chủ lực, chiếm tỷ trọng cao trong xuất khẩu</li>
                       <li>• Giúp Việt Nam trở thành trung tâm lắp ráp và sản xuất toàn cầu</li>
                       <li>• Tìm trong phần Ngành Mũi Nhọn</li>
-                      <li>• Chữ cái cần tìm: <strong>E</strong></li>
                     </ul>
                   </div>
 
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                     <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
                       <span>🛣️</span>
-                      Từ khóa "CAO TỐC"
+                      Từ khóa thứ 2
                     </h4>
                     <ul className="text-sm text-blue-700 space-y-1">
-                      <li>• 2 từ, 7 chữ cái</li>
+                      <li>• 2 từ, 6 chữ cái</li>
                       <li>• Tuyến giao thông huyết mạch Bắc–Nam, tăng năng lực vận tải</li>
                       <li>• Các dự án hạ tầng trọng điểm được đẩy mạnh để kết nối vùng</li>
                       <li>• Tìm trong phần Dự Án Tiêu Biểu</li>
-                      <li>• Chữ cái cần tìm: <strong>T</strong></li>
                     </ul>
                   </div>
 
                   <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                     <h4 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
                       <span>🌱</span>
-                      Từ khóa "KINH TẾ XANH"
+                      Từ khóa thứ 3
                     </h4>
                     <ul className="text-sm text-green-700 space-y-1">
                       <li>• 3 từ, 10 chữ cái</li>
                       <li>• Mô hình phát triển bền vững, ưu tiên bảo vệ môi trường và tài nguyên</li>
                       <li>• Định hướng chuyển đổi từ tăng trưởng số lượng sang chất lượng</li>
-                      <li>• Tìm trong phần Kết Luận & Tầm Nhìn</li>
-                      <li>• Chữ cái cần tìm: <strong>A</strong></li>
+                      <li>• Tìm trong phần Phân Tích Tác Động Xã Hội</li>
                     </ul>
                   </div>
 
                   <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
                     <h4 className="font-semibold text-purple-800 mb-2 flex items-center gap-2">
                       <span>🎯</span>
-                      Từ khóa "NGÀNH MŨI NHỌN"
+                      Từ khóa thứ 4
                     </h4>
                     <ul className="text-sm text-purple-700 space-y-1">
-                      <li>• 3 từ, 13 chữ cái</li>
+                      <li>• 3 từ, 12 chữ cái</li>
                       <li>• Các lĩnh vực được ưu tiên phát triển như chế tạo, công nghệ cao và dịch vụ</li>
                       <li>• Tạo ra bước đột phá để nâng cao năng suất và giá trị kinh tế quốc gia</li>
                       <li>• Tìm trong phần Ngành Mũi Nhọn</li>
-                      <li>• Chữ cái cần tìm: <strong>M</strong></li>
                     </ul>
                   </div>
 

@@ -209,39 +209,41 @@ function SocietyHintPanel() {
                   <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
                     <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
                       <span>📉</span>
-                      Từ khóa "NGHÈO"
+                      Từ khóa thứ nhất
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• 1 từ, 5 chữ cái</li>
-                      <li>• Liên quan đến chính sách xã hội</li>
-                      <li>• Tìm trong phần Hero Section</li>
+                      <li>• Liên quan đến chính sách xã hội, cần có chính sách giúp nhóm yếu thế này tiếp cận dịch vụ và khơi dậy nội lực.</li>
                       <li>• Vấn đề xã hội quan trọng</li>
+                      <li>• Tìm trong phần Hero Section</li>
                     </ul>
                   </div>
 
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                     <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
                       <span>🏛️</span>
-                      Từ khóa "HÀNH CHÍNH"
+                      Từ khóa thứ hai
                     </h4>
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• 2 từ, 9 chữ cái</li>
                       <li>• Liên quan đến dịch vụ công</li>
-                      <li>• Tìm trong phần Giáo dục & Đào tạo</li>
                       <li>• Hệ thống quản lý nhà nước</li>
+                      <li>• Giúp minh bạch thủ tục và sử dụng dữ liệu dân cư hiệu quả hơn</li>
+                      <li>• Tìm trong phần Giáo dục & Đào tạo</li>
                     </ul>
                   </div>
 
                   <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                     <h4 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
                       <span>🏥</span>
-                      Từ khóa "MẠNG LƯỚI Y TẾ"
+                      Từ khóa thứ 3 
                     </h4>
                     <ul className="text-sm text-green-700 space-y-1">
-                      <li>• 3 từ, 12 chữ cái</li>
+                      <li>• 3 từ, 11 chữ cái</li>
                       <li>• Liên quan đến hệ thống chăm sóc sức khỏe</li>
+                      <li>• Hệ thống cơ sở (tuyến dưới) đóng vai trò chủ chốt trong phòng chống dịch bệnh.</li>
+                      <li>• Lực lượng tiên phong trong ứng phó các dịch bệnh và triển khai chiến dịch tiêm chủng.</li>
                       <li>• Tìm trong phần Y tế & Phúc lợi</li>
-                      <li>• Hệ thống cơ sở y tế toàn quốc</li>
                     </ul>
                   </div>
 

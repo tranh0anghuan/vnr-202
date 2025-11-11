@@ -221,14 +221,13 @@ function StatisticsHintPanel() {
                   <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
                     <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
                       <span>📊</span>
-                      Từ khóa "HIỆN ĐẠI"
+                      Từ khóa thứ nhất
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• 2 từ, 7 chữ cái</li>
-                      <li>• Chữ cái cần tìm: <strong>I</strong></li>
-                      <li>• Liên quan đến phát triển xã hội</li>
+                      <li>• Thể hiện định hướng xã hội mới, tiên tiến và phát triển vượt bậc</li>
+                      <li>• Mục tiêu để nâng cao chất lượng cuộc sống và tính công bằng xã hội</li>
                       <li>• Tìm trong phần giới thiệu đầu trang</li>
-                      <li>• Mô tả xã hội phát triển, văn minh</li>
                     </ul>
                   </div>
 
