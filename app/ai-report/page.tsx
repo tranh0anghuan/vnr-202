@@ -372,7 +372,7 @@ export default function AIReportPage() {
                   <p className="text-gray-700 leading-relaxed">
                     Sử dụng{" "}
                     <span className="font-semibold text-purple-600">
-                      5 công cụ AI
+                      4 công cụ AI
                     </span>{" "}
                     khác nhau trong quá trình nghiên cứu và phát triển dự án.
                   </p>

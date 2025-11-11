@@ -188,7 +188,7 @@ function CultureHintPanel() {
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1 }}
-        style={{ marginTop: '8px'}}
+        style={{ marginTop: "8px" }}
       >
         <span>💡</span>
         <span className="hidden sm:inline">Gợi ý</span>
@@ -228,8 +228,14 @@ function CultureHintPanel() {
                     </h4>
                     <ul className="text-sm text-yellow-700 space-y-1">
                       <li>• 2 từ, 7 chữ cái</li>
-                      <li>• Loại hình nghệ thuật truyền thống (Hát Chèo, Múa rối, Ca trù, v.v.)</li>
-                      <li>• Văn hóa được bảo tồn, đưa vào trường học và truyền dạy cho thế hệ trẻ</li>
+                      <li>
+                        • Loại hình nghệ thuật truyền thống (Hát Chèo, Múa rối,
+                        Ca trù, v.v.)
+                      </li>
+                      <li>
+                        • Văn hóa được bảo tồn, đưa vào trường học và truyền dạy
+                        cho thế hệ trẻ
+                      </li>
                       <li>• Tìm trong phần Bảo tồn bản sắc & Truyền dạy</li>
                     </ul>
                   </div>
@@ -241,8 +247,14 @@ function CultureHintPanel() {
                     </h4>
                     <ul className="text-sm text-purple-700 space-y-1">
                       <li>• 2 từ, 5 chữ cái</li>
-                      <li>• Ứng dụng công nghệ để bảo tồn và phát huy giá trị di sản văn hóa</li>
-                      <li>• Thúc đẩy công nghiệp nội dung và dịch vụ giải trí sáng tạo</li>
+                      <li>
+                        • Ứng dụng công nghệ để bảo tồn và phát huy giá trị di
+                        sản văn hóa
+                      </li>
+                      <li>
+                        • Thúc đẩy công nghiệp nội dung và dịch vụ giải trí sáng
+                        tạo
+                      </li>
                       <li>• Tìm trong phần Di sản & Công nhận quốc tế</li>
                     </ul>
                   </div>
@@ -254,8 +266,14 @@ function CultureHintPanel() {
                     </h4>
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• 2 từ, 8 chữ cái</li>
-                      <li>• Yếu tố cần quản lý đồng bộ (cùng quy hoạch và môi trường) để phát triển bền vững</li>
-                      <li>• Các chương trình phục dựng nghề truyền thống nhằm tạo sinh kế và gia tăng yếu tố này</li>
+                      <li>
+                        • Yếu tố cần quản lý đồng bộ (cùng quy hoạch và môi
+                        trường) để phát triển bền vững
+                      </li>
+                      <li>
+                        • Các chương trình phục dựng nghề truyền thống nhằm tạo
+                        sinh kế và gia tăng yếu tố này
+                      </li>
                       <li>• Tìm trong phần Thách thức</li>
                     </ul>
                   </div>
@@ -571,9 +589,7 @@ export default function CulturePage() {
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
                       {site.name}
                     </h3>
-                    <p className="text-gray-600 mb-4">
-                      {site.description}
-                    </p>
+                    <p className="text-gray-600 mb-4">{site.description}</p>
                     <motion.a
                       href={site.link}
                       target="_blank"
@@ -608,8 +624,8 @@ export default function CulturePage() {
                   hint="Ứng dụng công nghệ để bảo tồn và phát huy giá trị di sản văn hóa. Thúc đẩy công nghiệp nội dung và dịch vụ giải trí sáng tạo."
                   inheritFontWeight={true}
                 />{" "}
-                di sản, nâng cấp kết cấu hạ tầng đón khách du lịch đã góp phần gia tăng lượng khách quốc tế và tạo nguồn lực
-                cho địa phương.
+                di sản, nâng cấp kết cấu hạ tầng đón khách du lịch đã góp phần
+                gia tăng lượng khách quốc tế và tạo nguồn lực cho địa phương.
               </p>
             </motion.div>
           </AnimatedItem>
@@ -675,11 +691,9 @@ export default function CulturePage() {
                     </h3>
                     <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                       {event.description}
-                      {event.title === "SEA Games 31 (2022)" ? (
-                        "sáng tạo và đổi mới"
-                      ) : (
-                        "phát triển ổn định"
-                      )}{" "}
+                      {event.title === "SEA Games 31 (2022)"
+                        ? "sáng tạo và đổi mới"
+                        : "phát triển ổn định"}{" "}
                       của ngành văn hóa.
                     </p>
                     <motion.a
@@ -840,7 +854,8 @@ export default function CulturePage() {
                             hint="Loại hình nghệ thuật truyền thống (Hát Chèo, Múa rối, Ca trù, v.v.). Văn hóa được bảo tồn, đưa vào trường học và truyền dạy cho thế hệ trẻ."
                             inheritFontWeight={true}
                           />
-                          , số hóa di sản để tiếp cận người trẻ và bảo tồn văn hóa truyền thống.
+                          , số hóa di sản để tiếp cận người trẻ và bảo tồn văn
+                          hóa truyền thống.
                         </>
                       )}
                       {initiative.title === "Phục dựng nghề truyền thống" &&
@@ -893,7 +908,7 @@ export default function CulturePage() {
                       Thương mại hóa văn hóa dễ dẫn đến mất bản sắc
                     </span>
                   </motion.li>
-                  
+
                   <motion.li
                     className="flex items-start gap-3 p-4 bg-red-50 rounded-xl border border-red-200"
                     initial={{ opacity: 0, x: -20 }}
@@ -913,7 +928,7 @@ export default function CulturePage() {
                       cho bảo tồn dài hạn
                     </span>
                   </motion.li>
-                  
+
                   <motion.li
                     className="flex items-start gap-3 p-4 bg-red-50 rounded-xl border border-red-200"
                     initial={{ opacity: 0, x: -20 }}
