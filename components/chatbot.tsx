@@ -88,7 +88,6 @@ export default function Chatbot() {
   const formatTime = (d: Date) =>
     d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
 
-  const clearChat = () => setMessages([]);
   const toggleChat = () => {
     setIsOpen(!isOpen);
     if (!isOpen) setIsMinimized(false);
@@ -305,17 +304,6 @@ export default function Chatbot() {
                   )}
                 </button>
               </div>
-              {messages.length > 0 && (
-                <div className="flex justify-end mt-2">
-                  <button
-                    type="button"
-                    onClick={clearChat}
-                    className="text-xs text-gray-500 hover:text-red-500 transition-colors"
-                  >
-                    Xóa lịch sử chat
-                  </button>
-                </div>
-              )}
             </form>
           </>
         )}
