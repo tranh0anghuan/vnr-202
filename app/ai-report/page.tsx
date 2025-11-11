@@ -338,20 +338,6 @@ export default function AIReportPage() {
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100">
-                    <span className="text-blue-500 text-lg">🔗</span>
-                    <div>
-                      <p className="font-semibold text-gray-700">
-                        Link sản phẩm:
-                      </p>
-                      <a
-                        href="https://codecuatienne.github.io/assignment-vnr202/"
-                        className="text-blue-600 hover:text-blue-700 transition-colors"
-                      >
-                        codecuatienne.github.io/assignment-vnr202
-                      </a>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white rounded-xl border border-blue-100">
                     <span className="text-purple-500 text-lg">⚙️</span>
                     <div>
                       <p className="font-semibold text-gray-700">Công nghệ:</p>
